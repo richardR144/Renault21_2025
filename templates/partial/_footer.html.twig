@@ -1,0 +1,35 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <title>	{% block metatitle %}Echanges de pièces R21 td{% endblock %}</title>
+</head>
+    <body>
+
+        {% block footer %}
+            <nav class="navFooter">
+                <img class="logoFooter" src="asset/images/logoRenault.png" alt="lodo-footer">
+                <ul class="ulFooter">
+                    <li class="liFooter"><a href="cgu">CGU</a></li>
+                    <br>
+                    <li class="liFooter"><a href="politique_de_confidentialité">Politique de confidentialité</a></li>
+                    <br>
+                    <li class="liFooter"><a href="newsletter">Newsletter</a></li>
+                    <br>
+                    <li class="liFooter">
+                        <label>
+                        <input required type="email" placeholder="Entrez votre email">
+                        </label>
+                    </li>
+                    <img class="logo-mailFooter" src="asset\images\e-mail.png" alt="logo-mail">
+                </ul>
+            </nav>
+
+        {% endblock footer %}
+    </body>
+</html>

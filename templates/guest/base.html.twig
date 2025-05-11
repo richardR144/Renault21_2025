@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <title>	{% block metatitle %}Echanges de pièces R21 td{% endblock %}</title>
+</head>
+<body>
+        {% include ('partial/_header.html.twig') %}
+            {% block main %}
+
+            {% endblock main %}
+            {% include('partial/_footer.html.twig') %}
+
+    </body>
+</html>
