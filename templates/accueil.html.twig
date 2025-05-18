@@ -1,0 +1,33 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block main %}
+
+    <main id="accueil">
+
+        <section>
+            <div class="renault">
+                <img src="{{ asset('images/mavoiture.png') }}" alt="Photo de ma R21 td">
+            </div>
+            <article class="article">
+                <h1>Welcome to Exchange-of-pieces.com</h1>
+                <h2>The site for Renault 21 TD enthusiasts</h2>
+                <p>Welcome to Exchange-of-pieces.com, the site dedicated to enthusiasts of the <strong>Renault 21 Turbo Diesel</strong>.</p>
+                <p>Exchange your spare parts for free and connect with other enthusiasts.</p>
+                <p>Find exactly what you need to maintain your vehicle.</p>
+                <p>Easy registration, complete parts listings, and direct messaging between users for quick and secure exchanges.</p>
+                <p>Join us today and be part of our community!</p>
+                <h3>Join us!</h3>
+                <label>
+                    <button type="button">Discover</button>
+                </label>
+                <div class="items">
+                    <img src="{{ asset('images/voiture.png') }}" alt="logo-auto-rouge">
+                    <img src="{{ asset('images/cle.png') }}" alt="logo-clef-a-molette">
+                </div>
+            </article>
+        </section>
+    </main>
+{% endblock main %}
+

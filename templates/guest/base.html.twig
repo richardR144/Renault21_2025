@@ -1,18 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <title>	{% block metatitle %}Echanges de pièces R21 td{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Site d\' echange{% endblock %}">
+    <meta name="author" content="Richard"/>
+    <title>	{% block metatitle %}Exchanges_of_piecesR21_td{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
 </head>
 <body>
-        {% include ('partial/_header.html.twig') %}
+<header>
+    <nav class="navHeader">
+        <div class="logoHeader">
+            <img src="{{ asset('images/logoRenault.png') }}" alt="logo-header">
+        </div>
+        <ul>
+        <li class="liHeader"><a href="{{ ('inscription') }}">Inscription</a></li>
+        <li class="liHeader"><a href="{{ ('messages') }}">Messages</a></li>
+        <li class="liHeader"><a href="{{ ('liste_de_pieces') }}">List of pieces</a></li>
+        <li class="liHeader"><a href="{{ ('connection') }}">Connection</a></li>
+    </ul>
+</nav>
+</header>
             {% block main %}
-
             {% endblock main %}
-            {% include('partial/_footer.html.twig') %}
-
-    </body>
+<footer>
+<nav class="navFooter">
+    <div class="logoF">
+    <img class="logoFooter" src=" {{  asset('images/logoRenault.png') }}" alt="logo-renault">
+    </div>
+    <ul class="ulFooter">
+        <li class="liFooter"><a href="{{ 'cgu' }}">CGU</a></li>
+        <li class="liFooter"><a href="{{ 'politique_de_confidentialité' }}">Confidential's politik</a></li>
+        <li class="liFooter"><a href="{{ 'newsletter' }}">Newsletter</a></li>
+        <li class="liFooter">
+            <label>
+                <input required type="email" placeholder="Enter your email">
+            </label>
+        </li>
+        <div class="mailF">
+        <img class="logo-mailFooter" src="{{ 'asset\images\e-mail.png '}}" alt="logo-mail">
+        </div>
+    </ul>
+</nav>
+</footer>
+</body>
 </html>
+
