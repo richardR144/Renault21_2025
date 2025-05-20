@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\guest;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccueilController extends AbstractController {
 
-    #[Route(path: '/accueil', name: 'accueil', methods: ['GET'])]
+    #[Route(path: '/', name: 'accueil', methods: ['GET'])]
     public function accueil() {
         return $this->render('accueil.html.twig');
     }

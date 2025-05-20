@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Site d\' echange{% endblock %}">
+    <meta name="author" content="Richard"/>
+    <title>	{% block metatitle %}Achat_de_piecesR21_td{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
+          {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
+</head>
+<body>
+{% block main %}
+{% endblock main %}
+
+<footer>
+    <nav class="navFooter">
+        <div class="logoFooter">
+            <img src="{{  asset('images/logoRenault.png') }}" alt="logo-renault">
+        </div>
+        <ul class="ulFooter">
+            <li class="liFooter"><a href="{{ 'cgu' }}">CGU</a></li>
+            <li class="liFooter"><a href="{{ 'politique_de_confidentialité' }}">Politique de confidentialité</a></li>
+            <li class="liFooter"><a href="{{ 'newsletters' }}">Newsletters</a></li>
+            <li class="liFooter">
+                <label>
+                    <input required type="email" placeholder="Entrez votre email">
+                </label>
+            </li>
+        </ul>
+    </nav>
+</footer>
+</body>
+</html>

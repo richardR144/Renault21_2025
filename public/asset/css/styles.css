@@ -1,69 +1,134 @@
 * {
     margin: 0;
     padding: 0;
-   box-sizing: border-box;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
 }
 
-a{
-    cursor: pointer;
+.logoHeader, .logoFooter{
+    width: 20px;
+    padding: 10px;
 }
+
 /*---------------HEADER Accueil/guest/base-----------------*/
-.navHeader{
+header, footer{
+    display: flex;
     width: 100%;
-    height: 70px;
+    height: 12vh;
 }
+
+.navHeader, .navFooter {
+    display: flex;
+    justify-content: space-between;
+    background-color: #1C1C1C;
+    height: 10vh;
+}
+
+.logoHeader, .logoFooter{
+    width: 4%;
+}
+
+.logoHeader{
+    margin-top: 15px;
+}
+
 .logoHeader img{
     width: 100%;
 }
 
-.logoHeader, .logoFooter {
-    width: 4%;
+.ulHeader{
+    display: flex;
+    justify-content: space-between;
+    color: #FAFAFF;
+    font-size: 14px;
+    cursor: pointer;
+    align-items: center;
+    width: 50%;
 }
 
 .liHeader{
-    width: 100%;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+}
 
+.liHeader, a {
+    list-style: none;
+    text-decoration: none;
+    color: #EEF0F2;
+}
+
+.bouton-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 117px;
+    height: 50px;
+    background-color: rgb(45, 97, 252);
+    border-radius: 10px;
+    border: 2px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    transition: all 0.3s ease; /* Animation fluide */
+}
+
+.bouton-header button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.bouton-header:hover {
+    background-color: rgb(30, 80, 220);
+    transform: translateY(-2px); /* Effet de soulèvement */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 
-/*-------------MAIN Accueil/guest/base---------------*/
-#accueil{
-    display: flex;
-    justify-content: center;
+/*-------------MAIN Accueil/guest---------------*/
+#mainAccueil{
     background-color: #EEF0F2;
-    height: 80vh;
+    min-height: 70vh;
+    cursor: pointer;
+}
+
+section{
+    display: flex;
+    align-items: center;
+    margin: 20px 20px 20px 20px;
+    border: solid 2px #DADDD8  ;
 }
 
 .renault{
-    display: flex;
-
+    width: 30%;
+    transform: translateX(23%);
 }
 
 .renault img{
-    display: flex;
-    width:35%;
-}
-
-.article{
-    display: block;
-
+    width:100%;
 }
 
 h1{
-   font-size: 36px;
-   margin: 10px 0;
+    font-size: 36px;
+    font-weight: lighter;
+    margin: 10px 0;
 }
 
 h2{
     font-size: 21px;
+    font-weight: lighter;
     margin: 5px 0;
 }
 
 h3{
     font-size: 25px;
+    font-weight: lighter;
     margin:15px 0;
 }
 
@@ -71,61 +136,335 @@ p{
     font-size: 18px;
     color: #1C1C1C;
     margin: 15px 0;
+
 }
 
-button{
-    margin-top: 15px;
-
-    justify-self: flex-end;
-    width: 20%;
-    height: 40px;
-    background-color: rgb(45, 97, 252);
+.article{
+    width: 60%;
+    padding-left: 150px;
+    background-color: white;
 }
 
-.items{
-    display: flex;
-    justify-content: right;
+.container{
+    justify-content: center;
 }
 
-.items img{
-    display: flex;
-    justify-items: right;
-    width: 30px;
-    height: 30px;
-
- }
-
-/*-------------FOOTER/guest/base----------------*/
-.navFooter{
-    display: flex;
-    justify-content: space-between;
-    background-color: #1C1C1C;
-    height: 10vh;
-}
-.logoFooter{
-    margin-top: 15px;
-}
-.logoFooter img{
-    width: 100%;
-}
-
-
-.ulFooter{
+.bouton {
     display: flex;
     justify-content: center;
-    color: #FAFAFF;
-    font-size: 14px;
-
+    align-items: center;
+    margin: 15px auto; /* Centrage horizontal */
+    width: 200px;
+    height: 50px;
+    background-color: rgb(45, 97, 252);
+    border-radius: 10px;
+    border: 2px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    transition: all 0.3s ease; /* Animation fluide */
 }
-.liFooter{
-    display: flex;
-    justify-content: space-evenly;
-    margin-top: 40px;
-    padding-left: 15px;
 
+.bouton button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+        .bouton:hover {
+            background-color: rgb(30, 80, 220);
+            transform: translateY(-2px); /* Effet de soulèvement */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+        .container-logo {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+}
+
+        .items {
+            display: flex;
+            gap: 20px;
+}
+
+        .items img{
+            width: 2%;
+}
+
+        .container2 {
+            display: flex;
+            color: #1C1C1C;
+            align-items: center;
+            margin-left: 300px;
+}
+
+        h4{
+            font-weight: lighter;
+            font-size: 2rem;
+            color: #1C1C1C;
+}
+
+        .bouton{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px auto; /* Centrage horizontal */
+            width: 117px;
+            height: 50px;
+            background-color: rgb(45, 97, 252);
+            border-radius: 10px;
+            border: 2px solid white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+            transition: all 0.3s ease; /* Animation fluide */
+}
+
+        .bouton button{
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+}
+
+        .bouton button:hover{
+            background-color: rgb(30, 80, 220);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+        .container3{
+            display: flex;
+            width: 100%;
+            gap: 20px;
+}
+
+        .container3 h5, h6{
+            display: flex;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: lighter;
+}
+
+        .container3 .moteur {
+            width: 100%;
+}
+
+        .container3 .habitacle img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
 }
 
 
+/*-------------FOOTER/guest/base----------------*/
+        .logoFooter img{
+            width: 100%;
+}
+
+        .ulFooter{
+            display: flex;
+            justify-content: space-between;
+            color: #FAFAFF;
+            font-size: 14px;
+            cursor: pointer;
+            align-items: center;
+            width: 50%;
+}
+
+        .liFooter{
+            justify-content: space-evenly;
+}
+
+        .liFooter, .liHeader, a {
+            list-style: none;
+            text-decoration: none;
+            color: #EEF0F2;
+}
+
+        .liHeader {
+            width: 100%;
+            text-align: center;
+            padding: 0.3rem 0;
+        }
+
+        .liHeader a {
+            display: block;
+            padding: 0.5rem;
+        }
+
+        .bouton-header {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .bouton-header button {
+            width: 100%;
+        }
+
+        /*-------------------Responsive HEADER accueil(téléphone portable)----------------------*/
+
+    @media screen and (max-width: 780px) {
+        *{
+            font-size: 95%;
+        }
+        /* Header */
+        .navHeader {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .logoHeader {
+            width: 60px;
+            margin-top: 0;
+        }
+
+        #burger {
+            display: block;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        #burger ul {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        #burger li {
+            width: 25px;
+            height: 3px;
+            background: white;
+        }
+
+        .ulHeader {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background: #1C1C1C;
+            padding: 20px 0;
+            margin-top: 10px;
+        }
+
+        .ulHeader.active {
+            display: flex;
+        }
+
+        .liHeader {
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .bouton-header {
+            width: 100%;
+            margin: 10px 0;
+        }
 
 
-/*--------------RESPONSIVE---------------*/
+    /*-----------------Responsive MAIN accueil---------------------------*/
+        section {
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .renault {
+            width: 50%;
+            transform: none;
+            text-align: center;
+        }
+
+        .article {
+            width: 100%;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        .container-logo {
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .items {
+            margin-top: 15px;
+        }
+
+        .items img {
+            width: 30px;
+        }
+
+        .items img {
+            width: 40px !important; /* Force la taille sur mobile */
+        }
+
+        .container2 {
+            margin-left: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .container3{
+            display: none;
+        }
+
+
+        /*--------------Responsive FOOTER accueil-----------*/
+
+        footer {
+            height: auto;
+        }
+
+        .navFooter {
+            width: 100%;
+            display: flex;
+            height: auto;
+            padding: 20px;
+        }
+
+        .logoFooter {
+            width: 60px;
+            margin: 0;
+        }
+
+        .ulFooter {
+            flex-direction: row;
+            align-items: center;
+            padding: 20px 0 20px 0;
+            margin-left: 15px;
+        }
+
+        .liFooter {
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .liFooter input {
+            width: 100%;
+        }
+
+        .bouton {
+            width: 150px;
+            height: 45px;
+        }
+}

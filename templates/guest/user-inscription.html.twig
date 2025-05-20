@@ -1,0 +1,70 @@
+{% extends ('guest/base.html.twig') %}
+
+
+
+{%  block main %}
+
+    <main id="mainInscription">
+
+        <section>
+            <div class="renault">
+                <img src="{{ asset('images/r21RougeSurRoutePhareAllumés.jpeg') }}" alt="Photo de ma R21 td">
+            </div>
+                <form  method="POST">
+
+                    <label for="name">Nom
+                    <input type="text" name="name">
+                    </label>
+
+                    <label for="lastName">Nom
+                        <input type="text" name="lastName">
+                    </label>
+
+                    <label for="mail">e-mail
+                        <input type="text" name="mail">
+                    </label>
+
+                    <label for="password">Mot de passe
+                        <input type="text" name="password">
+                    </label>
+
+
+                </form>
+
+                    <div class="container-logo">
+                        <div class="bouton">
+                            <label>
+                                <button type="button">Inscription</button>
+                            </label>
+                        </div>
+                        <div class="items">
+                            <img src="{{ asset('images/voiture.png') }}" alt="logo-auto-rouge">
+                            <img src="{{ asset('images/cle.png') }}" alt="logo-clef-a-molette">
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <div class="container2">
+            <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
+            <div class="bouton">
+                <label>
+                    <button type="button">Entrez !</button>
+                </label>
+            </div>
+        </div>
+        <div class="container3">
+            <div class="moteur">
+                <h5>Catégorie Moteur</h5>
+                <img src="{{ asset('images/TurboAccueil.jpg') }}" alt="piece de turbo">
+            </div>
+            <div class="habitacle">
+                <h6>Catégorie Habitacle</h6>
+                <img src="{{ asset('images/fauteuil_avant_droit.jpg') }}" alt="siège de R21 td">
+            </div>
+        </div>
+
+    </main>
+{% endblock %}
+
+

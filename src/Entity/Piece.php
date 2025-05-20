@@ -44,6 +44,7 @@ class Piece
 
     public function __construct()
     {
+
         $this->messages = new ArrayCollection();
     }
 

@@ -1,33 +1,59 @@
 {% extends 'guest/base.html.twig' %}
 
+
+{% block metaTitle %}Achats de Pièces Renault 21 TD{% endblock %}
+
 {% block title %}Accueil{% endblock %}
 
 {% block main %}
-
-    <main id="accueil">
+    <main id="mainAccueil">
 
         <section>
             <div class="renault">
                 <img src="{{ asset('images/mavoiture.png') }}" alt="Photo de ma R21 td">
             </div>
             <article class="article">
-                <h1>Welcome to Exchange-of-pieces.com</h1>
-                <h2>The site for Renault 21 TD enthusiasts</h2>
-                <p>Welcome to Exchange-of-pieces.com, the site dedicated to enthusiasts of the <strong>Renault 21 Turbo Diesel</strong>.</p>
-                <p>Exchange your spare parts for free and connect with other enthusiasts.</p>
-                <p>Find exactly what you need to maintain your vehicle.</p>
-                <p>Easy registration, complete parts listings, and direct messaging between users for quick and secure exchanges.</p>
-                <p>Join us today and be part of our community!</p>
-                <h3>Join us!</h3>
-                <label>
-                    <button type="button">Discover</button>
-                </label>
-                <div class="items">
-                    <img src="{{ asset('images/voiture.png') }}" alt="logo-auto-rouge">
-                    <img src="{{ asset('images/cle.png') }}" alt="logo-clef-a-molette">
+                <div class="container">
+                    <h1>Bienvenue sur Achat-de-pieces.com</h1>
+                    <h2>Le site dédié aux passionnés de la Renault 21 TD</h2>
+                        <p>Bienvenue sur Achat-de-pieces.com, le site dédié aux passionnés de la <strong>Renault 21 Turbo Diesel</strong>.</p>
+                        <p>Échangez vos pièces détachées gratuitement et connectez-vous avec d'autres passionnés.</p>
+                        <p>Trouvez exactement ce dont vous avez besoin pour entretenir votre véhicule.</p>
+                        <p>Inscription facile, listes complètes de pièces et messagerie directe entre utilisateurs pour des échanges rapides et sécurisés.</p>
+                        <p>Rejoignez-nous dès aujourd' hui et faites partie de notre communauté !</p>
+                    <h3>Rejoignez nous !</h3>
+                        <div class="container-logo">
+                            <div class="bouton">
+                                <label>
+                                    <button type="button">Découvrir</button>
+                                </label>
+                            </div>
+                        <div class="items">
+                            <img src="{{ asset('images/voiture.png') }}" alt="logo-auto-rouge">
+                            <img src="{{ asset('images/cle.png') }}" alt="logo-clef-a-molette">
+                        </div>
+                    </div>
                 </div>
             </article>
         </section>
+        <div class="container2">
+            <h4>Renault 21 TD</h4>
+            <div class="bouton">
+                <label>
+                    <button type="button">S'inscrire</button>
+                </label>
+            </div>
+        </div>
+        <div class="container3">
+            <div class="moteur">
+                <h5>Catégorie Moteur</h5>
+                    <img src="{{ asset('images/TurboAccueil.jpg') }}" alt="piece de turbo">
+            </div>
+            <div class="habitacle">
+                <h6>Catégorie Habitacle</h6>
+                    <img src="{{ asset('images/compteurR.jpg') }}" alt="compteur de R21 td">
+            </div>
+        </div>
     </main>
 {% endblock main %}
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
+    <title>	{% block metatitle %}{% endblock %}</title>
+</head>
+<body>
+
+<header>
+
+    <img src="">
+    <nav>
+
+        <ul>
+            <li><a href="{{path('admin-create-piece')}}">Créer une pièce</a></li>
+            <li><a href="{{path('admin-list-pieces')}}">Liste des pièces</a></li>
+            <li><a href="{{path('login')}}">Se connecter</a></li>
+            <li><a href="{{path('admin-create-user')}}">Créer un user</a></li>
+            <li><a href="{{path('admin-list-admins')}}">Liste des admins</a></li>
+        </ul>
+        <p>Connecté en tant que {{ app.user.email }}</p>
+
+        <a href="{{ path('logout')}}">Se déconnecter</a>
+
+    </nav>
+
+</header>
+
+{% for message in app.flashes('error', "Vous n'avez pas créer de message") %}
+
+    <div style="background-color: red;">
+        <p>{{ message }} </p>
+    </div>
+
+{% endfor %}
+
+{% for message in app.flashes('success', "Vous avez créer un message") %}
+
+    <div style="background-color: green;">
+        <p>{{ message }} </p>
+    </div>
+
+{% endfor %}
+
+
+<main>
+
+    {% block main %}
+
+    {% endblock main %}
+
+</main>
+
+</body>
+</html>
