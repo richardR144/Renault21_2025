@@ -13,9 +13,18 @@ class LoginController extends AbstractController
 {
     #[Route('/connexion', name: "connexion", methods: ['GET', 'POST'])]
     public function displayConnexion(AuthenticationUtils $authenticationUtils): Response {
+    $currentUser = $this->getUser();
+        if(null !== $currentUser && $currentUser->getRoles() !== ['ROLE_USER']) {
+            // Si l'utilisateur est déjà connecté, redirige vers la page d'accueil
+            return $this->redirectToRoute('accueil');
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
+
+
         return $this->render('guest/user-connexion.html.twig', [
             'error' => $error
+            
         ]);
     }
 

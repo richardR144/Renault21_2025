@@ -40,8 +40,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    private ?string $pseudo = null;
 
+
+
+    public function createUser(string $pseudo, string $email, string $passwordHashed) {
+        $this->pseudo = $pseudo;
+        $this->email = $email;
+        $this->password = $passwordHashed;
+
+        $this->roles = ['ROLE_USER'];
+    }
 
     public function getId(): ?int
     {
@@ -116,14 +125,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getPrenom(): ?string
+
+    public function getPseudo(): ?string
     {
-        return $this->prenom;
+        return $this->pseudo;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPseudo(string $pseudo): static
     {
-        $this->prenom = $prenom;
+        $this->pseudo = $pseudo;
 
         return $this;
     }

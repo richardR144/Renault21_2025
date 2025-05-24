@@ -26,16 +26,29 @@
                 </ul>
             </div>
                 <ul class="ulHeader">
-                    <li class="liHeader"><a href="{{ ('inscription') }}">Inscription</a></li>
+                    <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
                     <li class="liHeader"><a href="{{ ('messages') }}">Messages</a></li>
                     <li class="liHeader"><a href="{{ ('liste_de_pieces') }}">Liste de pièces</a></li>
                     <li class="liHeader"><a href="{{ ('pantheon') }}">Panthéon</a></li>
                     <li class="bouton-header">
-                        <button type="button" class="btn btn-primary"><a href="{{ ('connexion') }}">Connexion</a></button>
+                        <button type="button" class="btn btn-primary"><a href="{{ path('connexion') }}">Connexion</a></button>
+                        <button type="button" class="btn btn-primary"><a href="{{ path('logout') }}">Se déconnecter</a></button>
                     </li>
                 </ul>
         </nav>
+    
     </header>
+    {% for flash_message in app.flashes('success') %}
+            <h2 class="alert alert-success color-success">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <h2 class="alert alert-danger color-error">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
+    
 {% endblock header %}
 
             {% block main %}

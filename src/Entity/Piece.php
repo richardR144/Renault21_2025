@@ -42,11 +42,12 @@ class Piece
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
     private Collection $messages;
 
-    public function __construct()
-    {
 
-        $this->messages = new ArrayCollection();
-    }
+    #[ORM\Column (nullable: true)]
+    private ?\DateTime $update_at = null;
+
+    #[ORM\Column (nullable: true)]
+    private ?\DateTime $created_at = null;
 
 
 
@@ -165,6 +166,30 @@ class Piece
                 $message->setSender(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTimeImmutable
+    {
+        return $this->updateAt;
+    }
+
+    public function setUpdateAt(?\DateTimeImmutable $updateAt): static
+    {
+        $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

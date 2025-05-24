@@ -17,11 +17,11 @@
         <ul>
             <li><a href="{{path('admin-create-piece')}}">Créer une pièce</a></li>
             <li><a href="{{path('admin-list-pieces')}}">Liste des pièces</a></li>
-            <li><a href="{{path('login')}}">Se connecter</a></li>
+            <li><a href="{{path('connexion')}}">Se connecter</a></li>
             <li><a href="{{path('admin-create-user')}}">Créer un user</a></li>
             <li><a href="{{path('admin-list-admins')}}">Liste des admins</a></li>
         </ul>
-        <p>Connecté en tant que {{ app.user.email }}</p>
+        <p>Connecté en tant que </p>
 
         <a href="{{ path('logout')}}">Se déconnecter</a>
 
