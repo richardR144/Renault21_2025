@@ -1,0 +1,156 @@
+{% extends ('guest/base.html.twig') %}
+
+
+{% block metatitle %}Achats de Pièces Renault 21 TD | Connexion{% endblock metatitle %}
+
+
+{% block main %}
+    <main id="mainConnexion">
+    <div id="imgForm">
+    <div class="renault">
+        <img src="{{ asset('images/VoitureComplèt.jpg') }}" alt="Photo de ma R21 td">
+    </div>
+    <section class="article">
+<div class="tab-content">
+    <div class="tab-pane fade show active"
+            id="pills-login"
+            role="tabpanel"
+            aria-labelledby="tab-login">
+        <form>
+            <div class="text-center mb-3">
+                <p>Se connecter avec :</p>
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                </button>
+            </div>
+
+            <p class="text-center">ou :</p>
+
+            <!-- Email input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="email" id="loginName" class="form-control" />
+                <label class="form-label" for="loginName">Email ou Prénom</label>
+            </div>
+
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="password" id="loginPassword" class="form-control" />
+                <label class="form-label" for="loginPassword">Mot de passe</label>
+            </div>
+
+            <!-- 2 column grid layout -->
+            <div class="row mb-4">
+                <div class="col-md-6 d-flex justify-content-center">
+                    <!-- Checkbox -->
+                    <div class="form-check mb-3 mb-md-0">
+                        <input class="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id="loginCheck"
+                                checked/>
+                        <label class="form-check-label" for="loginCheck"> Se souvenir de moi </label>
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex justify-content-center">
+                    <!-- Simple link -->
+                    <a href="#">Mot de passe oublié ?</a>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Connexion</button>
+
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Vous n'êtes pas encore membre ? <a href="#">Inscrivez-vous !</a></p>
+            </div>
+        </form>
+    </div>
+    <div class="tab-pane fade"
+            id="pills-register"
+            role="tabpanel"
+            aria-labelledby="tab-register"
+    >
+        <form>
+            <div class="text-center mb-3">
+                <p>Se connecter avec :</p>
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                </button>
+
+                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                </button>
+            </div>
+
+            <p class="text-center">ou :</p>
+
+            <!-- Username input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="text" id="registerUsername" class="form-control" />
+                <label class="form-label" for="registerUsername">Prénom</label>
+            </div>
+
+            <!-- Email input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="email" id="registerEmail" class="form-control" />
+                <label class="form-label" for="registerEmail">Email</label>
+            </div>
+
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="password" id="registerPassword" class="form-control" />
+                <label class="form-label" for="registerPassword">Mot de passe</label>
+            </div>
+
+            <!-- Checkbox -->
+            <div class="form-check d-flex justify-content-center mb-4">
+                <input class="form-check-input me-2"
+                        type="checkbox"
+                        value=""
+                        id="registerCheck"
+                        checked
+                        aria-describedby="registerCheckHelpText"/>
+                <label class="form-check-label" for="registerCheck">
+                    I have read and agree to the terms
+                </label>
+            </div>
+
+            <!-- Submit button -->
+            <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block mb-3">Connexion</button>
+        </form>
+    </div>
+</div>
+    </section>
+    </div>
+    <div class="container2">
+        <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
+        <div class="bouton">
+            <label>
+                <button type="button">Entrez !</button>
+            </label>
+        </div>
+    </div>
+    </main>
+{% endblock %}

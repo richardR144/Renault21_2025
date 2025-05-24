@@ -24,10 +24,10 @@ class Piece
     #[ORM\Column(length: 255)]
     private ?string $Description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $Exchange = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $Price = null;
 
     #[ORM\ManyToOne(inversedBy: 'category')]

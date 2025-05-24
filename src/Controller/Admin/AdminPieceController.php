@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Piece;
 use App\Repository\CategoryRepository;
+use App\Repository\PieceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,13 +54,84 @@ class AdminPieceController extends AbstractController
             'category' => $category,
         ]);
     }
-    #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET'])]
-    public function displayListProduct(PieceRepository $pieceRepository): Response {
-        $products = $pieceRepository->findAll();
+    #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET', 'POST'])]
+    public function displayListPieces(PieceRepository $pieceRepository): Response {
+        $piece = $pieceRepository->findAll();
 
         return $this->render('admin/pieces/list-pieces.html.twig', [
-            'products' => $products
+            'pieces' => $piece
         ]);
     }
 
+    #[Route('/admin/delete-piece/{id}', name:'admin-delete-piece', methods: ['GET'])] //Exo 15
+    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager): Response {
+
+        $piece = $pieceRepository->find($id);
+        // Si le produit n'existe pas, redirige vers la page 404 admin
+        if(!$piece) {
+            return $this->redirectToRoute('admin_404');
+        }
+
+        try {
+            // Supprime le produit de la base de données
+            $entityManager->remove($piece);
+            $entityManager->flush();
+
+            // Ajoute un message flash de succès
+            $this->addFlash('success', 'Piece supprimé !');
+
+        } catch(Exception $exception) {
+            // En cas d'erreur, ajoute un message flash d'erreur
+            $this->addFlash('error', 'Impossible de supprimer le piece');
+        }
+
+        return $this->redirectToRoute('admin-list-pieces');
+    }
+
+    #[Route('/admin/update-piece/{id}', name: 'admin-update-piece', methods: ['GET', 'POST'])]
+    public function displayUpdatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
+
+        $piece = $pieceRepository->find($id);
+
+        if ($request->isMethod('POST')) {
+
+            $title = $request->request->get('title');
+            $description = $request->request->get('description');
+            $exchange = $request->request->get(key: 'exchange');
+            $price = $request->request->get('price');
+            $categoryId = $request->request->get('category-id');
+            $userId = $request->request->get(key: 'userId');
+
+
+
+            $category = $categoryRepository->find($categoryId);
+
+            // méthode 1 : modifier les données d'une piece avec les fonctions setters
+            //$piece->setTitle($title);
+            //$piece->setDescription($description);
+            //$piece->setPrice($price);
+            //$piece->setcategory($category);
+
+
+            // méthode 2 : modifier les données d'une piece avec une fonction update dans l'entité
+
+            try {
+                $piece->update($title, $description, $exchange, $price, $category);
+
+                $entityManager->persist($piece);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Piece supprimée !');
+
+            } catch (\Exception $exception) {
+                $this->addFlash('error', $exception->getMessage());
+            }
+        }
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('admin/pieces/update-piece.html.twig', [
+            'categories' => $categories,
+            'piece' => $piece
+        ]);
+    }
 }

@@ -1,50 +1,96 @@
 {% extends ('guest/base.html.twig') %}
 
-
+{% block metatitle %}Achats de Pièces Renault 21 TD | Inscription{% endblock metatitle %}
 
 {%  block main %}
 
     <main id="mainInscription">
-
-        <section>
+        <div id="imgForm">
             <div class="renault">
-                <img src="{{ asset('images/r21RougeSurRoutePhareAllumés.jpeg') }}" alt="Photo de ma R21 td">
+                <img src="{{ asset('images/VoitureComplèt.jpg') }}" alt="Photo de ma R21 td">
             </div>
-                <form  method="POST">
+            <section class="article">
 
-                    <label for="name">Nom
-                    <input type="text" name="name">
-                    </label>
+            <!-- navs pilules -->
 
-                    <label for="lastName">Nom
-                        <input type="text" name="lastName">
-                    </label>
+                <!-- Contenu des pilules -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active"
+                         id="pills-login"
+                         role="tabpanel"
+                         aria-labelledby="tab-login">
+                <form>
+                    <div class="text-center mb-3">
+                        <p>Se connecter avec:</p>
+                        <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
 
-                    <label for="mail">e-mail
-                        <input type="text" name="mail">
-                    </label>
+                            <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                                <i class="fab fa-google"></i>
+                            </button>
 
-                    <label for="password">Mot de passe
-                        <input type="text" name="password">
-                    </label>
+                                    <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                                        <i class="fab fa-twitter"></i>
+                                    </button>
 
+                                        <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                                            <i class="fab fa-github"></i>
+                                        </button>
+                                </div>
 
-                </form>
+                                <p class="text-center">ou :</p>
 
-                    <div class="container-logo">
-                        <div class="bouton">
-                            <label>
-                                <button type="button">Inscription</button>
-                            </label>
+                                <!-- Email input -->
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <input type="email" id="loginName" class="form-control" />
+                                    <label class="form-label" for="loginName">Email</label>
+                                </div>
+
+                                <!-- Password input -->
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <input type="password" id="loginPassword" class="form-control" />
+                                    <label class="form-label" for="loginPassword">Mot de passe</label>
+                                </div>
+
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <input type="password" id="loginPassword" class="form-control" />
+                                <label class="form-label" for="loginPassword">Répétez le mot de passe</label>
+                                </div>
+
+                                <!-- 2 column grid layout -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 d-flex justify-content-center">
+                                        <!-- Checkbox -->
+                                        <div class="form-check mb-3 mb-md-0">
+                                            <input class="form-check-input"
+                                                    type="checkbox"
+                                                    value=""
+                                                    id="loginCheck" checked/>
+                                            <label class="form-check-label" for="loginCheck"> Se souvenir de moi </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block mb-4">Inscription</button>
+
+                                <!-- Register buttons -->
+                                <div class="text-center">
+                                    <p>Vous nêtes pas encore membre ? <a href="#">S'inscrire</a></p>
+                                </div>
+                            </form>
                         </div>
-                        <div class="items">
-                            <img src="{{ asset('images/voiture.png') }}" alt="logo-auto-rouge">
-                            <img src="{{ asset('images/cle.png') }}" alt="logo-clef-a-molette">
+                        <div class="tab-pane fade"
+                                id="pills-register"
+                                role="tabpanel"
+                                aria-labelledby="tab-register">
                         </div>
                     </div>
-                </div>
-            </article>
+            </section>
+
         </section>
+        </div>
         <div class="container2">
             <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
             <div class="bouton">
@@ -53,17 +99,6 @@
                 </label>
             </div>
         </div>
-        <div class="container3">
-            <div class="moteur">
-                <h5>Catégorie Moteur</h5>
-                <img src="{{ asset('images/TurboAccueil.jpg') }}" alt="piece de turbo">
-            </div>
-            <div class="habitacle">
-                <h6>Catégorie Habitacle</h6>
-                <img src="{{ asset('images/fauteuil_avant_droit.jpg') }}" alt="siège de R21 td">
-            </div>
-        </div>
-
     </main>
 {% endblock %}
 

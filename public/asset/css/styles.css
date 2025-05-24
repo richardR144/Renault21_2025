@@ -98,7 +98,7 @@ header, footer{
     cursor: pointer;
 }
 
-section{
+#mainAccueil section, #imgForm{
     display: flex;
     align-items: center;
     margin: 20px 20px 20px 20px;
@@ -209,7 +209,9 @@ p{
             font-size: 2rem;
             color: #1C1C1C;
 }
-
+        #hMoteur{
+            margin-right: 16%;
+        }
         .bouton{
             display: flex;
             justify-content: center;
@@ -241,11 +243,20 @@ p{
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+        #allPieces{
+            width: 200px;
+            margin-left: 46%;
+        }
+
+
 
         .container3{
             display: flex;
-            width: 100%;
-            gap: 20px;
+            width: 98%;
+            justify-content: space-around;
+            border: 3px solid #DADDD8;
+            margin: 15px auto;
+
 }
 
         .container3 h5, h6{
@@ -256,15 +267,18 @@ p{
 }
 
         .container3 .moteur {
-            width: 100%;
+            height: 400px;
 }
 
-        .container3 .habitacle img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .container3 .habitacle {
+            height: 400px;
 }
-
+        .moteur img{
+            width: 86%;
+        }
+        .habitacle img{
+            width: 100%;
+        }
 
 /*-------------FOOTER/guest/base----------------*/
         .logoFooter img{
@@ -424,10 +438,6 @@ p{
             text-align: center;
         }
 
-        .container3{
-            display: none;
-        }
-
 
         /*--------------Responsive FOOTER accueil-----------*/
 
@@ -468,3 +478,15 @@ p{
             height: 45px;
         }
 }
+
+
+/*-------------------Page inscription-----------------------*/
+
+#imgForm{
+    padding: 150px;
+}
+
+
+
+
+
