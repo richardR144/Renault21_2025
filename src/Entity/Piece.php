@@ -37,10 +37,10 @@ class Piece
     private ?Category $category = null;
 
     /**
-     * @var Collection<int, Message>
+     * @var Collection<int, Annonce>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
-    private Collection $messages;
+    #[ORM\OneToMany(targetEntity: Annonce::class, mappedBy: 'piece')]
+    private Collection $annonces;
 
 
     #[ORM\Column (nullable: true)]
@@ -143,53 +143,52 @@ class Piece
     /**
      * @return Collection<int, Message>
      */
-    public function getMessages(): Collection
+    public function getAnnonces(): Collection
     {
-        return $this->messages;
+        return $this->annonces;
     }
 
-    public function addMessage(Message $message): static
+    public function addAnnonce(Annonce $annonce): static
     {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setSender($this);
+        if (!$this->annonces->contains($annonce)) {
+            $this->annonces->add($annonce);
         }
 
         return $this;
     }
 
-    public function removeMessage(Message $message): static
+    public function removeAnnonce(Annonce $annonce): static
     {
-        if ($this->messages->removeElement($message)) {
+        if ($this->annonces->removeElement($annonce)) {
             // set the owning side to null (unless already changed)
-            if ($message->getSender() === $this) {
-                $message->setSender(null);
+            if ($annonce->getSender() === $this) {
+                $annonce->setSender(null);
             }
         }
 
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
+    public function getUpdateAt(): ?\DateTime
     {
-        return $this->updateAt;
+        return $this->update_at;
     }
 
-    public function setUpdateAt(?\DateTimeImmutable $updateAt): static
+    public function setUpdateAt(?\DateTime $updateAt): static
     {
-        $this->updateAt = $updateAt;
+        $this->update_at = $updateAt;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(?\DateTime $created_at): static
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }

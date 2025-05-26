@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création de Pièce | guest{% endblock title %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/guest/pieces/create-piece.css') }}">
+{% endblock stylesheets %}
+
+{% include 'partial/_header.html.twig' %}
+    
+
+{% block main %}
+<main id="mainCreatePiece">
+    <div class="container">
+        <h1 class="text-center mb-4">Créer une nouvelle pièce</h1>
+        {% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">{{ flash_message }}</div>
+{% endfor %}
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ flash_message }}</div>
+{% endfor %}
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="category" class="form-label">Catégorie</label>
+                <select class="form-select" id="category" name="category-id" required>
+                    <option value="" disabled selected>Choisissez une catégorie</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">Nom de la pièce</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image de la pièce</label>
+                <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png">
+            </div>
+            <button type="submit" class="btn btn-primary">Créer la pièce</button>
+            <a href="{{ path('guest-pieces-list-pieces') }}" class="btn btn-secondary mt-3">Annuler</a>
+        </form>
+    </div>
+</main>
+{% endblock main %}
+
+{#{% block javascripts %}
+    <script src="{{ asset('') }}"></script>
+{% endblock javascripts %}#}
+
+{% include 'partial/_footer.html.twig' %}

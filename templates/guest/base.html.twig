@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     <meta name="author" content="Richard R"/>
-    <title>	{% block metatitle %}Achat_de_piecesR21_td{% endblock %}</title>
+    <title>	{% block metatitle %}Achat/Vente de pièces Renault 21 TD{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
           {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
 </head>
@@ -27,12 +27,19 @@
             </div>
                 <ul class="ulHeader">
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
-                    <li class="liHeader"><a href="{{ ('messages') }}">Messages</a></li>
-                    <li class="liHeader"><a href="{{ ('liste_de_pieces') }}">Liste de pièces</a></li>
-                    <li class="liHeader"><a href="{{ ('pantheon') }}">Panthéon</a></li>
+                    {#<li class="liHeader"><a href="{{ path('messages') }}">Messages</a></li>#}
+                    <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste de pièces</a></li>
+                    
                     <li class="bouton-header">
-                        <button type="button" class="btn btn-primary"><a href="{{ path('connexion') }}">Connexion</a></button>
-                        <button type="button" class="btn btn-primary"><a href="{{ path('logout') }}">Se déconnecter</a></button>
+                    {% if app.user %}
+                        <button type="button" class="btn btn-primary">
+                            <a href="{{ path('logout') }}">Se déconnecter</a>
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-primary">
+                            <a href="{{ path('connexion') }}">Connexion</a>
+                        </button>
+                    {% endif %}
                     </li>
                 </ul>
         </nav>
@@ -61,9 +68,9 @@
                 <img src="{{  asset('images/logoRenault.png') }}" alt="logo-renault">
             </div>
         <ul class="ulFooter">
-            <li class="liFooter"><a href="{{ 'cgu' }}">CGU</a></li>
-            <li class="liFooter"><a href="{{ 'politique_de_confidentialité' }}">Politique de confidentialité</a></li>
-            <li class="liFooter"><a href="{{ 'newsletters' }}">Newsletters</a></li>
+            {#<li class="liFooter"><a href="{{ path('cgu') }}">CGU</a></li>
+            <li class="liFooter"><a href="{{ path('politique_de_confidentialité') }}">Politique de confidentialité</a></li>
+            <li class="liFooter"><a href="{{ path('newsletters') }}">Newsletters</a></li>#}
             <li class="liFooter">
                 <label>
                     <input required type="email" placeholder="Entrez votre email">

@@ -1,0 +1,38 @@
+{% extends ('guest/base.html.twig') %}
+
+{% block title %}Liste des Pièces | Utilisateur{% endblock title %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/guest/pieces/list-pieces.css') }}">
+{% endblock stylesheets %}
+
+    {% block main %}
+        <main id="mainListPieces">
+            <div class="container">
+                <h1 class="text-center mb-4">Liste des Pièces</h1>
+                <div class="pieces-list">
+                    {% include 'guest/pieces/search-results.html.twig' %}{# #}
+                </div>
+            </div>
+
+            {% if pieces is empty %}
+                <p>Aucune pièce trouvée.</p>
+            {% else %}
+        {% for piece in pieces %}
+            <div class="piece">
+                <h2>{{ piece.title }}</h2>
+                <p>{{ piece.description }}</p>
+                <p>Categorie: {{ piece.category.name }}</p>
+                <p>Created at: {{ piece.createdAt|date('Y-m-d H:i') }}</p>
+            {% if piece.image %}
+                <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce">
+            {% endif %}
+            <a href="{{ path('details-piece', {'id': piece.id}) }}">Voir les détails</a>
+        </div>
+        {% endfor %}
+            {% endif %}
+    </main>
+{% endblock main %}
+
+
+

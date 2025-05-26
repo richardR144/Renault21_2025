@@ -1,2 +1,22 @@
-{% extends ('guest/base.html.twig') %}
+{% extends 'guest/base.html.twig' %}
 
+{% block title %}Détail de la pièce{% endblock %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+<main id="mainDetailsPiece">
+    <div class="container">
+        <h1 class="text-center mb-4">{{ piece.title }}</h1>
+        {% if piece.image %}
+            <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="mb-3" width="300">
+        {% endif %}
+        <p><strong>Description :</strong> {{ piece.description }}</p>
+        <p><strong>Catégorie :</strong> {{ piece.category.name }}</p>
+        <p><strong>Créée le :</strong> {{ piece.createdAt|date('d/m/Y H:i') }}</p>
+        <a href="{{ path('guest-pieces-list-pieces') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    </div>
+</main>
+{% endblock %}
+
+{% include 'partial/_footer.html.twig' %}

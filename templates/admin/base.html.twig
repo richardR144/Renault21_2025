@@ -5,31 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block meta_description %}{% endblock %}">
     <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
-    <title>	{% block metatitle %}{% endblock %}</title>
+    <title>	
+    {% block metatitle %}Achat/Vente de pièces Renault 21 TD{% endblock %}
+    </title>
 </head>
 <body>
 
 <header>
-
-    <img src="">
-    <nav>
-
+    <div class="logo-header">
+        <img src="{{ asset('images/logoRenault.png') }}" alt="Logo Renault" />
+    <nav class="nav-admin-header">
         <ul>
             <li><a href="{{path('admin-create-piece')}}">Créer une pièce</a></li>
             <li><a href="{{path('admin-list-pieces')}}">Liste des pièces</a></li>
-            <li><a href="{{path('connexion')}}">Se connecter</a></li>
+            <li><a href="{{path('admin-create-category')}}">Créer une catégorie</a></li>
+            <li><a href="{{path('admin-list-categories')}}">Liste des catégories</a></li>
+            <li><a href="{{path('admin-create-message')}}">Créer un message</a></li>
+            <li><a href="{{path('admin-list-messages')}}">Liste des messages</a></li>
+            <li><a href="{{path('admin-create-pantheon')}}">Créer un pantheon</a></li>
+            <li><a href="{{path('admin-list-pantheon')}}">Liste des pantheons</a></li>
             <li><a href="{{path('admin-create-user')}}">Créer un user</a></li>
+            <li><a href="{{path('admin-list-users')}}">Liste des users</a></li>
+            <li><a href="{{path('admin-create-admin')}}">Créer un admin</a></li>
             <li><a href="{{path('admin-list-admins')}}">Liste des admins</a></li>
         </ul>
-        <p>Connecté en tant que </p>
-
+        
+        <a href="{{path('connexion')}}">Se connecter</a>
         <a href="{{ path('logout')}}">Se déconnecter</a>
 
     </nav>
 
 </header>
 
-{% for message in app.flashes('error', "Vous n'avez pas créer de message") %}
+{% for message in app.flashes('error') %}
 
     <div style="background-color: red;">
         <p>{{ message }} </p>
@@ -37,7 +45,7 @@
 
 {% endfor %}
 
-{% for message in app.flashes('success', "Vous avez créer un message") %}
+{% for message in app.flashes('success') %}
 
     <div style="background-color: green;">
         <p>{{ message }} </p>

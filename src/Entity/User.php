@@ -42,6 +42,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
+    /**
+     * @var Collection<int, Piece>
+     */
+    #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user')]
+    private Collection $piece;
+
+    public function __construct()
+    {
+        $this->piece = new ArrayCollection();
+    }
+
 
 
     public function createUser(string $pseudo, string $email, string $passwordHashed) {
@@ -134,6 +145,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piece>
+     */
+    public function getPiece(): Collection
+    {
+        return $this->piece;
+    }
+
+    public function addPiece(Piece $piece): static
+    {
+        if (!$this->piece->contains($piece)) {
+            $this->piece->add($piece);    
+        }
+
+        return $this;
+    }
+
+    public function removePiece(Piece $piece): static
+    {
+        $this->piece->removeElement($piece);
 
         return $this;
     }

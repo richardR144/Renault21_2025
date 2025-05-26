@@ -21,6 +21,7 @@ class AdminUserController extends AbstractController
         if ($request->isMethod('POST')) {                    // je vérifie que les données sont envoyés en POST
             $email = $request->request->get('email');       // je récupère l'email et le mot de passe envoyée par le formulaire
             $password = $request->request->get('password');
+            $role = $request->request->get('role', ['ROLE_USER']); 
 
             $user = new User();
 
@@ -28,7 +29,7 @@ class AdminUserController extends AbstractController
 
 
             //Méthode 2
-            $user->createUser($email, $passwordHashed);
+            $user->createUser($email, $passwordHashed, $role); // Utilise une méthode personnalisée pour initialiser l'utilisateur
             // Utilise une méthode personnalisée pour initialiser l'admin
 
             try {

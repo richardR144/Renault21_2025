@@ -1,0 +1,23 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block title %}Supprimer la pièce{% endblock %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+<main id="mainDeletePiece">
+    <div class="container">
+        <h1 class="text-center mb-4">Supprimer la pièce</h1>
+        <p>Voulez-vous vraiment supprimer la pièce <strong>{{ piece.title }}</strong> ?</p>
+        {% if piece.image %}
+            <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce">
+        {% endif %}
+        <form method="post">
+            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+            <a href="{{ path('guest-pieces-list-pieces') }}" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</main>
+{% endblock main %}
+
+{% include 'partial/_footer.html.twig' %}

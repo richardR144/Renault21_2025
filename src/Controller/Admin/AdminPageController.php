@@ -15,14 +15,17 @@ class AdminPageController extends AbstractController
 
         return new Response($html, '404');
     }
+
     #[Route('/admin/user-inscription', 'user-inscription')]
     public function displayUserInscription() {
         return $this->render('guest/user-inscription.html.twig');
     }
+
     #[Route('/admin/user-connexion', 'user-connexion')]
     public function displayUserConnexion(){
         return $this->render('guest/user-connexion.html.twig');
     }
+    
     #[Route('/admin/list-pieces', 'list-pieces')]
     public function displayListPiece() {
         return $this->render('admin/list-pieces.html.twig');
