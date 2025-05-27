@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block metatitle %}Liste des annonces | Renault 21 TD{% endblock %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+
+
+    <h1>Liste des annonces</h1>
+    <div class="annonces-list">
+        {% for annonce in annonces %}
+            <div class="annonce-card">
+                <h2>{{ annonce.title }}</h2>
+                <p><strong>Prix :</strong> {{ annonce.price }} €</p>
+                <p><strong>Description :</strong> {{ annonce.description|length > 100 ? annonce.description|slice(0, 100) ~ '...' : annonce.description }}</p>
+                {% if annonce.image %}
+                    <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" style="max-width:200px;">
+                {% endif %}
+                <a href="{{ path('guest/annonce-show', {id: annonce.id}) }}" class="btn btn-primary">Voir l'annonce</a>
+                <a href="{{ path('guest/annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer</a>
+            </div>
+        {% else %}
+            <p>Aucune annonce trouvée.</p>
+        {% endfor %}
+    </div>
+
+{% endblock main %}
+{% include 'partial/_footer.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/scripts.js') }}"></script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
+{% endblock stylesheets %}
+

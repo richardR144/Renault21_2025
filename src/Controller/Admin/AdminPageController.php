@@ -5,11 +5,13 @@ namespace App\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class AdminPageController extends AbstractController
 {
     #[Route('/admin/404', name: 'admin_404')]
-    public function displayAdmin404(): Response
+    public function admin404(): Response
     {
         $html = $this->renderView('admin/404.html.twig');
 
@@ -17,12 +19,12 @@ class AdminPageController extends AbstractController
     }
 
     #[Route('/admin/user-inscription', 'user-inscription')]
-    public function displayUserInscription() {
+    public function userInscription() {
         return $this->render('guest/user-inscription.html.twig');
     }
 
     #[Route('/admin/user-connexion', 'user-connexion')]
-    public function displayUserConnexion(){
+    public function userConnexion(){
         return $this->render('guest/user-connexion.html.twig');
     }
     
@@ -32,17 +34,19 @@ class AdminPageController extends AbstractController
     }
 
     #[Route('admin/details-piece', 'details-piece')]
-    public function displayDetailsPiece() {
+    public function detailsPiece() {
         return $this->render('admin/details-piece.html.twig');
     }
+    
     #[Route('/admin/list-category', 'list-category')]
-    public function displayListCategory() {
+    public function listCategory() {
         return $this->render('guest/accueil.html.twig');
     }
-    /*#[Route('admin/details-category', 'details-category')]
-    public function displayDetailsCategory() {
+
+    #[Route('admin/details-category', 'details-category')]
+    public function detailsCategory() {
         return $this->render('admin/details-category.html.twig');
-    }*/
+    }
 
 
 }

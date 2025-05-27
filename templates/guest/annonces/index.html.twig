@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/annonces.css') }}">
+{% endblock stylesheets %}
+
+{% block metatitle %}Annonces de Pièces Renault 21 TD | Annonces{% endblock metatitle %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+    <h1>Bienvenue sur le site d'annonces de pièces pour Renault 21 TD</h1>
+    <p>Vous pouvez consulter les annonces ci-dessous pour acheter ou échanger des pièces.</p>
+
+    {% if annonces is empty %}
+        <p>Aucune annonce disponible pour le moment.</p>
+    {% else %}
+        <ul>
+            {% for annonce in annonces %}
+                <li>
+                    <strong>{{ annonce.description }}</strong> - {{ annonce.description }}
+                    <br>
+                    <em>Publié le {{ annonce.created_at|date('d/m/Y') }}</em>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock main %}
+
+{% include 'partial/_footer.html.twig' %}
+
+
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/annonces.js') }}"></script>
+{% endblock javascripts %}

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block metatitle %}Annonces de Pièces | Renault 21 TD | Montrer l'annonce{% endblock metatitle %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+
+    <div class="annonce-detail">
+        <h1>{{ annonce.title }}</h1>
+        <p><strong>Description :</strong> {{ annonce.description }}</p>
+        <p><strong>Prix :</strong> {{ annonce.price }} €</p>
+        <p><strong>Contact :</strong> {{ annonce.contact }}</p>
+        {% if annonce.image %}
+            <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" class="img-fluid" style="max-width:400px;">
+        {% endif %}
+    </div> 
+    <div class="actions">
+        <a href="{{ path('guest/annonces/update', {id: annonce.id}) }}" class="btn btn-primary">Modifier l'annonce</a>
+        <a href="{{ path('guest/annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer l'annonce</a>
+        <a href="{{ path('guest/annonces') }}" class="btn btn-secondary">Retour à la liste des annonces</a>
+    </div>
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+    {% endif %}
+
+    {% if not annonce %}
+        <div class="alert alert-warning">
+            Aucune annonce trouvée.
+        </div>
+    {% endif %}      
+
+
+{% endblock main %}
+
+{% include 'partial/_footer.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/scripts.js') }}"></script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
+{% endblock stylesheets %}

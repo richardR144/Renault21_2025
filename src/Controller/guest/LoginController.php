@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LoginController extends AbstractController
 {
     #[Route('/connexion', name: "connexion", methods: ['GET', 'POST'])]
-    public function displayConnexion(AuthenticationUtils $authenticationUtils): Response {
+    public function connexionUser(AuthenticationUtils $authenticationUtils): Response {
     $currentUser = $this->getUser();
         if(null !== $currentUser && $currentUser->getRoles() !== ['ROLE_USER']) {
             // Si l'utilisateur est déjà connecté, redirige vers la page d'accueil

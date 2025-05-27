@@ -12,12 +12,14 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class AdminPieceController extends AbstractController
 {
     #[Route('/admin/create-piece', name: 'admin-create-piece', methods: ['GET', 'POST'])]
-    public function displayCreatePiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager, \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag): Response
+    public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager, \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag): Response
     {
 
         if ($request->isMethod('POST')) {
@@ -25,6 +27,7 @@ class AdminPieceController extends AbstractController
             $description = $request->request->get('description');
             $price = $request->request->get('price');
             $userId = $request->request->get(key: 'userId');
+            $image = $request->files->get('image'); 
             $categoryId = $request->request->get('category-id');
 
             $piece = new Piece();
@@ -55,7 +58,7 @@ class AdminPieceController extends AbstractController
         ]);
     }
     #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET', 'POST'])]
-    public function displayListPieces(PieceRepository $pieceRepository): Response {
+    public function listPieces(PieceRepository $pieceRepository): Response {
         $piece = $pieceRepository->findAll();
 
         return $this->render('admin/pieces/list-pieces.html.twig', [
@@ -89,7 +92,7 @@ class AdminPieceController extends AbstractController
     }
 
     #[Route('/admin/update-piece/{id}', name: 'admin-update-piece', methods: ['GET', 'POST'])]
-    public function displayUpdatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
+    public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
 
         $piece = $pieceRepository->find($id);
 

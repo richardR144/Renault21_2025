@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block metatitle %}Modifier l'annonce | Renault 21 TD{% endblock %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+    <h1>Modifier l'annonce</h1>
+    <form action="{{ path('annonce_update', {id: annonce.id}) }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Titre de l'annonce</label>
+            <input type="text" id="title" name="title" class="form-control" required value="{{ annonce.title }}">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" rows="5" required>{{ annonce.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Prix (en €)</label>
+            <input type="number" id="price" name="price" class="form-control" step="0.01" required value="{{ annonce.price }}">
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact (email)</label>
+            <input type="text" id="contact" name="contact" class="form-control" required value="{{ annonce.contact }}">
+        </div>
+        <div class="form-group">
+            <label for="image">Image de l'annonce</label>
+            <input type="file" id="image" name="image" class="form-control-file">
+            {% if annonce.image %}
+                <p>Image actuelle :</p>
+                <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image actuelle" style="max-width:200px;">
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    </form>
+{% endblock main %}
+
+{% include 'partial/_footer.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/scripts.js') }}"></script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
+{% endblock stylesheets %}

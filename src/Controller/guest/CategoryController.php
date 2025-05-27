@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController {
     #[Route('/list-categories', name:'list-categories', methods: ['GET'])]
-    public function displayListCategories(CategoryRepository $categoryRepository): Response {
+    public function listCategories(CategoryRepository $categoryRepository): Response {
 
         $categories = $categoryRepository->findAll();  // la méthode findAll() permet de récupérer toutes les catégories
 
@@ -19,7 +19,7 @@ class CategoryController extends AbstractController {
 
 
     #[Route('/details-category/{id}', name:'details-category', methods: ['GET'])]
-    public function displayDetailsCategory(CategoryRepository $categoryRepository, int $id): Response {
+    public function detailsCategory(CategoryRepository $categoryRepository, int $id): Response {
 
         $category = $categoryRepository->find($id);
 

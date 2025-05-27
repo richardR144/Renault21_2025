@@ -109,7 +109,7 @@ class PieceController extends AbstractController {
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
                 $imageFile->move(
-                $this->getParameter('pieces_images_directory'), // à définir dans services.yaml
+                $this->getParameter('pieces-images-directory'), // à définir dans services.yaml
                 $newFilename);
                 // Vérifie si une image précédente existe et la supprime si nécessaire
                 $piece->setImage($newFilename); // Stocke le nom du fichier dans l'entité
@@ -192,7 +192,7 @@ class PieceController extends AbstractController {
 
 
     #[Route(path: '/guest/pieces/results-recherche', name:'search-results', methods: ['GET'])]
-    public function displayResultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response
+    public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response
     {
         $search = $request->query->get('search');
 

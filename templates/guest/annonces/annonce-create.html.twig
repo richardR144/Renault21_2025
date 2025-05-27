@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block metatitle %}Annonces de Pièces Renault 21 TD | Création d'annonce{% endblock metatitle %}
+
+{% include 'partial/_header.html.twig' %}
+
+{% block main %}
+
+    <form action="{{ path('annonce-create') }}" method="post">
+        <div class="form-group">
+            <label for="title">Titre de l'annonce</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Prix (en €)</label>
+            <input type="number" id="price" name="price" class="form-control" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact (email)</label>
+            <input type="text" id="contact" name="contact" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="image">Image de l'annonce (obligatoire)</label>
+            <input type="file" id="image" name="image" class="form-control-file">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer l'annonce</button>
+    </form>
+
+        
+
+    
+{% endblock main %}
+
+{% include 'partial/_footer.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/scripts.js') }}"></script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
+{% endblock stylesheets %}

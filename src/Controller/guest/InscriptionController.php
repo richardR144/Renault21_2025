@@ -16,7 +16,7 @@ namespace App\Controller\guest;
     class InscriptionController extends AbstractController
     {
         #[Route('/inscription', name: "inscription", methods: ['GET', 'POST'])]
-        public function displayInscription(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+        public function inscriptionUser(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
         {
             if ($request->isMethod('POST')) {// je vérifie que les données sont envoyés en POST
                 

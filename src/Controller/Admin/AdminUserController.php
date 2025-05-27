@@ -10,12 +10,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
+#[IsGranted('ROLE_ADMIN')]
 class AdminUserController extends AbstractController
 {
     #[Route(path: '/admin/create-user', name: 'admin-create-user', methods: ['GET', 'POST'])]
-    public function displayCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function createUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
 
         if ($request->isMethod('POST')) {                    // je vérifie que les données sont envoyés en POST
@@ -56,7 +58,7 @@ class AdminUserController extends AbstractController
     }
 
     #[Route(path: '/admin/list-admins', name: 'admin-list-admins', methods: ['GET'])]
-    public function displayListAdmins(UserRepository $userRepository): Response
+    public function listAdmins(UserRepository $userRepository): Response
     {
 
         $users = $userRepository->findAll();
@@ -65,4 +67,27 @@ class AdminUserController extends AbstractController
             'users' => $users
         ]);
     }
+
+    #[Route(path: '/admin/delete-user/{id}', name: 'admin-delete-user', methods: ['GET'])]
+    public function deleteUser(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    {
+        try {
+            $user = $userRepository->find($id);
+
+            if (!$user) {
+                throw new Exception('Utilisateur non trouvé');
+            }
+
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur supprimé !');
+
+        } catch (Exception $exception) {
+            $this->addFlash('error', 'Impossible de supprimer l\'utilisateur');
+        }
+
+        return $this->redirectToRoute('admin-list-admins');
+    }
+
 }

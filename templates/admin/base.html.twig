@@ -6,7 +6,7 @@
     <meta name="description" content="{% block meta_description %}{% endblock %}">
     <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}">
     <title>	
-    {% block metatitle %}Achat/Vente de pièces Renault 21 TD{% endblock %}
+    {% block metatitle %}Site d'annonce de pièces Renault 21 TD{% endblock %}
     </title>
 </head>
 <body>
@@ -18,16 +18,16 @@
         <ul>
             <li><a href="{{path('admin-create-piece')}}">Créer une pièce</a></li>
             <li><a href="{{path('admin-list-pieces')}}">Liste des pièces</a></li>
-            <li><a href="{{path('admin-create-category')}}">Créer une catégorie</a></li>
-            <li><a href="{{path('admin-list-categories')}}">Liste des catégories</a></li>
-            <li><a href="{{path('admin-create-message')}}">Créer un message</a></li>
-            <li><a href="{{path('admin-list-messages')}}">Liste des messages</a></li>
-            <li><a href="{{path('admin-create-pantheon')}}">Créer un pantheon</a></li>
-            <li><a href="{{path('admin-list-pantheon')}}">Liste des pantheons</a></li>
+          {#<li><a href="{{path('admin-create-category')}}">Créer une catégorie</a></li>
+            <li><a href="{{path('admin-list-categories')}}">Liste des catégories</a></li>#}
+            <li><a href="{{path('admin-annonce-create')}}">Créer une annonce</a></li>
+            <li><a href="{{path('admin-annonce-list')}}">Liste des annonces</a></li>
+           {#<li><a href="{{path('admin-create-pantheon')}}">Créer un pantheon</a></li>
+            <li><a href="{{path('admin-list-pantheon')}}">Liste des pantheons</a></li>#}
             <li><a href="{{path('admin-create-user')}}">Créer un user</a></li>
             <li><a href="{{path('admin-list-users')}}">Liste des users</a></li>
-            <li><a href="{{path('admin-create-admin')}}">Créer un admin</a></li>
-            <li><a href="{{path('admin-list-admins')}}">Liste des admins</a></li>
+            {#<li><a href="{{path('admin-create-admin')}}">Créer un admin</a></li>
+            <li><a href="{{path('admin-list-admins')}}">Liste des admins</a></li>#}
         </ul>
         
         <a href="{{path('connexion')}}">Se connecter</a>
