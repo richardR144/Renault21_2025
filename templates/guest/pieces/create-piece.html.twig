@@ -29,6 +29,13 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="form-group">
+                <label>Type d'annonce :</label><br>
+                <input type="checkbox" id="vente" name="type[]" value="vente">
+                <label for="vente">Vente</label>
+                <input type="checkbox" id="echange" name="type[]" value="echange">
+                <label for="echange">Échange</label>
+            </div>
             <div class="mb-3">
                 <label for="title" class="form-label">Nom de la pièce</label>
                 <input type="text" class="form-control" id="title" name="title" required>

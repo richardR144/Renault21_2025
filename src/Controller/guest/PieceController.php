@@ -22,7 +22,14 @@ class PieceController extends AbstractController {
     public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $parameterBag): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-         $categories = $categoryRepository->findAll();
+        
+        
+        $piece = $request->request->get('piece'); // Récupère les données de la pièce depuis le formulaire
+        $user = $this->getUser(); 
+        //$type = $request->request->get('type', []); // Récupère le type de la pièce depuis le formulaire
+        $categories = $categoryRepository->findAll();
+
+        $piece = new Piece();
 
     if ($request->isMethod('POST')) {
         $title = $request->request->get('title');
@@ -91,16 +98,14 @@ class PieceController extends AbstractController {
             }
 
         if ($request->isMethod('POST')) {
-
+            // Récupération des données du formulaire
             $title = $request->request->get('title');
             $description = $request->request->get('description');
-            $exchange = $request->request->get('exchange');
+            $email = $request->request->get('email');   // Bien que l'email ne soit pas utilisé dans l'entité Piece, il est récupéré ici
+            $exchange = $request->request->get('exchange'); // Récupération de l'option d'échange
             $price = $request->request->get('price');
             $categoryId = $request->request->get('category-id');
             $userId = $request->request->get('userId');
-            $imageFile = $request->files->get('image');
-
-
             $imageFile = $request->files->get('image');
             $category = $categoryRepository->find($categoryId);
             $user = $userRepository->find($userId); //association de l'utilisateur à la pièce
@@ -108,9 +113,7 @@ class PieceController extends AbstractController {
 
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                $imageFile->move(
-                $this->getParameter('pieces-images-directory'), // à définir dans services.yaml
-                $newFilename);
+                $imageFile->move($this->getParameter('pieces-images-directory'), $newFilename);
                 // Vérifie si une image précédente existe et la supprime si nécessaire
                 $piece->setImage($newFilename); // Stocke le nom du fichier dans l'entité
     }
@@ -118,9 +121,6 @@ class PieceController extends AbstractController {
             if ($user) {
                 $piece->setUser($user);
             } 
-
-
-            // méthode 2 : modifier les données d'une piece avec une fonction update dans l'entité
 
             try {
                 $piece->update($title, $description, $exchange, $price, $category);

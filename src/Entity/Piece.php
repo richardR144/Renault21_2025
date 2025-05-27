@@ -49,7 +49,8 @@ class Piece
     #[ORM\Column (nullable: true)]
     private ?\DateTime $created_at = null;
 
-
+    //#[ORM\Column(type: 'json')] case à coucher échange ou vente
+    //private array $type = [];
 
     public function getId(): ?int
     {

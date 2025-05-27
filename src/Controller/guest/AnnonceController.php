@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
+
+
+
 class AnnonceController extends AbstractController
 {
     #[Route('/guest/annonces', name: 'guest-annonces')]
@@ -51,7 +54,7 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/annonces/{annonce}/update', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
+    #[Route('/guest/annonces/{piece}/update', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
     public function update(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(Annonce::class, $annonce);
@@ -69,16 +72,8 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/annonces/{annonce}/deleteAnnonce', name: 'guest-annonces-delete', methods: ['POST'])]
-    public function deleteAnnonce(Annonce $annonce, EntityManagerInterface $entityManager): Response
-    {
-        $entityManager->remove($annonce);
-        $entityManager->flush();
 
-        return $this->redirectToRoute('guest/annonces');
-    }
-
-    #[Route('/guest/annonces/{annonce}/delete-confirm', name: 'guest/annonces/delete-confirm', methods: ['GET'])]
+    #[Route('/guest/annonces/{piece}/delete-confirm', name: 'guest/annonces/delete-confirm', methods: ['GET'])]
     public function deleteConfirm(Annonce $annonce): Response
 {
         return $this->render('guest/annonces/annonce-delete-confirm.html.twig', [
@@ -86,24 +81,8 @@ class AnnonceController extends AbstractController
     ]);
 }
 
-    #[Route('/guest/annonces/update/{id}', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
-    public function updateAnnonce(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(Annonce::class, $annonce);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('guest/annonces');
-        }
-
-        return $this->render('guest/annonces/annonce-update.html.twig', [
-            'form' => $form->createView(),
-            'annonce' => $annonce,
-        ]);
-    }
-
+    
+    #[Route('/guest/annonces/list', name: 'guest-annonces-list', methods: ['GET'])]
     public function listAnnonces(AnnonceRepository $annonceRepository): Response
     {
         $annonces = $annonceRepository->findAll();
