@@ -39,10 +39,10 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/annonces/{id}', name: 'guest-annonces-show', methods: ['GET'])]
-    public function show(int $id, AnnonceRepository $annonceRepository): Response
+    #[Route('/guest/annonces/{piece}', name: 'guest-annonces-show', methods: ['GET'])]
+    public function show(string $piece, AnnonceRepository $annonceRepository): Response
     {
-        $annonce = $annonceRepository->find($id);
+        $annonce = $annonceRepository->find($piece);
         if (!$annonce) {
             throw $this->createNotFoundException('Annonce non trouvée');
         }
@@ -51,7 +51,7 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/annonces/{id}/update', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
+    #[Route('/guest/annonces/{annonce}/update', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
     public function update(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(Annonce::class, $annonce);
@@ -69,7 +69,7 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/annonces/{id}/deleteAnnonce', name: 'guest-annonces-delete', methods: ['POST'])]
+    #[Route('/guest/annonces/{annonce}/deleteAnnonce', name: 'guest-annonces-delete', methods: ['POST'])]
     public function deleteAnnonce(Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($annonce);
@@ -78,7 +78,7 @@ class AnnonceController extends AbstractController
         return $this->redirectToRoute('guest/annonces');
     }
 
-    #[Route('/guest/annonces/{id}/delete-confirm', name: 'guest/annonces/delete-confirm', methods: ['GET'])]
+    #[Route('/guest/annonces/{annonce}/delete-confirm', name: 'guest/annonces/delete-confirm', methods: ['GET'])]
     public function deleteConfirm(Annonce $annonce): Response
 {
         return $this->render('guest/annonces/annonce-delete-confirm.html.twig', [
