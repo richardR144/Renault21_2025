@@ -57,6 +57,8 @@ class AdminPieceController extends AbstractController
             'category' => $category,
         ]);
     }
+
+    
     #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET', 'POST'])]
     public function listPieces(PieceRepository $pieceRepository): Response {
         $piece = $pieceRepository->findAll();

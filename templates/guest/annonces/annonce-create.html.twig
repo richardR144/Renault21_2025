@@ -8,6 +8,13 @@
 
     <form action="{{ path('annonce-create') }}" method="post">
         <div class="form-group">
+                <label>Type d'annonce :</label><br>
+                <input type="checkbox" id="vente" name="type[]" value="vente">
+                <label for="vente">Vente</label>
+                <input type="checkbox" id="echange" name="type[]" value="echange">
+                <label for="echange">Échange</label>
+            </div>
+        <div class="form-group">
             <label for="title">Titre de l'annonce</label>
             <input type="text" id="title" name="title" class="form-control" required>
         </div>
@@ -31,8 +38,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Créer l'annonce</button>
-    </form>
-
+   
+    
+ </form>
         
 
     
@@ -41,7 +49,7 @@
 {% include 'partial/_footer.html.twig' %}
 
 {% block javascripts %}
-    <script src="{{ asset('asset/js/scripts.js') }}"></script>
+    <script src="{{ asset('asset/js/styles.js') }}"></script>
 {% endblock javascripts %}
 
 {% block stylesheets %}

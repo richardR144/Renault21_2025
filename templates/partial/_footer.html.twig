@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Site d\' echange{% endblock %}">
-    <meta name="author" content="Richard"/>
-    <title>	{% block metatitle %}Achat_de_piecesR21_td{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
-          {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
-</head>
-<body>
-{% block main %}
-{% endblock main %}
+{% extends 'base.html.twig' %}
+
+
+{% block main %}{% endblock main %}
+
+{% block footer %}
 
 <footer>
     <nav class="navFooter">
@@ -30,5 +22,4 @@
         </ul>
     </nav>
 </footer>
-</body>
-</html>
+{% endblock footer %}

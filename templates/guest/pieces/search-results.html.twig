@@ -1,0 +1,49 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block title %}Résultats de la recherche | Guest Renault 21 TD{% endblock title %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/search-results.css') }}">
+{% endblock stylesheets %}
+
+
+
+
+
+{% block main %}
+
+    <div class="search-form">
+        <form action="{{ path('search-results') }}" method="get">
+            <input type="search" name="q" placeholder="Rechercher une pièce..." required>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+
+   {% if pieces is not empty %}
+    <ul>
+        {% for piece in pieces %}
+            <li>
+                <strong>{{ piece.name }}</strong> - {{ piece.price }} €
+                <br>
+                {{ piece.description ~ (piece.description ? '...' : '') }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucun résultat trouvé.</p>
+{% endif %}
+
+    {% for message in app.flashes('info') %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+{% endblock main %}
+
+
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/search-results.js') }}"></script>
+{% endblock javascripts %}
+

@@ -49,7 +49,7 @@ class Piece
     #[ORM\Column (nullable: true)]
     private ?\DateTime $created_at = null;
 
-    //#[ORM\Column(type: 'json')] case à coucher échange ou vente
+    //#[ORM\Column(type: 'json')] case à cocher échange ou vente
     //private array $type = [];
 
     public function getId(): ?int
@@ -161,7 +161,7 @@ class Piece
     public function removeAnnonce(Annonce $annonce): static
     {
         if ($this->annonces->removeElement($annonce)) {
-            // set the owning side to null (unless already changed)
+            
             if ($annonce->getSender() === $this) {
                 $annonce->setSender(null);
             }

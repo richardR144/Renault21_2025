@@ -55,7 +55,7 @@ class AdminAnnonceController extends AbstractController
             //je fais ici le traitement de l'image
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                $imageFile->move($this->getParameter('annonces-images-directory'), $newFilename);
+                $imageFile->move($this->getParameter('annonces_images_directory'), $newFilename);
                 $annonce->setImage($newFilename);
             }
 

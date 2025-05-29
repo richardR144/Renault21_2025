@@ -7,7 +7,7 @@
 {% block main %}
 <main id="mainDetailsPiece">
     <div class="container">
-        <h1 class="text-center mb-4">{{ piece.title }}</h1>
+        <h1 class="text-center mb-4">{{ piece.name }}</h1>
         {% if piece.image %}
             <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="mb-3" width="300">
         {% endif %}

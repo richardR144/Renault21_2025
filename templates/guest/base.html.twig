@@ -26,18 +26,20 @@
                 </ul>
             </div>
                 <ul class="ulHeader">
+                    <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
+                    {#<li class="liHeader"><a href="{{ path('user-profil') }}">Profil</a></li>#}
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
-                    {#<li class="liHeader"><a href="{{ path('messages') }}">Messages</a></li>#}
+                    {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
                     <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste de pièces</a></li>
                     
                     <li class="bouton-header">
                     {% if app.user %}
                         <button type="button" class="btn btn-primary">
-                            <a href="{{ path('logout') }}">Se déconnecter</a>
+                            <a href="{{ path('logout') }}">Se connecter</a>
                         </button>
                     {% else %}
                         <button type="button" class="btn btn-primary">
-                            <a href="{{ path('connexion') }}">Connexion</a>
+                            <a href="{{ path('connexion') }}">Se déconnecter</a>
                         </button>
                     {% endif %}
                     </li>

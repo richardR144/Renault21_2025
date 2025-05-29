@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\guest;
+namespace App\Controller\Guest;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +22,7 @@ class LoginController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
 
 
-        return $this->render('guest/user-connexion.html.twig', [
+        return $this->render('Guest/user-connexion.html.twig', [
             'error' => $error
             
         ]);

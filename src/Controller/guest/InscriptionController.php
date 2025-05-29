@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\guest;
+namespace App\Controller\Guest;
 
 
     use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +37,7 @@ namespace App\Controller\guest;
 
                 //Méthode 2
                 $user->createUser($pseudo, $email, $passwordHashed);
-                // Utilise une méthode personnalisée pour initialiser l'admin
+                // Utilise une méthode personnalisée pour initialiser l'utilisateur
 
                 try {   //exo 13, 14
                     $entityManager->persist($user);
@@ -60,7 +60,7 @@ namespace App\Controller\guest;
                 return $this->render('guest/user-inscription.html.twig');
             }
             // Affiche le formulaire de création si la méthode n'est pas POST
-            return $this->render('guest/user-inscription.html.twig');
+            return $this->render('Guest/user-inscription.html.twig');
         }
     }
 

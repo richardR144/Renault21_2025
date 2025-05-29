@@ -23,11 +23,11 @@ class InsertPieceForm extends AbstractType
             ->add('Price')
             ->add('user', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'email',
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
             ->add('valider', SubmitType::class)
         ;

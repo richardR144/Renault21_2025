@@ -14,47 +14,47 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AnnonceController extends AbstractController
 {
-    #[Route('/guest/annonces', name: 'guest-annonces')]
+    #[Route('/Guest/annonces', name: 'annonces')]
     public function annonceController(AnnonceRepository $annonceRepository): Response
     {
         $annonces = $annonceRepository->findAll();
-        return $this->render('guest/annonces/index.html.twig', [
+        return $this->render('Guest/annonces/index.html.twig', [
             'annonces' => $annonces,
         ]);
     }
 
-    #[Route('/guest/annonces/create', name: 'guest-annonces-create', methods: ['GET', 'POST'])]
+    #[Route('/Guest/annonces/create', name: 'annonce-create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $annonce = new Annonce();
         $form = $this->createForm(Annonce::class, $annonce);
 
-        $form->handleRequest($request);
+        $form->handleRequest($request); 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($annonce);
             $entityManager->flush();
 
-            return $this->redirectToRoute('guest/annonces');
+            return $this->redirectToRoute('Guest/annonces');
         }
 
-        return $this->render('guest/annonces/annonce-create.html.twig', [
+        return $this->render('Guest/annonces/annonce-create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/guest/annonces/{piece}', name: 'guest-annonces-show', methods: ['GET'])]
+    #[Route('/Guest/annonces/{piece}', name: 'annonce-show', methods: ['GET'])]
     public function show(string $piece, AnnonceRepository $annonceRepository): Response
     {
         $annonce = $annonceRepository->find($piece);
         if (!$annonce) {
             throw $this->createNotFoundException('Annonce non trouvée');
         }
-        return $this->render('guest/annonces/annonce-show.html.twig', [
+        return $this->render('Guest/annonces/annonce-show.html.twig', [
             'annonce' => $annonce,
         ]);
     }
 
-    #[Route('/guest/annonces/{piece}/update', name: 'guest-annonces-update', methods: ['GET', 'POST'])]
+    #[Route('/Guest/annonces/{piece}/update', name: 'annonce-update', methods: ['GET', 'POST'])]
     public function update(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(Annonce::class, $annonce);
@@ -63,30 +63,30 @@ class AnnonceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('guest/annonces');
+            return $this->redirectToRoute('Guest/annonces');
         }
 
-        return $this->render('guest/annonces/annonce-update.html.twig', [
+        return $this->render('Guest/annonces/annonce-update.html.twig', [
             'form' => $form->createView(),
             'annonce' => $annonce,
         ]);
     }
 
 
-    #[Route('/guest/annonces/{piece}/delete-confirm', name: 'guest/annonces/delete-confirm', methods: ['GET'])]
+    #[Route('/Guest/annonces/{piece}/delete-confirm', name: 'annonce-delete-confirm', methods: ['GET'])]
     public function deleteConfirm(Annonce $annonce): Response
 {
-        return $this->render('guest/annonces/annonce-delete-confirm.html.twig', [
+        return $this->render('Guest/annonces/annonce-delete-confirm.html.twig', [
             'annonce' => $annonce,
     ]);
 }
 
     
-    #[Route('/guest/annonces/list', name: 'guest-annonces-list', methods: ['GET'])]
+    #[Route('/Guest/annonces/list', name: 'annonce-list', methods: ['GET'])]
     public function listAnnonces(AnnonceRepository $annonceRepository): Response
     {
         $annonces = $annonceRepository->findAll();
-        return $this->render('guest/annonces/annonce-list.html.twig', [
+        return $this->render('Guest/annonces/annonce-list.html.twig', [
             'annonces' => $annonces,
         ]);
     }
