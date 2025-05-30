@@ -38,7 +38,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
         $piece->setUser($user);
 
         $imageFile = $form->get('image')->getData();
-        
+
         if ($imageFile) {
             $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFileName = $slugger->slug($originalFileName);
@@ -89,22 +89,24 @@ class PieceController extends AbstractController {  //AbstractController permet 
             $exchange = $request->request->get('exchange'); // Récupération de l'option d'échange
             $price = $request->request->get('price');
             $categoryId = $request->request->get('category-id');
-            $userId = $request->request->get('userId');
             $imageFile = $request->files->get('image');
             $category = $categoryRepository->find($categoryId);
-            $user = $userRepository->find($userId); //association de l'utilisateur à la pièce
-
-
+           
+           
+            $piece->setName($name);
+            $piece->setDescription($description);
+            $piece->setExchange($exchange);
+            $piece->setPrice($price);
+            $piece->setCategory($category);
+            $piece->setUser($this->getUser());
+    
+        
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
                 $imageFile->move($this->getParameter('pieces_images_directory'), $newFilename);
                 // Vérifie si une image précédente existe et la supprime si nécessaire
                 $piece->setImage($newFilename); // Stocke le nom du fichier dans l'entité
     }
-
-            if ($user) {
-                $piece->setUser($user);
-            } 
 
             try {
                 $piece->update($name, $description, $exchange, $price, $category);
@@ -118,17 +120,16 @@ class PieceController extends AbstractController {  //AbstractController permet 
             } catch (\Exception $exception) {
                 $this->addFlash('error', $exception->getMessage());
             }
+       
+        $categories = $categoryRepository->findAll();
         }
-                $categories = $categoryRepository->findAll();
-
         return $this->render('Guest/pieces/update-piece.html.twig', [
-            'categories' => $categories,
             'piece' => $piece
         ]);
     }
 
 
-    #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET'])]
+    #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET', 'POST'])]
     public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response {
 
         $this->denyAccessUnlessGranted('ROLE_USER');

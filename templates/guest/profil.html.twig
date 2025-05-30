@@ -4,19 +4,87 @@
 
 
 {% block main %}
+<!-- Page de profil utilisateur -->
+    <div style="
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;">
 
+    <!-- Image de fond -->
+    <div style="
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: url('{{ asset('images/r21 face route.webp') }}');
+        background-size: cover;
+        background-position: center;
+        z-index: 1;">
+    </div>
+    <div style="
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(144, 178, 250, 0.9); 
+        z-index: 2;">
+    </div>
+    <div style="position: relative; z-index: 3; padding: 2rem;">
     <h1>Bonjour {{ user.pseudo }}</h1>
 
     <p>Voici votre profil :</p>
     <ul>
-        <li><strong>Nom :</strong> {{ user.pseudo }}</li>
+        <li><strong>Pseudo :</strong> {{ user.pseudo }}</li>
         <li><strong>Email :</strong> {{ user.email }}</li>        
     </ul>
 
-    <div class="">
+    <div class="form-group">
+                <label>Type d'annonce :</label><br>
+                <input type="checkbox" id="vente" name="type[]" value="vente">
+                <label for="vente">Vente</label>
+                <input type="checkbox" id="echange" name="type[]" value="echange">
+                <label for="echange">Échange</label>
+            </div>
+
+    <div class="routeCreate-piece">
+        <h2>Créer une nouvelle pièce</h2>
         <a href="{{ path('create-piece') }}" class="btn btn-primary">Formulaire de création</a>
         </div>
 
-    
+    <div class="routeList-piece">
+        <h2>Liste des pièces</h2>
+        <a href="{{ path('list-pieces') }}" class="btn btn-primary">Voir les pièces</a>
+    </div>
 
+     {% for piece in user.piece %}
+    <div class="update-piece">
+    <span>{{ piece.name }}</span>
+        <h2>Modifier une pièce</h2>
+        <a href="{{ path('update-piece', {'id': piece.id}) }}" class="btn btn-primary">Modifier votre pièce</a>
+    </div>
+
+    {% endfor %}
+
+    {% for piece in user.piece %}
+    <div class="delete-piece">
+    <span>{{ piece.name }}</span>
+        <h2>Supprimer une pièce</h2>
+        <a href="{{ path('delete-piece', {'id': piece.id}) }}" class="btn btn-danger">Supprimer votre pièce</a>
+    </div>
+    {% endfor %} 
+
+{#A voir ?#}
+    {% if app.user %}
+        <div class="logout">
+            <a href="{{ path('logout') }}" class="btn btn-primary">Se déconnecter</a>
+        </div>
+    {% else %}
+        <div class="login">
+            <a href="{{ path('connexion') }}" class="btn btn-danger">Se connecter</a>
+        </div>
+        
+    {% endif %}
+</div>
+    </div>
+    
  {% endblock main %}
