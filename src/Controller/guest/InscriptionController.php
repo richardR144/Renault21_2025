@@ -20,26 +20,36 @@ namespace App\Controller\Guest;
         {
             if ($request->isMethod('POST')) {// je vérifie que les données sont envoyés en POST
                 
-                $pseudo = $request->request->get('pseudo');
+                
+                $pseudo = $request->request->get('pseudo'); // je récupère le pseudo, l'email et le mot de passe envoyée par le formulaire
                 $email = $request->request->get('email');       // je récupère l'email et le mot de passe envoyée par le formulaire
                 $password = $request->request->get('password');
                 $verifPassword = $request->request->get('verifPassword');
 
+              
+                
                 if ($password !== $verifPassword) { // je vérifie que le mot de passe et la vérification sont identiques
                     $this->addFlash('error', 'Les mots de passe ne correspondent pas.');
                     return $this->render('guest/user-inscription.html.twig');
                 }
+
+                if(!$password || !$email || !$pseudo) { // je vérifie que les champs ne sont pas vides
+                    $this->addFlash('error', 'Veuillez remplir tous les champs.');
+                    return $this->render('guest/user-inscription.html.twig');
+                }
+
+
 
                 $user = new User();  //je créais une nouvelle instance de l'entité user
 
                 $passwordHashed = $userPasswordHasher->hashPassword($user, $password);
                 //Hash le mot de passe avec le service de Symfony 
 
-                //Méthode 2
-                $user->createUser($pseudo, $email, $passwordHashed);
+               
+                $user->createUser($pseudo, $email, $passwordHashed, ['ROLE_USER']); // Provide the third argument as needed (e.g., roles or another required parameter)
                 // Utilise une méthode personnalisée pour initialiser l'utilisateur
 
-                try {   //exo 13, 14
+                try {   
                     $entityManager->persist($user);
                     $entityManager->flush();
 
@@ -49,25 +59,17 @@ namespace App\Controller\Guest;
 
                 } catch (Exception $exception) {
 
-                    $this->addFlash('error', 'Impossible de créer l\'admin');
+                    $this->addFlash('error', 'Impossible de créer l\'utilisateur');
 
                     // si l'erreur vient de la clé d'unicité, je créé un message flash ciblé
                     if ($exception->getCode() === '1062') {
-                        $this->addFlash('error', 'Email déjà pris.');
+                        $this->addFlash('error', 'Email déjà pris');
                     }
                 }
                 //Affiche le formulaire de création
                 return $this->render('guest/user-inscription.html.twig');
             }
             // Affiche le formulaire de création si la méthode n'est pas POST
-            return $this->render('Guest/user-inscription.html.twig');
+            return $this->render('guest/user-inscription.html.twig');
         }
     }
-
-
-
-
-    //Méthode 1
-                //$user->setPassword($passwordHashed);
-                //$user->setEmail($email);
-                //$user->setRoles(['ROLE_ADMIN']);

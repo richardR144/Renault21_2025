@@ -12,69 +12,53 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Piece;
-use \Exception;
+use App\Form\InsertPieceForm;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Repository\UserRepository;
+use App\Form\InsertPieceType;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PieceController extends AbstractController {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
     
-    #[Route('/Guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $parameterBag): Response       
+    #[Route('/guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
+    public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $params, SluggerInterface $slugger): Response       
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         
-        $piece = $request->request->get('piece'); // Récupère les données de la pièce depuis le formulaire
-        $user = $this->getUser(); 
-        $type = $request->request->get('type', []); // Récupère le type de la pièce depuis le formulaire
+        // Vérifie si l'utilisateur est connecté
+         $user = $this->getUser();
+    
         $categories = $categoryRepository->findAll();
-        
+        $params = $this->container->get('parameter_bag');
+        $piece = new Piece();
+        $form = $this->createForm(InsertPieceForm::class, $piece);
+        $form->handleRequest($request);
 
-        $piece = new Piece(); 
-
-    if ($request->isMethod('POST')) {
-        $title = $request->request->get('title');
-        $description = $request->request->get('description');
-        $price = $request->request->get('price');
-        $categoryId = $request->request->get('category-id');
-        $category = $categoryRepository->find($categoryId);
-        $userId = $request->request->get('userId');
-        $user = $userRepository->find($userId);
-        $imageFile = $request->files->get('image');
-
-
-
-    if (!$user) {
-        $this->addFlash('error', 'Utilisateur introuvable !!');
-        return $this->redirectToRoute('Guest-user-inscription.html.twig');
-     }
-
-    try {
-        $piece = new Piece($title, $description, $price, $category);
+   if ($form->isSubmitted() && $form->isValid()) {
         $piece->setUser($user);
 
+        $imageFile = $form->get('image')->getData();
+        
         if ($imageFile) {
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
-            $imageFile->move(
-                $this->getParameter('pieces_images_directory'), // à définir dans services.yaml
-                $newFilename
-            );
-            $piece->setImage($newFilename); // Stocke le nom du fichier dans l'entité
+            $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFileName = $slugger->slug($originalFileName);
+            $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
+            
+            $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+            $piece->setImage($newFileName);
         }
 
             $entityManager->persist($piece);
             $entityManager->flush();
 
             $this->addFlash('success', 'pièce créée avec succès !');
-            return $this->redirectToRoute('Guest-pieces-list-pieces');
-
-        } catch (\Exception $exception) {
-            $this->addFlash('error', $exception->getMessage());
+            return $this->redirectToRoute('list-pieces');
+    }
+            return $this->render('guest/pieces/insertPiece.html.twig', [
+               'insertPieceForm' => $form->createView(),
+            ]);
         }
-    }
-            return $this->render('Guest/pieces/create-piece.html.twig', [
-                'categories' => $categories
-    ]);
-    }
+    
 
 
     #[Route('/Guest/pieces/list-pieces', name:'list-pieces', methods: ['GET'])]
@@ -87,11 +71,11 @@ class PieceController extends AbstractController {  //AbstractController permet 
         ]);
     }
 
-    #[Route('/Guest/pieces/update-piece/{name}', name: 'update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(string $name, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
+    #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
+    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
         
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $piece = $pieceRepository->find($name);
+        $piece = $pieceRepository->find($id);
 
         if (!$piece) {
                 throw $this->createNotFoundException('Pièce non trouvée');
@@ -99,7 +83,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
 
         if ($request->isMethod('POST')) {
             // Récupération des données du formulaire
-            $title = $request->request->get('title');
+            $name = $request->request->get('name');
             $description = $request->request->get('description');
             $email = $request->request->get('email');   // Bien que l'email ne soit pas utilisé dans l'entité Piece, il est récupéré ici
             $exchange = $request->request->get('exchange'); // Récupération de l'option d'échange
@@ -123,7 +107,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
             } 
 
             try {
-                $piece->update($title, $description, $exchange, $price, $category);
+                $piece->update($name, $description, $exchange, $price, $category);
                 $piece->setImage($request->files->get('image')); // Mettre à jour l'image si elle est fournie
                 
                 /*$entityManager->persist($piece);*/ // Pas besoin de persist car l'entité est déjà gérée par Doctrine
@@ -144,11 +128,11 @@ class PieceController extends AbstractController {  //AbstractController permet 
     }
 
 
-    #[Route('/Guest/pieces/delete-piece/{name}', name:'delete-piece', methods: ['GET'])]
-    public function deletePiece(string $name, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response {
+    #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET'])]
+    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $piece = $pieceRepository->find($name);
+        $piece = $pieceRepository->find($id);
         // Si le produit n'existe pas, redirige vers la page 404 ou affiche un message d'erreur de Symfony
         if(!$piece) {
             throw $this->createNotFoundException('Pièce non supprimée, elle n\'existe pas');
@@ -163,36 +147,36 @@ class PieceController extends AbstractController {  //AbstractController permet 
             // Ajoute un message flash de succès
             $this->addFlash('success', 'Piece supprimée !');
 
-        } catch(Exception $exception) {
+        } catch (\Exception $exception) {
             // En cas d'erreur, ajoute un message flash d'erreur
             $this->addFlash('error', 'Impossible de supprimer le piece');
         }
 
-        return $this->redirectToRoute('Guest-pieces-list-pieces');
+        return $this->redirectToRoute('list-pieces');
     }
         // Sinon, on affiche la page de confirmation
-        return $this->render('Guest/pieces/delete-piece.html.twig', [
+        return $this->render('guest/pieces/delete-piece.html.twig', [
         'piece' => $piece
         ]);
     }
 
-    #[Route('/Guest/pieces/details-piece/{name}', name:'details-piece', methods: ['GET'])]
-    public function detailsPiece(PieceRepository $pieceRepository, string $name): Response {
+    #[Route('/Guest/pieces/details-piece/{id}', name:'details-piece', methods: ['GET'])]
+    public function detailsPiece(PieceRepository $pieceRepository, int $id): Response {
 
-        $piece = $pieceRepository->find($name);
+        $piece = $pieceRepository->find($id);
 
         if(!$piece) {
             throw $this->createNotFoundException('Pièce non trouvée');
         }
 
         return $this->render('guest/pieces/details-piece.html.twig', [
-            'piece' => $piece
+            'piece' => $piece,
         ]);
     }
 
 
     #[Route('/Guest/pieces/search-results', name:'search-results', methods: ['GET'])]
-public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response
+    public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response
 {
     $query = $request->query->get('q', '');
     $pieces = [];

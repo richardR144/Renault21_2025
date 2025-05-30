@@ -1,0 +1,22 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block metatitle %}Profile{% endblock metatitle %}
+
+
+{% block main %}
+
+    <h1>Bonjour {{ user.pseudo }}</h1>
+
+    <p>Voici votre profil :</p>
+    <ul>
+        <li><strong>Nom :</strong> {{ user.pseudo }}</li>
+        <li><strong>Email :</strong> {{ user.email }}</li>        
+    </ul>
+
+    <div class="">
+        <a href="{{ path('create-piece') }}" class="btn btn-primary">Formulaire de création</a>
+        </div>
+
+    
+
+ {% endblock main %}

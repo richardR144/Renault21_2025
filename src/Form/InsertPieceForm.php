@@ -10,21 +10,23 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class InsertPieceForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Name')
-            ->add('Image')
-            ->add('Description')
-            ->add('Exchange')
-            ->add('Price')
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email',
+            ->add('name')
+            ->add('image', FileType::class, [
+                'label' => 'Image (JPG, PNG file, JPEG, GIF, webp)',
+                'mapped' => false,
+                'required' => false,
             ])
+
+            ->add('description')
+            ->add('exchange')
+            ->add('price')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
