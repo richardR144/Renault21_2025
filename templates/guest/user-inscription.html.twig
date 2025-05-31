@@ -12,10 +12,12 @@
             <section class="article">
                 <!-- Contenu des pilules -->
                 <div class="tab-content">
-                    <div class="tab-pane fade show active"
+                {# contenu d'onglets, ajoute un effet de transition, 
+                    onglet affiché dans bootstrap#}
+                    <div class="tab-pane fade show active" 
                          id="pills-login"
-                         role="tabpanel"
-                         aria-labelledby="tab-login">
+                         role="tabpanel" {# ce block est le contenu d'un onglet #}
+                         aria-labelledby="tab-login">{# ça contrôle l'onglet qui est relié à un bouton ou un lien#}
                 <form method="post">
                     <div class="text-center mb-3">
                         <p>Se connecter avec:</p>
@@ -59,7 +61,7 @@
                                 <label class="form-label" for="verifPassword">Répétez le mot de passe</label>
                                 </div>
 
-                                <!-- 2 column grid layout -->
+                                <!--Grid row-->
                                 <div class="row mb-4">
                                     <div class="col-md-6 d-flex justify-content-center">
                                         <!-- Checkbox -->
@@ -78,7 +80,7 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Vous nêtes pas encore membre ? <a href="#">S'inscrire</a></p>
+                                    <p>Vous n'êtes pas encore membre ? <buton type="submit" class="btn btn-primary btn-block mb-1"><a href="#">S'inscrire</a></buton></p>
                                 </div>
                             </form>
                         </div>

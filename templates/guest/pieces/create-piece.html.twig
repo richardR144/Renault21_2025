@@ -38,7 +38,7 @@
             </div>
             <div class="mb-3">
                 <label for="title" class="form-label">Nom de la pièce</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+                <input type="text" class="form-control" id="title" name="name" required>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -48,15 +48,17 @@
                 <label for="image" class="form-label">Image de la pièce</label>
                 <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png">
             </div>
+            <div class="mb-3">
+                <label for="createdAt" class="form-label">Créer le :</label>
+                <input type="date" class="form-control" id="createdAt" name="createAt" accept=".jpg, .jpeg, .png">
+            </div>
             <button type="submit" class="btn btn-primary">Créer la pièce</button>
-            <a href="{{ path('guest-pieces-list-pieces') }}" class="btn btn-secondary mt-3">Annuler</a>
+            <a href="{{ path('list-pieces') }}" class="btn btn-secondary mt-3">Annuler</a>
         </form>
     </div>
 </main>
 {% endblock main %}
 
-{% block javascripts %}
-    <script src="{{ asset('asset('') }}"></script>
-{% endblock javascripts %}
+
 
 {% include 'partial/_footer.html.twig' %}

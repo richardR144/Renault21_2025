@@ -14,15 +14,14 @@
 /*---------------HEADER Accueil/guest/base-----------------*/
 header, footer{
     display: flex;
-    width: 100%;
-    height: 12vh;
+    width: 100%;  
 }
 
 .navHeader, .navFooter {
     display: flex;
     justify-content: space-between;
-    background-color: #1C1C1C;
-    height: 10vh;
+    background-color: rgb(28, 28, 28);
+    height: 12vh;
 }
 
 .logoHeader, .logoFooter{
@@ -68,7 +67,7 @@ header, footer{
     background-color: rgb(45, 97, 252);
     border-radius: 10px;
     border: 2px solid white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    box-shadow: 0 4px 8px rgba(28, 28, 28, 0.3); /* Ombre légère */
     transition: all 0.3s ease; /* Animation fluide */
 }
 
@@ -87,7 +86,7 @@ header, footer{
 .bouton-header:hover {
     background-color: rgb(30, 80, 220);
     transform: translateY(-2px); /* Effet de soulèvement */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 12px rgba(28, 28, 28, 0.3);
 }
 
 
@@ -106,8 +105,9 @@ header, footer{
 }
 
 .renault{
-    width: 30%;
+    width: 40%;
     transform: translateX(23%);
+  
 }
 
 .renault img{
@@ -138,6 +138,8 @@ p{
     margin: 15px 0;
 
 }
+
+
 
 .article{
     width: 60%;
@@ -175,17 +177,17 @@ p{
     padding: 0;
 }
 
-        .bouton:hover {
-            background-color: rgb(30, 80, 220);
-            transform: translateY(-2px); /* Effet de soulèvement */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+.bouton:hover {
+    background-color: rgb(30, 80, 220);
+    transform: translateY(-2px); /* Effet de soulèvement */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-        .container-logo {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 20px;
+.container-logo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
 }
 
         .items {
@@ -256,7 +258,6 @@ p{
             justify-content: space-around;
             border: 3px solid #DADDD8;
             margin: 15px auto;
-
 }
 
         .container3 h5, h6{
@@ -280,22 +281,47 @@ p{
             width: 100%;
         }
 
+        /*--------------------Main connexion img---------------*/
+                   
 
-        /*------------------list-pieces--------------------*/
 
-        input[type="file"] {
-    margin-top: 10px;
-    padding: 5px;
-}
+        #imgForm img{
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(30, 80, 220, 0.75);
+        }
 
-        .list-pieces {
+
+/*------------------formulaire connexion-------------------*/    
+        form {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px;
+            justify-content: center;
+            width: 98%;
+            margin: 0, 20px, 0, 20px;
             padding: 20px;
-            border: 2px solid #DADDD8;
-            background-color: white;
+            background-color: #EEF0F2;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(30, 80, 220, 0.5);
+        }
+
+        /*------------------list-pieces--------------------*/
+        /* style de bouton pour ajouter une pièce*/
+        input[type="file"] {
+            margin-top: 10px;
+            padding: 5px;
+}
+
+        .list-pieces {
+            display: block;
+            width: 100%;
+            align-items: center;
+            border: 2px solid #4753fd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(30, 80, 220, 0.5);
+            background-color: #b3c7fa;
         }
 
         .list-pieces h2 {
@@ -329,8 +355,41 @@ p{
         }
 
         .list-pieces button:hover {
-            background-color: rgb(30, 80, 220);
+            background-color: rgb();
         }
+
+        .piece {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(30,80,220,0.20);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: left;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;            
+}
+
+        .piece:hover {
+            box-shadow: 0 8px 24px rgba(45,97,252,0.10);
+            border-color: #b3c7fa;
+}
+
+        .piece img {
+            display: flex;
+            margin: 0 auto 1rem auto;
+            max-width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(28,28,28,0.06);
+}
+/*------------------FOOTER Accueil/guest/base--------------------*/
+footer {
+    background-color: #1C1C1C;
+    height: 12vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 /*-------------FOOTER/guest/base----------------*/
         .logoFooter img{
@@ -532,11 +591,8 @@ p{
 }
 
 
-/*-------------------Page inscription-----------------------*/
 
-#imgForm{
-    padding: 150px;
-}
+
 
 
 
