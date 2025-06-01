@@ -1,0 +1,16 @@
+{% extends ('guest/base.html.twig') %}
+
+
+
+{% block main %}
+     <main id="details-category">
+        <h2>Catégories</h2>
+        <p>Bienvenue sur la page des catégories. Vous pouvez consulter les différentes catégories de pièces disponibles pour la Renault 21 TD.</p>
+        <section id="categoryList">
+            {% for category in category %}
+                <h3><a href="{{ path('details-category', {'id': category.id}) }}">{{ category.name }}</a></h3>
+            {% endfor %}
+        </section>
+    </main>
+      
+{% endblock main %}

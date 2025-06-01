@@ -7,7 +7,7 @@
 {% block main %}
     <main id="mainConnexion">
     <div id="imgForm">
-    <div class="renault">
+    <div class="renault" id="renault">
         <img src="{{ asset('images/VoitureComplèt.jpg') }}" alt="Photo de ma R21 td">
     </div>
     <section class="article">
@@ -16,28 +16,16 @@
             id="pills-login"
             role="tabpanel"
             aria-labelledby="tab-login">
-        <form method="post">
+         <form method="post">
             <div class="text-center mb-3">
-                <p>Se connecter avec :</p>
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-google"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-twitter"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-github"></i>
-                </button>
-            </div>
-
-            <p class="text-center">ou :</p>
-
+                        <p>Se connecter avec </p>
+                            <div class="btn-group" role="group" aria-label="Social Media Buttons">
+                                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
+                                    <img src="{{ asset('icones/logoGoogle.png') }}">
+                                </button>
+                            </div>
+                        
+                                <p class="text-center">ou :</p>
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 <input type="email" name="_username" id="email" class="form-control" />
@@ -79,68 +67,6 @@
             </div>
         </form>
     </div>
-    <div class="tab-pane fade"
-            id="pills-register"
-            role="tabpanel"
-            aria-labelledby="tab-register"
-    >
-        <form>
-            <div class="text-center mb-3">
-                <p>Se connecter avec :</p>
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-google"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-twitter"></i>
-                </button>
-
-                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                    <i class="fab fa-github"></i>
-                </button>
-            </div>
-
-            <p class="text-center">ou :</p>
-
-            <!-- Username input -->
-            <div data-mdb-input-init class="form-outline mb-4">
-                <input type="text" id="registerUsername" class="form-control" />
-                <label class="form-label" for="registerUsername">Prénom</label>
-            </div>
-
-            <!-- Email input -->
-            <div data-mdb-input-init class="form-outline mb-4">
-                <input type="email" id="registerEmail" class="form-control" />
-                <label class="form-label" for="registerEmail">Email</label>
-            </div>
-
-            <!-- Password input -->
-            <div data-mdb-input-init class="form-outline mb-4">
-                <input type="password" id="registerPassword" class="form-control" />
-                <label class="form-label" for="registerPassword">Mot de passe</label>
-            </div>
-
-            <!-- Checkbox -->
-            <div class="form-check d-flex justify-content-center mb-4">
-                <input class="form-check-input me-2"
-                        type="checkbox"
-                        value=""
-                        id="registerCheck"
-                        checked
-                        aria-describedby="registerCheckHelpText"/>
-                <label class="form-check-label" for="registerCheck">
-                    Se souvenir de moi
-                </label>
-            </div>
-
-            <!-- Submit button -->
-            <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block mb-3">Connexion</button>
-        </form>
-    </div>
 </div>
     </section>
     </div>
@@ -148,7 +74,7 @@
         <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
         <div class="bouton">
             <label>
-                <button type="button">Entrez !</button>
+                <button type="button"><a href="entrez">Entrez !</a></button>
             </label>
         </div>
     </div>

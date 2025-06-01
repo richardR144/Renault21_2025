@@ -72,26 +72,56 @@ class PieceController extends AbstractController {  //AbstractController permet 
     }
 
     #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
+    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
         
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
         $piece = $pieceRepository->find($id);
+        $categories = $categoryRepository->findAll();
 
-        if (!$piece) {
+        $form = $this->createForm(InsertPieceForm::class, $piece);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+        $piece->setUser($user);
+
+        $imageFile = $form->get('image')->getData();
+
+        if ($imageFile !== null) {
+            $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFileName = $slugger->slug($originalFileName);
+            $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
+            
+            $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+            $piece->setImage($newFileName);
+        }
+
+            $entityManager->persist($piece);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'pièce modifiée avec succès !');
+            return $this->redirectToRoute('list-pieces');
+    }
+
+            return $this->render('guest/pieces/update-piece.html.twig', [
+               'insertPieceForm' => $form->createView(),
+            ]);
+        }
+
+    /*    if (!$piece) {
                 throw $this->createNotFoundException('Pièce non trouvée');
             }
 
         if ($request->isMethod('POST')) {
             // Récupération des données du formulaire
-            $name = $request->request->get('name');
+            $name = $request->request->get('Name');
             $description = $request->request->get('description');
             $email = $request->request->get('email');   // Bien que l'email ne soit pas utilisé dans l'entité Piece, il est récupéré ici
             $exchange = $request->request->get('exchange'); // Récupération de l'option d'échange
-            $price = $request->request->get('price');
-            $categoryId = $request->request->get('category-id');
+            $price = $request->request->get('price');       
             $imageFile = $request->files->get('image');
+            $categoryId = $request->request->get('category-id');
             $category = $categoryRepository->find($categoryId);
-           
            
             $piece->setName($name);
             $piece->setDescription($description);
@@ -99,9 +129,10 @@ class PieceController extends AbstractController {  //AbstractController permet 
             $piece->setPrice($price);
             $piece->setCategory($category);
             $piece->setUser($this->getUser());
-    
+            
+
         
-            if ($imageFile) {
+            if (!$imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
                 $imageFile->move($this->getParameter('pieces_images_directory'), $newFilename);
                 // Vérifie si une image précédente existe et la supprime si nécessaire
@@ -112,7 +143,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
                 $piece->update($name, $description, $exchange, $price, $category);
                 $piece->setImage($request->files->get('image')); // Mettre à jour l'image si elle est fournie
                 
-                /*$entityManager->persist($piece);*/ // Pas besoin de persist car l'entité est déjà gérée par Doctrine
+                $entityManager->persist($piece); // Pas besoin de persist car l'entité est déjà gérée par Doctrine
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Piece modifiée !');
@@ -121,12 +152,14 @@ class PieceController extends AbstractController {  //AbstractController permet 
                 $this->addFlash('error', $exception->getMessage());
             }
        
-        $categories = $categoryRepository->findAll();
+           
         }
         return $this->render('Guest/pieces/update-piece.html.twig', [
-            'piece' => $piece
+            'piece' => $piece,
+            'categories' => $categories,
+            'insertPieceForm' => $this->createForm(InsertPieceForm::class, $piece)->createView(),
         ]);
-    }
+    }*/
 
 
     #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET', 'POST'])]

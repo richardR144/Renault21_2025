@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Guest;
 use App\Repository\CategoryRepository;
+use App\Repository\PieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,16 +20,29 @@ class CategoryController extends AbstractController {
 
 
     #[Route('/details-category/{id}', name:'details-category', methods: ['GET'])]
-    public function detailsCategory(CategoryRepository $categoryRepository, int $id): Response {
+    public function detailsCategory(PieceRepository $pieceRepository, CategoryRepository $categoryRepository, int $id): Response {
 
         $category = $categoryRepository->find($id);
-
+        $piece = []; // Initialise un tableau vide pour les pièces
+        
+        if ($category) {
+            // Si la catégorie existe, récupère les pièces associées
+            $piece = $pieceRepository->findBy([
+                'category' => $category
+            ]);
+        }
+        
         if(!$category) {
             return $this->redirectToRoute("404");
         }
 
-        return $this->render('guest/category/details-category.html.twig', [
-            'category' => $category
+        return $this->render('guest/pieces/details-category.html.twig', [
+            'category' => $category,
+            'pieces' => $piece
         ]);
     }
+
+
+
+
 }

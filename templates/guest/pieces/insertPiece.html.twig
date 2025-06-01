@@ -2,7 +2,7 @@
 
 {# This template is used to display the form for inserting a new piece #}
 
-{% block metatitle %}Nouvelle pièce{% endblock metatitle %}
+{% block metatitle %}créer novelle piece{% endblock metatitle %}
 
 
 
@@ -10,12 +10,14 @@
 {% block main %}
 
     <main>
-
-        <section class="formulaireInsertUser">
-
-            <h2>Nouvelle pièce</h2>
+<h2 id="formPiece">Création de pièces</h2>
+        <section class="formulaireInsertUser" id="formulaireInsertPiece">
+            <div class="imgMonaco">
+            <img src="{{ asset('images/Virage Monaco.jpg') }}" alt="Image d'insertion de pièce" class="imageInsertPiece">
+            </div>
 
             {{ form(insertPieceForm) }}
+                
 
         </section>
 

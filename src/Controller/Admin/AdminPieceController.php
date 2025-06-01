@@ -21,6 +21,7 @@ class AdminPieceController extends AbstractController
     #[Route('/admin/create-piece', name: 'admin-create-piece', methods: ['GET', 'POST'])]
     public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager, \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag): Response
     {
+        $category = $categoryRepository->findAll();
 
         if ($request->isMethod('POST')) {
             $title = $request->request->get('title');
@@ -53,7 +54,7 @@ class AdminPieceController extends AbstractController
             }
         }
 
-        return $this->render('admin/create-piece.html.twig', [
+        return $this->render('admin/piece/create-piece.html.twig', [
             'category' => $category,
         ]);
     }
@@ -63,7 +64,7 @@ class AdminPieceController extends AbstractController
     public function listPieces(PieceRepository $pieceRepository): Response {
         $piece = $pieceRepository->findAll();
 
-        return $this->render('admin/pieces/list-pieces.html.twig', [
+        return $this->render('admin/piece/list-pieces.html.twig', [
             'pieces' => $piece
         ]);
     }
