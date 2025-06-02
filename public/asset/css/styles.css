@@ -443,7 +443,7 @@ p{
         }
 
         .list-pieces button:hover {
-            background-color: rgb();
+            background-color: rgba(30,80,220,0.20);
         }
 
         .piece {

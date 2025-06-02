@@ -11,12 +11,12 @@
 
     <main>
 <h2 id="formPiece">Création de pièces</h2>
-        <section class="formulaireInsertUser" id="formulaireInsertPiece">
+        <section class="formulaireInsertUser" id="formulaireInsertUser">
             <div class="imgMonaco">
             <img src="{{ asset('images/Virage Monaco.jpg') }}" alt="Image d'insertion de pièce" class="imageInsertPiece">
             </div>
 
-            {{ form(insertPieceForm) }}
+            {{ form_row(insertPieceForm.price) }}
                 
 
         </section>

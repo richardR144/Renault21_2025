@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class InsertPieceForm extends AbstractType
 {
@@ -38,7 +39,11 @@ class InsertPieceForm extends AbstractType
 
             ])
             
-            ->add('price')
+            ->add('price', NumberType::class, [
+                'label' => 'Prix',
+                'required' => true,
+            ])
+            
             ->add('image', FileType::class, [
                 'label' => 'Image (format : jpg, png, jpeg, gif, webp)',
                 'mapped' => false,

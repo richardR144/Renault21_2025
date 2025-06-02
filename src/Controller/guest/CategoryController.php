@@ -20,7 +20,7 @@ class CategoryController extends AbstractController {
 
 
     #[Route('/details-category/{id}', name:'details-category', methods: ['GET'])]
-    public function detailsCategory(PieceRepository $pieceRepository, CategoryRepository $categoryRepository, int $id): Response {
+    public function detailsCategory(int $id, PieceRepository $pieceRepository, CategoryRepository $categoryRepository): Response {
 
         $category = $categoryRepository->find($id);
         $piece = []; // Initialise un tableau vide pour les pièces
@@ -28,11 +28,9 @@ class CategoryController extends AbstractController {
         if ($category) {
             // Si la catégorie existe, récupère les pièces associées
             $piece = $pieceRepository->findBy([
-                'category' => $category
+                'category' => $category,
             ]);
-        }
-        
-        if(!$category) {
+        } else {
             return $this->redirectToRoute("404");
         }
 
