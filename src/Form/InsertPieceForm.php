@@ -41,9 +41,9 @@ class InsertPieceForm extends AbstractType
             
             ->add('price', NumberType::class, [
                 'label' => 'Prix',
-                'required' => true,
+                'required' => false,
             ])
-            
+
             ->add('image', FileType::class, [
                 'label' => 'Image (format : jpg, png, jpeg, gif, webp)',
                 'mapped' => false,

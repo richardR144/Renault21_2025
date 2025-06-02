@@ -321,7 +321,7 @@ p{
             transform: translateX(23%);
         }
 
-        /*---------------icônes facebook, X, snap, git-------------------*/
+        /*---------------icône google-------------------*/
         .btn-group {            
             margin: 20px 0;
             margin: 15px 0; 
@@ -355,6 +355,8 @@ p{
             transform: scale(1.1); /* Effet de zoom */
             box-shadow: 0 6px 12px rgba(30, 80, 220, 0.5); 
         }
+
+
            
 /*------------------formulaire inscription-------------------*/    
         form {
@@ -370,7 +372,7 @@ p{
             box-shadow: 0 4px 8px rgba(30, 80, 220, 0.5);
         }
 
-        /*Connexion*/
+        /*------------------Connexion------------------------*/
       
         #renault img{
             width: 100%;
@@ -394,6 +396,9 @@ p{
             padding: 10px 20px;
             cursor: pointer;
        }
+
+       /*---------------Modif piece------------------------------*/
+       
 
         /*------------------list-pieces--------------------*/
         /* style de bouton pour ajouter une pièce*/

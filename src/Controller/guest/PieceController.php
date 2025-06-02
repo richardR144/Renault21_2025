@@ -37,6 +37,15 @@ class PieceController extends AbstractController {  //AbstractController permet 
    if ($form->isSubmitted() && $form->isValid()) {
         $piece->setUser($user);
 
+        $exchange = $form->get('exchange')->getData();
+        $price = $form->get('price')->getData();
+
+    if ($exchange === 'vente' && (is_null($price) || $price === '')) {
+        $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+        return $this->render('guest/pieces/insertPiece.html.twig', [
+            'insertPieceForm' => $form->createView(),
+        ]);
+    }
         $imageFile = $form->get('image')->getData();
 
         if ($imageFile) {
@@ -71,10 +80,12 @@ class PieceController extends AbstractController {  //AbstractController permet 
         ]);
     }
 
+
     #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
     public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
         
         $this->denyAccessUnlessGranted('ROLE_USER');
+
         $user = $this->getUser();
         $piece = $pieceRepository->find($id);
         $categories = $categoryRepository->findAll();
@@ -83,31 +94,41 @@ class PieceController extends AbstractController {  //AbstractController permet 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-        $piece->setUser($user);
+            $piece->setUser($user);
 
-        $imageFile = $form->get('image')->getData();
+            $exchange = $form->get('exchange')->getData();
+            $price = $form->get('price')->getData();
 
-        if ($imageFile !== null) {
-            $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFileName = $slugger->slug($originalFileName);
-            $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
-            
-            $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
-            $piece->setImage($newFileName);
-        }
-
-            $entityManager->persist($piece);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'pièce modifiée avec succès !');
-            return $this->redirectToRoute('list-pieces');
+    // Vérification : si "vente" et pas de prix, on bloque
+        if ($exchange === 'vente' && (is_null($price) || $price === '')) {
+            $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+                return $this->render('guest/pieces/insertPiece.html.twig', [
+                    'insertPieceForm' => $form->createView(),
+        ]);
     }
+
+    // ... gestion image ...
+        $imageFile = $form->get('image')->getData();
+    if ($imageFile) {
+        $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFileName = $slugger->slug($originalFileName);
+        $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
+        $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+        $piece->setImage($newFileName);
+    }
+
+    $entityManager->persist($piece);
+    $entityManager->flush();
+
+    $this->addFlash('success', 'pièce créée avec succès !');
+    return $this->redirectToRoute('list-pieces');
+}
 
             return $this->render('guest/pieces/update-piece.html.twig', [
                'insertPieceForm' => $form->createView(),
             ]);
         }
-
+    
     /*    if (!$piece) {
                 throw $this->createNotFoundException('Pièce non trouvée');
             }
@@ -210,8 +231,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
 
 
     #[Route('/Guest/pieces/search-results', name:'search-results', methods: ['GET'])]
-    public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response
-{
+    public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response{
     $query = $request->query->get('q', '');
     $pieces = [];
 

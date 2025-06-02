@@ -27,7 +27,7 @@ class Piece
     #[ORM\Column(nullable: true)]
     private ?bool $Exchange = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $Price = null;
 
     #[ORM\ManyToOne(inversedBy: 'category')]
@@ -49,8 +49,6 @@ class Piece
     #[ORM\Column (nullable: true)]
     private ?\DateTime $created_at = null;
 
-    //#[ORM\Column(type: 'json')] case à cocher échange ou vente
-    //private array $type = [];
 
     public function getId(): ?int
     {
@@ -110,7 +108,7 @@ class Piece
         return $this->Price;
     }
 
-    public function setPrice(float $Price): static
+    public function setPrice(?float $Price): static
     {
         $this->Price = $Price;
 
