@@ -21,6 +21,7 @@ class ProfilController extends AbstractController
     public function profilUser(Request $request, UserRepository $userRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        
 
         $user = $this->getUser();
         if (!$user) {

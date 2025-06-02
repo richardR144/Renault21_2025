@@ -7,7 +7,7 @@
     <main id="mainInscription">
         <div id="imgForm">
             <div class="renault">
-                <img src="{{ asset('images/VoitureComplèt.jpg') }}" alt="Photo de ma R21 td">
+                <img src="{{ asset('images/VoitureComplet.jpg') }}" alt="Photo de ma R21 td">
             </div>
             <section class="article">
                 <!-- Contenu des pilules -->
@@ -19,9 +19,10 @@
                          role="tabpanel" {# ce block est le contenu d'un onglet #}
                          aria-labelledby="tab-login">{# ça contrôle l'onglet qui est relié à un bouton ou un lien#}
 
-                <form method="post">
+            <form method="post">
+                <div class="user-inscription-form">
                     <div class="text-center mb-3">
-                        <p>Se connecter avec </p>
+                        <p>Se connecter avec :</p>
                             <div class="btn-group" role="group" aria-label="Social Media Buttons">
                                 <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
                                     <img src="{{ asset('icones/logoGoogle.png') }}">
@@ -63,15 +64,14 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
                                 <!-- Submit button -->
                                 <button type="submit" class="btn btn-primary btn-block mb-4">Inscription</button>      
                             </form>
                         </div>
-                    </div>
+                    
             </section>
-
-        </section>
+        </div>
         </div>
         <div class="container2">
             <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>

@@ -1,26 +1,28 @@
 {% extends 'guest/base.html.twig' %}
 
-{# This template is used to display the form for inserting a new piece #}
-
-{% block metatitle %}créer novelle piece{% endblock metatitle %}
 
 
-
+{% block metatitle %}créer nouvelle piece | Renault 21 TD{% endblock metatitle %}
 
 {% block main %}
+        
+<div class="profil-bg">
+    <div class="bg-image"></div>
+    <div class="profil-content">
+        <h2 id="formPiece">Création de pièces</h2>
 
-    <main>
-<h2 id="formPiece">Création de pièces</h2>
-        <section class="modifPiece" id="modifPiece">
-            <div class="imgMonaco">
-            <img src="{{ asset('images/Virage Monaco.jpg') }}" alt="Image d'insertion de pièce" class="imageInsertPiece">
-            </div>
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success">{{ flash_message }}</div>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ flash_message }}</div>
+        {% endfor %}
 
-            {{ form_row(insertPieceForm.price) }}
-                
-
-        </section>
-
-    </main>
+            {{ form(insertPieceForm) }}
+ </div>
+</div>
+    <div class="btn-back">
+        <a href="{{ path('list-pieces') }}" class="btn-custom">Retour à la liste des pièces</a>
+    </div>           
 
 {% endblock main %}

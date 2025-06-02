@@ -1,72 +1,18 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Création de Pièce | guest Renault 21 TD{% endblock title %}
-
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/guest/pieces/create-piece.css') }}">
-{% endblock stylesheets %}
-
-{% include 'partial/_header.html.twig' %}
-    
+{% extends 'guest/base.html.twig' %}
 
 {% block main %}
-<main id="mainCreatePiece">
-    <div class="container">
-        <h1 class="text-center mb-4">Créer une nouvelle pièce</h1>
-        {% for flash_message in app.flashes('success') %}
-    <div class="alert alert-success">{{ flash_message }}</div>
-{% endfor %}
-{% for flash_message in app.flashes('error') %}
-    <div class="alert alert-danger">{{ flash_message }}</div>
-{% endfor %}
-        <form method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="category" class="form-label">Catégorie</label>
-                <select class="form-select" id="category" name="category-id" required>
-                    <option value="" disabled selected>Choisissez une catégorie</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Type d'annonce :</label><br>
-                <div class="form-checkBox-vente">
-                <input type="checkbox" id="vente" name="type[]" value="vente">
-                </div>
-                <div class="form-checkBox-vente">
-                <label for="vente">Vente</label>
-                </div>
-                <div class="form-checkBox-echange">
-                <input type="checkbox" id="echange" name="type[]" value="echange">
-                </div>
-                <div class="form-checkBox-echange">
-                <label for="echange">Échange</label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="title" class="form-label">Nom de la pièce</label>
-                <input type="text" class="form-control" id="title" name="name" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Image de la pièce</label>
-                <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png">
-            </div>
-            <div class="mb-3">
-                <label for="createdAt" class="form-label">Créer le :</label>
-                <input type="date" class="form-control" id="createdAt" name="createAt" accept=".jpg, .jpeg, .png">
-            </div>
-            <button type="submit" class="btn btn-primary">Créer la pièce</button>
-            <a href="{{ path('list-pieces') }}" class="btn btn-secondary mt-3">Annuler</a>
-        </form>
+<div class="profil-bg">
+    <div class="bg-image"></div>
+    <div class="profil-content">
+        <h1>Créer une pièce</h1>
+        {{ form_start(insertPieceForm) }}
+            {{ form_widget(insertPieceForm) }}
+            <button type="submit" class="btn-custom">Valider</button>
+        {{ form_end(insertPieceForm) }}
     </div>
-</main>
-{% endblock main %}
+</div>
+{% endblock %}
 
 
 
-{% include 'partial/_footer.html.twig' %}
+

@@ -40,7 +40,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
         $exchange = $form->get('exchange')->getData();
         $price = $form->get('price')->getData();
 
-    if ($exchange === 'vente' && (is_null($price) || $price === '')) {
+    if ($exchange === 'vente' && (is_null($price) || $price === '')) { //Récupère la valeur sélectionnée pour le type d'annonce ("vente" ou "échange") depuis le formulaire
         $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
         return $this->render('guest/pieces/insertPiece.html.twig', [
             'insertPieceForm' => $form->createView(),
@@ -191,6 +191,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
         // Si le produit n'existe pas, redirige vers la page 404 ou affiche un message d'erreur de Symfony
         if(!$piece) {
             throw $this->createNotFoundException('Pièce non supprimée, elle n\'existe pas');
+                
         }
 
         if ($request->isMethod('POST')) {

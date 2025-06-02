@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fond général */
+.profil-bg {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profil-bg .bg-image {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('../images/voitureComplet.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    
+}
+
+/*Pour la modif de piece*/
+.bg-profil .bg-image {
+    background-image: url('../../images/ma_voiture.png');
+}
+/*Pour la création de piece*/
+.bg-insert-piece .bg-image {
+    background-image: url('../../images/image_rigolotte.jpeg');
+}
+
+.profil-content {
+    position: relative;
+    padding: 2rem 2.5rem;
+    background: #dad0d8;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(30,80,220,0.1);
+    min-width: 300px;
+    margin: 2rem auto; 
+    z-index: 3;  
+}
+
+.profil-content-scroll {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Boutons personnalisés */
+.btn-custom {
+    display: inline-block;
+    padding: 0.6em 1.2em;
+    margin: 0.5em 0.2em;
+    border-radius: 8px;
+    border: none;
+    background: rgb(45, 97, 252);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+.btn-custom:hover {
+    background: #1a3fa6;
+}
+.btn-danger {
+    background: #e74c3c;
+}
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+/* Listes et titres */
+.profil-content ul {
+    list-style: none;
+    padding: 0;
+}
+.profil-content li {
+    margin-bottom: 0.5em;
+}
+.profil-content h1, .profil-content h2 {
+    margin-bottom: 1em;
+    align-items: center;
+}
+
+#insert_piece_form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.btn-back {
+    display: flex;
+    justify-content: center;
+    padding: 0.6em 1.2em;
+    margin: 0.5em 0.2em;
+    border-radius: 8px;
+    align-items: center;
+    color: #ECEBE4;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+
+
+
