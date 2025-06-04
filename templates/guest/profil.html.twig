@@ -4,19 +4,17 @@
 
 
 {% block main %}
-<div class="profil-bg">
-    <div class="bg-image">
-        <img src="{{ asset('images/voitureComplet.jpg') }}" alt="Background Image">
-    </div>
+<div class="profil-bg bg-profil">
+    <div class="bg-image"></div>
     
-    <div class="profil-content profil-content-scroll">
-        {% for flash_message in app.flashes('success') %}
-            <div class="alert alert-success">{{ flash_message }}</div>
-        {% endfor %}
+        <div class="profil-content profil-content-scroll">
+            {% for flash_message in app.flashes('success') %}
+                <div class="alert alert-success">{{ flash_message }}</div>
+            {% endfor %}
 
-        {% for flash_message in app.flashes('error') %}
-            <div class="alert alert-danger">{{ flash_message }}</div>
-        {% endfor %}
+            {% for flash_message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ flash_message }}</div>
+            {% endfor %}
         <h1>Bonjour et bienvenue {{ user.pseudo }}</h1>
 
         <p>Voici votre profil :</p>

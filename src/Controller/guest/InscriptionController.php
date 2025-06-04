@@ -46,7 +46,7 @@ namespace App\Controller\Guest;
                 //Hash le mot de passe avec le service de Symfony 
 
                
-                $user->createUser($pseudo, $email, $passwordHashed, ['ROLE_USER']); // Provide the third argument as needed (e.g., roles or another required parameter)
+                $user->createUser($pseudo, $email, $passwordHashed, ['ROLE_USER']); 
                 // Utilise une méthode personnalisée pour initialiser l'utilisateur
 
                 try {   

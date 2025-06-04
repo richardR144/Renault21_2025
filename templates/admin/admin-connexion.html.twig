@@ -1,0 +1,42 @@
+{% extends ('admin/base.html.twig') %}
+
+
+{% block metatitle %} Connexion | Admin Renault 21 TD{% endblock metatitle %}
+
+
+{% block main %}
+    <main id="mainConnexion">
+    <div id="imgForm">
+    <div class="renault" id="renault">
+        <img src="{{ asset('asset/images/VoitureComplet.jpg') }}" alt="Photo de ma R21 td">
+    </div>
+    <section class="article">
+<div class="tab-content">
+    <div class="tab-pane fade show active"
+            id="pills-login"
+            role="tabpanel"
+            aria-labelledby="tab-login">
+         <form method="post">
+            <div class="text-center mb-3">
+                        
+            <!-- Email input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="email" name="_username" id="email" class="form-control" />
+                <label class="form-label" for="email">Email</label>
+            </div>
+
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input type="password" name="_password" id="password" class="form-control" />
+                <label class="form-label" for="password">Mot de passe</label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Connexion</button>
+        </form>
+    </div>
+</div>
+    </section>
+    </div>
+    </main>
+{% endblock main %}

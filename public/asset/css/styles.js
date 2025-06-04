@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Gestion des boutons de navigation pour les onglets avec des données et des actions
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     const actionTabNavButtons = document.querySelectorAll('.action-tab-nav-button');
     actionTabNavButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector(target).classList.add('active');
         });
     });
-});
+});*/
 
 // gestion du bouton se connecter se deconnecter
 document.addEventListener('DOMContentLoaded', function() {

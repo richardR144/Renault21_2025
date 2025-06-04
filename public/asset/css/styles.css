@@ -17,7 +17,6 @@
 
 /*---------------HEADER Accueil/guest/base-----------------*/
     header, footer{
-        display: flex;
         width: 100%;  
 }
 
@@ -111,6 +110,8 @@
 .renault{
     width: 33%;
     transform: translateX(23%);
+    margin-right: -60px; 
+    z-index: 2;
 }
 
 .renault img{
@@ -141,8 +142,6 @@ h3{
         margin: 15px 0;
 
 }
-
-
 
     .article{
         width: 60%;
@@ -432,9 +431,9 @@ h3{
 
         /*------------------list-pieces--------------------*/
         /* style de bouton pour ajouter une pièce*/
-        input[type="file"] {
-            margin-top: 10px;
-            padding: 5px;
+input[type="file"] {
+    margin-top: 10px;
+    padding: 5px;
 }
 
         .list-pieces {
