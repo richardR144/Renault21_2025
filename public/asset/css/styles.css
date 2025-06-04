@@ -110,12 +110,12 @@
 .renault{
     width: 33%;
     transform: translateX(23%);
-    margin-right: -60px; 
     z-index: 2;
 }
 
 .renault img{
     width:100%;
+    
 }
 
 h1{
@@ -145,7 +145,7 @@ h3{
 
     .article{
         width: 60%;
-        padding-left: 150px;
+        padding-left: 250px;
         background-color: white;
 }
 
