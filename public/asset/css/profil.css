@@ -29,20 +29,18 @@
 }
 
 .profil-bg .bg-image { 
-    background-image: url('asset/images/mavoiture.png');
+    background-image: url('../images/mavoiture.png');
     top: 0; left: 0; right: 0; bottom: 0;
     background-size: cover;
     background-position: center;
     position: absolute;
     z-index: 1; 
     opacity: 0.6;
-    height: 80vh;
-    border: 3px solid red;   
 }
 
 /*Pour la création de piece*/
 .bg-insert-piece .bg-image {
-    background-image: url('asset/images/R21_en_course.jpg');
+    background-image: url('../images/R21_en_course.jpg');
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -52,7 +50,7 @@
 
 /*Pour la modif de piece*/
 .bg-update-piece .bg-image {
-    background-image: url('asset/images/Voiturecomplet.jpg');
+    background-image: url('../images/Voiturecomplet.jpg');
     background-size: cover;
     background-position: center;
     position: absolute;
