@@ -25,7 +25,6 @@ class AdminLoginController extends AbstractController
             return $this->redirectToRoute('admin/admin-accueil');
         }
 
-
         $error = $authenticationUtils->getLastAuthenticationError();
 
 

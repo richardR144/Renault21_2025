@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity;
+use App\Entity\Image;
+use App\Entity\Description;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Piece>
      */
-    #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user', cascade: ['remove'], orphanRemoval: true)]
     private Collection $piece;
 
     public function __construct()
@@ -53,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->piece = new ArrayCollection();
     }
 
-
+    
 
     public function createUser(string $pseudo, string $email, string $passwordHashed) {
         $this->pseudo = $pseudo;
@@ -61,6 +63,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $passwordHashed;
         $this->roles = ['ROLE_USER'];
     }
+
+    
 
     public function getId(): ?int
     {

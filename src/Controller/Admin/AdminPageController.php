@@ -37,11 +37,6 @@ class AdminPageController extends AbstractController
     public function detailsPiece() {
         return $this->render('admin/details-piece.html.twig');
     }
-    
-    #[Route('/admin/list-category', 'list-category')]
-    public function listCategory() {
-        return $this->render('guest/accueil.html.twig');
-    }
 
     #[Route('admin/details-category', 'details-category')]
     public function detailsCategory() {
