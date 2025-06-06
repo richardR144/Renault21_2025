@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+
+
+{% block main %}
+
+    <main id="delete-user">
+
+        <h1>Supprimer l'utilisateur</h1>
+
+        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur "{{ user.username }}" ?</p>
+
+        <form method="post" action="{{ path('admin-delete-user', {'id': user.id}) }}">
+
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_user' ~ user.id) }}">
+
+            <button type="submit">Confirmer la suppression</button>
+
+            <a href="{{ path('admin-list-users') }}">Annuler</a>
+
+        </form>
+
+    </main>
+
+{% endblock main %}

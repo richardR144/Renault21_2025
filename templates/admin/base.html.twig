@@ -26,26 +26,19 @@
                     <li></li>
                 </ul>
             </div>
-                <ul class="ulHeader">
-                    <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
-                    <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
-                    {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
-                    <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste des pièces</a></li>
-                    <li class="liHeader"><a href="{{ path('profil') }}">Profile</a>
-                    <li class="bouton-header">
-                    {% if app.user %}
-                        <button type="button" class="btn btn-primary">
-                            <a href="{{ path('logout') }}">Se déconnecter</a>
-                        </button>
-                    {% else %}
-                        <button type="button" class="btn btn-primary">
-                            <a href="{{ path('connexion') }}">Se connecter</a>
-                        </button>
-                    {% endif %}
-                    </li>
-                </ul>
-        </nav>
-    
+            <ul class="ulHeader">
+                <li class="liHeader"><a href="{{ path('admin-dashboard') }}">Tableau de bord</a></li>
+                <li class="liHeader"><a href="{{ path('admin-list-admins') }}">Gestion utilisateurs</a></li>
+                <li class="liHeader"><a href="{{ path('admin-list-pieces') }}">Gestion pièces</a></li>
+                <li class="liHeader"><a href="{{ path('admin-list-articles') }}">Gestion articles</a></li>
+                <li class="liHeader"><a href="{{ path('home') }}">Retour au site</a></li>
+                <li class="bouton-header">
+                    <button type="button" class="btn btn-primary">
+                        <a href="{{ path('logout') }}">Se déconnecter</a>
+                    </button>
+                </li>
+            </ul>
+        </nav>   
     </header>
     {% for flash_message in app.flashes('success') %}
             <h2 class="alert alert-success color-success">

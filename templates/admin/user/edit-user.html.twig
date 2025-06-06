@@ -1,0 +1,33 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'">&#8592; Retour à la gestion des utilisateurs</button>
+    <main id="edit-user">
+        <h1>Modifier un utilisateur</h1>
+        <form method="post" action="{{ path('admin-edit-user', {'id': user.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('edit_user' ~ user.id) }}">
+
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" value="{{ user.pseudo }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Rôle :</label>
+                <select name="role" id="role">
+                    <option value="ROLE_USER" {% if 'ROLE_USER' in user.roles %}selected{% endif %}>Utilisateur</option>
+                    <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>Administrateur</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'">Modifier</button>
+            <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'">Supprimer</button>
+        </form>
+    </main>
+    
+{% endblock %}

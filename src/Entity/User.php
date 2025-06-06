@@ -57,7 +57,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     
 
-    public function createUser(string $pseudo, string $email, string $passwordHashed) {
+    public function createUser(string $pseudo, string $email, string $passwordHashed) 
+    {
         $this->pseudo = $pseudo;
         $this->email = $email;
         $this->password = $passwordHashed;

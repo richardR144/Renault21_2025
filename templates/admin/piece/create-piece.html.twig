@@ -1,19 +1,35 @@
-{% extends ('guest/base.html.twig') %}
-
-
-
-
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/admin/piece/create-piece.css') }}">
-{% endblock stylesheets %}
-
+{% extends ('admin/base.html.twig') %}
 
 
 {% block main %}
-    <main id="creer">
-        <label>
-            <input type="submit" name="create-piece">Créer une piece
-        </label>
+<button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">&#8592; Retour à la gestion des pièces</a></button>
+    <main id="create-piece">
+
+        <h1>Créer une nouvelle pièce</h1>
+
+        <form method="post" action="{{ path('admin-create-piece') }}">
+
+            <div class="form-group">
+                <label for="name">Nom de la pièce :</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description :</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <button type="submit">Créer la pièce</button>
+
+            <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Annuler</a></button>
+
+        </form>
+
     </main>
+
 {% endblock main %}
+
+
+
+
 

@@ -1,0 +1,15 @@
+{% extends ('admin/base.html.twig') %}
+
+{% block main %}
+    <main id="update-piece">
+        <a href="{{ path('admin-list-pieces') }}">&#8592; Retour à la gestion des pièces</a>
+            <h1>Modifier la pièce</h1>
+                <p>Êtes-vous sûr de vouloir modifier la pièce "{{ piece.name }}" ?</p>
+            <form method="post" action="{{ path('admin-update-piece', {'id': piece.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('update_piece' ~ piece.id) }}">
+                    <button type="submit">Confirmer la modification</button>
+                        <a href="{{ path('admin-list-pieces') }}">Annuler</a>
+                    <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Annuler</button>
+            </form>
+    </main>
+{% endblock main %}

@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+
+<h1>Gestion des utilisateurs</h1>
+<button type="button" onclick="window.location.href='{{ path('admin-create-user') }}'">Créer un utilisateur</button>
+
+
+{% if app.session.flashbag.has('success') %}
+    <div class="alert alert-success">
+        {{ app.session.flashbag.get('success')[0] }}
+    </div>
+{% endif %}
+
+{% if app.session.flashbag.has('error') %}
+    <div class="alert alert-danger">
+        {{ app.session.flashbag.get('error')[0] }}
+    </div>
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Rôles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roles | join(', ') }}</td>
+            <td>
+                <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'">Modifier</button>
+                <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'">Supprimer</button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

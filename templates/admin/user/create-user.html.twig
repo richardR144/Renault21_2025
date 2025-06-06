@@ -1,0 +1,27 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+<button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'">&#8592; Retour à la gestion des utilisateurs</a></button>
+    <h1>Créer un utilisateur</h1>
+    
+    <p>Remplissez le formulaire ci-dessous pour créer un nouvel utilisateur.</p>
+    <form method="post">
+        <div class="form-group">
+            <label for="email">Email :</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe :</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Rôle :</label>
+            <select name="role" id="role">
+                <option value="ROLE_USER">Utilisateur</option>
+                <option value="ROLE_ADMIN">Administrateur</option>
+            </select>
+        </div>
+        <button type="submit">Créer</button>
+        <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Annuler</a></button>
+    </form>
+{% endblock %}

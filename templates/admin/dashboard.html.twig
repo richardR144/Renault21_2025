@@ -1,0 +1,11 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <h1>Bienvenue sur le tableau de bord admin</h1>
+    <ul>
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'">Gestion des utilisateurs</a></button></li>
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Gestion des pièces</a></button></li>
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-articles') }}'">Gestion des articles</a></button></li>
+        {#<li><button type="button" onclick="window.location.href='{{ path('admin-list-categories') }}'">Gestion des catégories</a></button></li>#}
+    </ul>
+{% endblock %}

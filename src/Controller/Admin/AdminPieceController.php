@@ -135,7 +135,7 @@ class AdminPieceController extends AbstractController
         }
         $categories = $categoryRepository->findAll();
 
-        return $this->render('admin/pieces/update-piece.html.twig', [
+        return $this->render('admin/piece/update-piece.html.twig', [
             'categories' => $categories,
             'piece' => $piece
         ]);

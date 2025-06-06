@@ -1,0 +1,17 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block main %}
+    <h1>Panthéon</h1>
+    <div class="articles-list">
+        {% for article in articles %}
+            <div class="article-card">
+                <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}">
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.content|slice(0, 150) ~ '...' }}</p>
+                <a href="{{ path('show-article', {'id': article.id}) }}">Lire l'article</a>
+            </div>
+        {% else %}
+            <p>Aucun article pour le moment.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

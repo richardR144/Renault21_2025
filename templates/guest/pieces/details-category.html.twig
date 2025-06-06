@@ -4,16 +4,39 @@
 
 
 {% block main %}
-     <main id="details-category">
-        <h2>Catégorie : {{ category.name }}</h2>
-        <p>Bienvenue sur la page de la catégorie {{ category.name }}.</p>
+     <button type="button" onclick="window.location.href='{{ path('list-pieces') }}'">&#8592; Retour à la liste des pièces</button>
+    <main id="details-category">
+        <h2 class="title-category">Catégorie : {{ category.name }}</h2>
+        <p class="title-category">Bienvenue sur la page de la catégorie <strong>{{ category.name }}</strong>.</p>
         <section id="list-pieces">
-            {% for piece in pieces %}
-                <div>{{ piece.name }}</div>
-            {% else %}
-                <div>Aucune pièce dans cette catégorie.</div>
-            {% endfor %}
+            {% if pieces|length > 0 %}
+                <form method="post" action="{{ path('details-category', {'id': category.id}) }}" class="piece-select-form">
+                    <table>
+                        <thead>
+                            <tr>
+                                {#<th>Sélectionner</th>#}
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for piece in pieces %}
+                                <tr>
+                                    {#<td><input type="checkbox" name="selected_pieces[]" value="{{ piece.id }}"></td>#}
+                                    <td>{{ piece.name }}</td>
+                                    <td>{{ piece.description }}</td>
+                                    <td>{{ piece.price }} €</td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                    {#<button type="submit">Valider mon choix</button>#}
+                </form>
+             {% endif %}
         </section>
     </main>
+   
 {% endblock main %}
       

@@ -1,0 +1,41 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <button type="button" onclick="window.location.href='{{ path('admin-list-users') }}'">&#8592; Retour à la gestion des utilisateurs</button>
+    <main id="update-user">
+        <h1>Modifier l'utilisateur</h1>
+
+        <form method="post" action="{{ path('admin-update-user', {'id': user.id}) }}">
+
+            <input type="hidden" name="_token" value="{{ csrf_token('update_user' ~ user.id) }}">
+
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+
+
+            <button type="submit">Confirmer la modification</button>
+
+            <a href="{{ path('admin-list-admins') }}">Annuler</a>
+</form>
+    </main>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {% if app.session.flashbag.has('error') %}
+        <div class="alert alert-danger">
+            {{ app.session.flashbag.get('error')[0] }}
+        </div>
+    {% endif %}
+{% endblock %}

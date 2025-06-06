@@ -20,7 +20,8 @@ class AdminUserController extends AbstractController
     public function createUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
 
-        if ($request->isMethod('POST')) {                    // je vérifie que les données sont envoyés en POST
+        if ($request->isMethod('POST')) { 
+            $pseudo = $request->request->get('pseudo');                   // je vérifie que les données sont envoyés en POST
             $email = $request->request->get('email');       // je récupère l'email et le mot de passe envoyée par le formulaire
             $password = $request->request->get('password');
             $role = $request->request->get('role', ['ROLE_USER']); 
@@ -54,7 +55,7 @@ class AdminUserController extends AbstractController
             return $this->render('admin/user/create-user.html.twig');
         }
         // Affiche le formulaire de création si la méthode n'est pas POST
-        return $this->render('admin/user/create-user.html.twig');
+            return $this->render('admin/user/create-user.html.twig');
     }
 
     #[Route(path: '/admin/list-admins', name: 'admin-list-admins', methods: ['GET'])]
@@ -63,7 +64,7 @@ class AdminUserController extends AbstractController
 
         $users = $userRepository->findAll();
 
-        return $this->render('/admin/user/list-users.html.twig', [
+        return $this->render('admin/user/list-users.html.twig', [
             'users' => $users
         ]);
     }
@@ -89,5 +90,22 @@ class AdminUserController extends AbstractController
 
         return $this->redirectToRoute('admin-list-admins');
     }
+
+
+//Pour éditer l'utilisateur dans le dashboard admin
+    #[Route(path: '/admin/edit-user/{id}', name: 'admin-edit-user', methods: ['GET', 'POST'])]
+    public function editUser(int $id, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+{
+    $user = $userRepository->find($id);
+
+    if (!$user) {
+        $this->addFlash('error', 'Utilisateur non trouvé');
+        return $this->redirectToRoute('admin-list-admins');
+    }
+
+    return $this->render('admin/user/edit-user.html.twig', [
+        'user' => $user
+    ]);
+}
 
 }
