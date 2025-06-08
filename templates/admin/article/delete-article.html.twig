@@ -1,0 +1,11 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <h1>Supprimer un article</h1>
+    <p>Es-tu sûr de vouloir supprimer l’article <strong>{{ article.title }}</strong> ?</p>
+    <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete_article_' ~ article.id) }}">
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{{ path('admin-list-articles') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+{% endblock %}
