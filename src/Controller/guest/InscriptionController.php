@@ -33,7 +33,7 @@ namespace App\Controller\Guest;
                     return $this->render('guest/user-inscription.html.twig');
                 }
 
-                if(!$password || !$email || !$pseudo) { // je vérifie que les champs ne sont pas vides
+                if (!$password || !$email || !$pseudo) { // je vérifie que les champs ne sont pas vides
                     $this->addFlash('error', 'Veuillez remplir tous les champs.');
                     return $this->render('guest/user-inscription.html.twig');
                 }

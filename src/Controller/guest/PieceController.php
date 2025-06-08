@@ -99,14 +99,13 @@ class PieceController extends AbstractController {  //AbstractController permet 
             $exchange = $form->get('exchange')->getData();
             $price = $form->get('price')->getData();
 
-    // Vérification : si "vente" et pas de prix, on bloque
+        // Vérification : si "vente" et pas de prix, on bloque
         if ($exchange === 'vente' && (is_null($price) || $price === '')) {
             $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
                 return $this->render('guest/pieces/insertPiece.html.twig', [
                     'insertPieceForm' => $form->createView(),
         ]);
     }
-
     // ... gestion image ...
         $imageFile = $form->get('image')->getData();
     if ($imageFile) {
@@ -233,23 +232,24 @@ class PieceController extends AbstractController {  //AbstractController permet 
 
     #[Route('/Guest/pieces/search-results', name:'search-results', methods: ['GET'])]
     public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response{
-    $query = $request->query->get('q', '');
+    $query = $request->query->get('q', ''); // je récupère le texte tapé dans le champ de recherche q dans l'url
+    // Si le champ de recherche est vide, on initialise $pieces à un tableau vide
     $pieces = [];
 
-    if ($query) {
-        $pieces = $pieceRepository->createQueryBuilder('p')
-            ->where('p.name LIKE :q OR p.description LIKE :q')
-            ->setParameter('q', '%' . $query . '%')
-            ->orderBy('p.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+    if ($query) {  // Si le champ de recherche n'est pas vide, j'effectue la recherche
+        $pieces = $pieceRepository->createQueryBuilder('p') //j'utilise le QueryBuilder pour construire ma requête
+            ->where('p.name LIKE :q OR p.description LIKE :q') // je cherche dans le nom et la description de la pièce
+            ->setParameter('q', '%' . $query . '%') // je remplace le texte tapé par un LIKE pour chercher dans la base de données
+            ->orderBy('p.createdAt', 'DESC') // je trie les résultats par date de création décroissante
+            ->getQuery()                     // je récupère la requête
+            ->getResult();                   // je récupère les résultats de la requête
     }
 
     if (empty($pieces)) {
         $this->addFlash('info', 'Aucune pièce trouvée pour votre recherche.');
     }
     return $this->render('guest/pieces/search-results.html.twig', [
-        'pieces' => $pieces
+        'pieces' => $pieces  //j'affiche la page des résultats, en passant la liste des trouvées au twig    
     ]);
     }
    

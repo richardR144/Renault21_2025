@@ -1,7 +1,7 @@
 {% extends 'guest/base.html.twig' %}
 
 {% block main %}
-    <a href="{{ path('guest-list-articles') }}">&#8592; Retour au Panthéon</a>
+    <a href="{{ path('list-articles') }}">&#8592; Retour au Panthéon</a>
     <div class="article-detail">
         <h1>{{ article.title }}</h1>
         <p>{{ article.content }}</p>
