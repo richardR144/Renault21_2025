@@ -11,7 +11,7 @@ namespace App\Controller\Guest;
     use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
     use Symfony\Component\HttpFoundation\Request;
-    use App\Entity\User; // Import the User entity
+    use App\Entity\User; 
 
     class InscriptionController extends AbstractController
     {

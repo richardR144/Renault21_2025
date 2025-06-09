@@ -513,6 +513,12 @@ input[type="file"] {
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(28,28,28,0.06);
 }
+    .piece-image {
+        display: flex;
+        margin: 0 auto 1rem auto;
+        max-width: 220px;
+        border-radius: 8px;
+    }
 /*------------------Détails-category-----------------*/
 .title-category {
     text-align: center;

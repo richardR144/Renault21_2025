@@ -32,23 +32,18 @@
                     {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
                     <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste des pièces</a></li>
                     <li class="liHeader"><a href="{{ path('list-articles') }}">Liste des articles</a></li>
-                    <li class="liHeader"><a href="{{ path('profil') }}">Profile</a>
+                    <li class="liHeader"><a href="{{ path('profil') }}">Profile</a></li>
                     <li class="bouton-header">
                     {% if app.user %}
-                        <button type="button" class="btn btn-primary">
-                            <a href="{{ path('logout') }}">Se déconnecter</a>
-                        </button>
-                    {% else %}
-                        <button type="button" class="btn btn-primary">
-                            <a href="{{ path('connexion') }}">Se connecter</a>
-                        </button>
+                            <a href="{{ path('logout') }}" class="btn btn-primary">Se déconnecter</a>   
+                    {% else %}   
+                            <a href="{{ path('connexion') }}" class="btn btn-primary">Se connecter</a>  
                     {% endif %}
                     </li>
                 </ul>
         </nav>
     
-    </header>
-    {% for flash_message in app.flashes('success') %}
+        {% for flash_message in app.flashes('success') %}
             <h2 class="alert alert-success color-success">
                 {{ flash_message }}
             </h2>
@@ -62,12 +57,11 @@
 {% endblock header %}
 
         
-            {% block main %}
-         
-            {% endblock main %}
+        {% block main %}
+        {% endblock main %}
 
 {% block footer %}
-    <footer>
+    
         <nav class="navFooter">
             <div class="logoFooter">
                 <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-renault">
@@ -75,7 +69,9 @@
         <ul class="ulFooter">
             {#<li class="liFooter"><a href="{{ path('cgu') }}">CGU</a></li>
             <li class="liFooter"><a href="{{ path('politique_de_confidentialité') }}">Politique de confidentialité</a></li>
-            <li class="liFooter"><a href="{{ path('newsletters') }}">Newsletters</a></li>#}
+            <li class="liFooter"><a href="{{ path('newsletters') }}">Newsletters</a></li>
+            <li class="liFooter"><a href="{{ path('mentions_legales') }}">Mentions légales</a></li>
+            <li class="liFooter"><a href="{{ path('contact') }}">Contact</a></li>#}
             <li class="liFooter">
                 <label>
                     <input required type="email" placeholder="Entrez votre email">
@@ -83,7 +79,7 @@
             </li>
         </ul>
         </nav>
-    </footer>
+   
 {% endblock footer %}
 </body>
 </html>

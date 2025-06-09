@@ -25,7 +25,7 @@
                         <div class="container-logo">
                             <div class="bouton">
                                 <label>
-                                    <button type="button">Découvrir</button>
+                                    <a href="{{ path('list-articles') }}" class="btn btn-primary">Découvrir</a>
                                 </label>
                             </div>
                         <div class="items">
@@ -40,7 +40,7 @@
             <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
             <div class="bouton">
                 <label>
-                    <button type="button">Entrez !</button>
+                    <a href="{{ path('list-articles') }}" class="btn btn-primary">Entrez !</a>
                 </label>
             </div>
         </div>
@@ -59,7 +59,7 @@
         </div>
         <div class="bouton" id="allPieces">
             <label>
-                <button type="button">Liste de toutes les pièces</button>
+                <a href="{{ path('list-pieces') }}" class="btn btn-primary">Liste de toutes les pièces</a>
             </label>
         </div>
     </main>

@@ -238,8 +238,8 @@ class PieceController extends AbstractController {  //AbstractController permet 
 
     if ($query) {  // Si le champ de recherche n'est pas vide, j'effectue la recherche
         $pieces = $pieceRepository->createQueryBuilder('p') //j'utilise le QueryBuilder pour construire ma requête
-            ->where('p.name LIKE :q OR p.description LIKE :q') // je cherche dans le nom et la description de la pièce
-            ->setParameter('q', '%' . $query . '%') // je remplace le texte tapé par un LIKE pour chercher dans la base de données
+            ->where('p.name LIKE :q OR p.description LIKE :q') // je remplace le texte tapé par un LIKE pour chercher dans la base de données
+            ->setParameter('q', '%' . $query . '%') // je cherche dans le nom et la description de la pièce
             ->orderBy('p.createdAt', 'DESC') // je trie les résultats par date de création décroissante
             ->getQuery()                     // je récupère la requête
             ->getResult();                   // je récupère les résultats de la requête

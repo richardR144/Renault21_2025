@@ -21,9 +21,14 @@
                     <p>Created at: {{ piece.createdAt|date('Y-m-d H:i') }}</p>
                     {% if piece.image %}
                         <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="img-fluid"
-                            style="display:block; margin: 0 auto 1rem auto; max-width: 250px; border-radius: 8px;">
                     {% endif %}
                     <p>{{ piece.user.pseudo }}</p>
+                    <p>Email : {{ piece.user.email }}</p>
+                    {% if piece.price %}
+                        <p>Prix : {{ piece.price }} €</p>
+                    {% elseif piece.isExchange %}
+                        <p>Échange possible</p>
+                    {% endif %}
                     <a href="{{ path('details-piece', {'id': piece.name}) }}">Voir les détails</a>
                 </div>
                 {% endfor %}

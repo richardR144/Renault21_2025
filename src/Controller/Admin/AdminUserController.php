@@ -21,7 +21,7 @@ class AdminUserController extends AbstractController
     {
 
         if ($request->isMethod('POST')) { 
-            $pseudo = $request->request->get('pseudo');                   // je vérifie que les données sont envoyés en POST
+            $pseudo = $request->request->get('pseudo');      // je vérifie que les données sont envoyés en POST
             $email = $request->request->get('email');       // je récupère l'email et le mot de passe envoyée par le formulaire
             $password = $request->request->get('password');
             $role = $request->request->get('role', ['ROLE_USER']); 
