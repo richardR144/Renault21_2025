@@ -1,10 +1,21 @@
 {% extends 'guest/base.html.twig' %}
 
 {% block main %}
-    <a href="{{ path('list-articles') }}">&#8592; Retour au Panthéon</a>
-    <div class="article-detail">
-        <h1>{{ article.title }}</h1>
-        <p>{{ article.content }}</p>
-        <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}">
+<div id="main-pantheon">
+    <a href="{{ path('list-articles') }}" class="btn btn-primary">&#8592; Retour au Panthéon</a>
+    <div id="main-pantheon">
+    <div class="articles-list">
+       
+            <div class="article-card">
+                <div class="article-image">
+                    <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}">
+                </div>
+                <div class="article-content">
+                    <h2 class="pantheon">{{ article.title }}</h2>
+                    <p>{{ article.content }}</p>
+                </div>
+            </div>
+        
+    </div>
     </div>
 {% endblock %}

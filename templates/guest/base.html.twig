@@ -20,18 +20,16 @@
                 <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-header">
             </div>
             <div id="burger">
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
                 <ul class="ulHeader">
                     <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
                     {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
                     <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste des pièces</a></li>
-                    <li class="liHeader"><a href="{{ path('list-articles') }}">Liste des articles</a></li>
+                    <li class="liHeader"><a href="{{ path('list-articles') }}">Panthéon</a></li>
                     <li class="liHeader"><a href="{{ path('profil') }}">Profile</a></li>
                     <li class="bouton-header">
                     {% if app.user %}
@@ -81,6 +79,11 @@
         </nav>
    
 {% endblock footer %}
+{% block javascripts %}
+   <script src="{{ asset('asset/css/script.js') }}"></script>
+{% endblock javascripts %}
 </body>
 </html>
+
+
 

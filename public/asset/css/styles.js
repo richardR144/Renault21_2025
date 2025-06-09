@@ -1,15 +1,7 @@
 import { Input, Tab, Ripple, initMDB } from "mdb-ui-kit";
 initMDB({ Input, Tab, Ripple });
 
-// Menu burger
-document.addEventListener('DOMContentLoaded', function() {
-    const burger = document.getElementById('burger');
-    const ulHeader = document.querySelector('.ulHeader');
-    if (burger && ulHeader) {
-        burger.addEventListener('click', function() {
-            ulHeader.classList.toggle('active');
-        });
-    }
+
 
     // Gestion des onglets et boutons avec data-mdb-target
     const tabButtons = document.querySelectorAll('[data-mdb-target]');
@@ -40,4 +32,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         updateButton();
     }
-});
+

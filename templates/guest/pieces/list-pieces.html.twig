@@ -28,8 +28,7 @@
                         <p>Prix : {{ piece.price }} €</p>
                     {% elseif piece.isExchange %}
                         <p>Échange possible</p>
-                    {% endif %}
-                    <a href="{{ path('details-piece', {'id': piece.name}) }}">Voir les détails</a>
+                    {% endif %}  
                 </div>
                 {% endfor %}
             {% endif %}

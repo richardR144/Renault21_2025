@@ -56,7 +56,7 @@
         font-size: 14px;
         cursor: pointer;
         align-items: center;
-        width: 50%;
+        width: 60%;
 }
 
     .liHeader{
@@ -541,6 +541,46 @@ input[type="file"] {
 
 }
 
+/*-------------------Pantheon--------------------------*/
+#main-pantheon {
+    background-color: #b3c7fa;
+    min-height: 70vh;   
+}
+.pantheon {
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+}
+.article-card {
+    display: flex;
+    align-items: center;
+    margin: 50px;
+    gap: 20px;
+    justify-content: space-around;   
+}
+
+.article-image  {
+    width: 23%;
+}
+
+.article-image img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.article-content {
+    width: 60%;
+    
+}
+
+.separate {
+    width: 60%;
+    height: 1px;
+    background-color: black;
+    margin-left: 20%;
+}
+
+
 /*------------------FOOTER Accueil/guest/base--------------------*/
 footer {
     background-color: #1C1C1C;
@@ -624,18 +664,14 @@ footer {
             z-index: 100;
         }
 
-        #burger ul {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        #burger li {
+        #burger span {
+            display: block;
             width: 25px;
             height: 3px;
             background: white;
-        }
-
+            margin: 4px 0;
+            border-radius: 2px;
+    }
         .ulHeader {
             display: none;
             flex-direction: column;

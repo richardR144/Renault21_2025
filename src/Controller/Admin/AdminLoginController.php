@@ -22,7 +22,7 @@ class AdminLoginController extends AbstractController
     $currentUser = $this->getUser();
         if(null !== $currentUser && $currentUser->getRoles() !== ['ROLE_USER']) {
             // Si l'utilisateur est déjà connecté, redirige vers la page d'accueil
-            return $this->redirectToRoute('admin/admin-accueil');
+            return $this->redirectToRoute('admin-dashboard');
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();
