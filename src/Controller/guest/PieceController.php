@@ -128,58 +128,6 @@ class PieceController extends AbstractController {  //AbstractController permet 
             ]);
         }
     
-    /*    if (!$piece) {
-                throw $this->createNotFoundException('Pièce non trouvée');
-            }
-
-        if ($request->isMethod('POST')) {
-            // Récupération des données du formulaire
-            $name = $request->request->get('Name');
-            $description = $request->request->get('description');
-            $email = $request->request->get('email');   // Bien que l'email ne soit pas utilisé dans l'entité Piece, il est récupéré ici
-            $exchange = $request->request->get('exchange'); // Récupération de l'option d'échange
-            $price = $request->request->get('price');       
-            $imageFile = $request->files->get('image');
-            $categoryId = $request->request->get('category-id');
-            $category = $categoryRepository->find($categoryId);
-           
-            $piece->setName($name);
-            $piece->setDescription($description);
-            $piece->setExchange($exchange);
-            $piece->setPrice($price);
-            $piece->setCategory($category);
-            $piece->setUser($this->getUser());
-            
-
-        
-            if (!$imageFile) {
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                $imageFile->move($this->getParameter('pieces_images_directory'), $newFilename);
-                // Vérifie si une image précédente existe et la supprime si nécessaire
-                $piece->setImage($newFilename); // Stocke le nom du fichier dans l'entité
-    }
-
-            try {
-                $piece->update($name, $description, $exchange, $price, $category);
-                $piece->setImage($request->files->get('image')); // Mettre à jour l'image si elle est fournie
-                
-                $entityManager->persist($piece); // Pas besoin de persist car l'entité est déjà gérée par Doctrine
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Piece modifiée !');
-
-            } catch (\Exception $exception) {
-                $this->addFlash('error', $exception->getMessage());
-            }
-       
-           
-        }
-        return $this->render('Guest/pieces/update-piece.html.twig', [
-            'piece' => $piece,
-            'categories' => $categories,
-            'insertPieceForm' => $this->createForm(InsertPieceForm::class, $piece)->createView(),
-        ]);
-    }*/
 
 
     #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET', 'POST'])]
