@@ -712,6 +712,17 @@ footer {
         font-size: 2rem;
         margin: 20px 0;
       }
+
+      /*--------------------Admin-modif-user------------------*/
+      .modif-user {
+        text-align: center;
+      }
+
+      /*-----------------------Admin-modif-piece--------------------*/
+
+        .modif-piece {
+            text-align: center;
+        }
         /*-------------------Responsive HEADER accueil(téléphone portable)----------------------*/
 
     @media screen and (max-width: 780px) {
