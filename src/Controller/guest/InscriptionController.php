@@ -42,12 +42,12 @@ namespace App\Controller\Guest;
 
                 $user = new User();  //je créais une nouvelle instance de l'entité user
 
-                $passwordHashed = $userPasswordHasher->hashPassword($user, $password);
-                //Hash le mot de passe avec le service de Symfony 
+            $passwordHashed = $userPasswordHasher->hashPassword($user, $password);
+            //Hash le mot de passe avec le service de Symfony 
 
-               
-                $user->createUser($pseudo, $email, $passwordHashed, ['ROLE_USER']); 
-                // Utilise une méthode personnalisée pour initialiser l'utilisateur
+            $role = 'ROLE_USER'; // Définir le rôle par défaut
+            $user->createUser($pseudo, $email, $passwordHashed, $role); 
+            // Utilise une méthode personnalisée pour initialiser l'utilisateur
 
                 try {   
                     $entityManager->persist($user);
