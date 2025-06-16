@@ -1,11 +1,26 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
+    <div class="admin-dashboard">
+        <p>Bienvenue, {{ app.user.pseudo }} !</p>
     <h1>Bienvenue sur le tableau de bord admin</h1>
-    <ul>
-        <li><button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'">Gestion des utilisateurs</a></button></li>
-        <li><button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Gestion des pièces</a></button></li>
-        <li><button type="button" onclick="window.location.href='{{ path('admin-list-articles') }}'">Gestion des articles</a></button></li>
+    <ul class="admin-menu">
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'" class="btn btn-primary">Gestion des utilisateurs</a></button></li>
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'" class="btn btn-primary">Gestion des pièces</a></button></li>
+        <li><button type="button" onclick="window.location.href='{{ path('admin-list-articles') }}'" class="btn btn-primary">Gestion des articles</a></button></li>
         {#<li><button type="button" onclick="window.location.href='{{ path('admin-list-categories') }}'">Gestion des catégories</a></button></li>#}
     </ul>
+    </div>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
 {% endblock %}

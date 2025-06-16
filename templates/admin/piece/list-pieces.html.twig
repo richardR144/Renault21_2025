@@ -1,9 +1,10 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
+<section id="admin-user-menu" width="80%" border="1">
 <h1>Gestion des pièces</h1>
-<button type="button" onclick="window.location.href='{{ path('admin-create-piece') }}'">Créer une pièce</a></button>
-<table>
+<button type="button" onclick="window.location.href='{{ path('admin-create-piece') }}'" class="btn btn-primary">Créer une pièce</a></button>
+<table width="80%" border="1">
     <thead>
         <tr>
             <th>ID</th>
@@ -21,12 +22,25 @@
             <td>{{ piece.description }}</td>
             <td>{{ piece.price }}</td>
             <td>
-                <button type="button" onclick="window.location.href='{{ path('admin-update-piece', {'id': piece.id}) }}'">Modifier</a></button>
-                <button type="button" onclick="window.location.href='{{ path('admin-delete-piece', {'id': piece.id}) }}'" onclick="return confirm('Supprimer cette pièce ?')">Supprimer</a></button>
+                <button type="button" onclick="window.location.href='{{ path('admin-update-piece', {'id': piece.id}) }}'" class="btn btn-warning">Modifier</a></button>
+                <button type="button" onclick="window.location.href='{{ path('admin-delete-piece', {'id': piece.id}) }}'" onclick="return confirm('Supprimer cette pièce ?')" class="btn btn-danger">Supprimer</a></button>
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+</section>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
 {% endblock %}
 

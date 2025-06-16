@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Controller\Guest;
-use App\Repository\PieceRepository; 
-use App\Repository\CategoryRepository;
+
+use App\Repository\PieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;   
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Piece;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -33,5 +30,17 @@ class ProfilController extends AbstractController
         ]);
     }
 
-   
+    #[Route('/Guest/profil/piece', name: 'profil-piece')]
+    public function profilPiece(Request $request, UserRepository $userRepository, PieceRepository $pieceRepository): Response
+    {
+        $currentUser = $this->getUser();
+        $pieces = [];
+        foreach ($pieceRepository->findAll() as $piece) {
+            if ($piece->getUser() === $currentUser) {
+                $pieces[] = $piece;
+            }
+        }
+
+        return $this->render('guest/show-user-piece.html.twig', ['pieces' => $pieces, 'user' => $currentUser]);
+    }
 }

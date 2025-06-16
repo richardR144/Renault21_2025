@@ -427,6 +427,15 @@ h3{
   
 }
 
+/*----------------------Show-user-piece---------------*/
+.show-user-piece {
+    margin: 15% 0;
+}
+
+.show-piece{
+    background-color: #b3c7fa;
+}
+
 
        /*********************modification de piece**********************/
 
@@ -637,6 +646,72 @@ footer {
             width: 100%;
         }
 
+
+        /*-----------------Admin-Dashboard-------------*/
+        .admin-dashboard {
+            text-align: center;
+            min-height: 70vh; 
+        }
+
+        .admin-menu li {
+            margin-bottom: 2%;
+        }
+
+        /*-------------------Admin-User-Liste----------------------*/
+
+        #admin-user-menu{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            min-height: 70vh;
+            margin: 2% 0;
+        }
+
+        #admin-user-menu h1{
+            margin-bottom: 2%;
+        }
+
+      /*------------------------Admin-Create-User------------------------------*/
+       
+      #admin-create-user{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        min-height: 70vh;
+      }  
+
+
+      #create-user-form{
+        width: 70%;
+      }
+
+/*-------------------Admin-Create-Article----------------------*/
+
+      .admin-article{
+        display: flex;
+        justify-content: space-around;
+        flex-direction: row-reverse;
+        align-items: center;
+      }
+
+      .admin-article div{
+        margin: 1% 0;
+      }
+
+      .article-button{
+        display: flex;
+        justify-content: space-between;
+      }
+
+      /*-----------------------Admin-list-article create*/
+
+      .title-article{
+        text-align: center;
+        font-size: 2rem;
+        margin: 20px 0;
+      }
         /*-------------------Responsive HEADER accueil(téléphone portable)----------------------*/
 
     @media screen and (max-width: 780px) {

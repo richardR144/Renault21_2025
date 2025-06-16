@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="{{ asset('asset/css/profil.css') }}">   
 </head>
 <body>
-{% block header %}
     <header>
         <nav class="navHeader">
             <div class="logoHeader">
@@ -51,14 +50,18 @@
                 {{ flash_message }}
             </h2>
         {% endfor %}
+    </header>
     
-{% endblock header %}
 
+    <main>
         
         {% block main %}
         {% endblock main %}
 
-{% block footer %}
+    </main>
+
+
+    <footer>
     
         <nav class="navFooter">
             <div class="logoFooter">
@@ -77,8 +80,10 @@
             </li>
         </ul>
         </nav>
+
+        </footer>
    
-{% endblock footer %}
+
 {% block javascripts %}
    <script src="{{ asset('asset/css/script.js') }}"></script>
 {% endblock javascripts %}

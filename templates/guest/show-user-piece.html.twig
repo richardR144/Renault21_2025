@@ -1,0 +1,43 @@
+{% extends 'guest/base.html.twig'%}
+
+
+
+{% block metatitle %}Mes pièces | guest Renault 21 TD{% endblock metatitle %}
+
+{% block main %}
+    
+    <h1 class="text-center mb-4">Mes pièces</h1>
+        <div class="show-piece piece ">
+            {% for piece in pieces %}
+                <div class="show-user-piece">
+            <h2>{{ piece.name }}</h2>   
+        <p>{{ piece.description }}</p>
+
+        <p>Catégorie : {{ piece.category.name }}</p>
+
+        <p>Créé le : {{ piece.createdAt|date('Y-m-d H:i') }}</p>
+
+        {% if piece.image %}
+            <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="img-fluid">
+        {% endif %}
+
+        <p>Proposé par : {{ piece.user.pseudo }}</p>
+        <p>Email : {{ piece.user.email }}</p>
+
+        {% if piece.price %}
+            <p>Prix : {{ piece.price }} €</p>
+        {% elseif piece.isExchange %}
+            <p>Échange possible</p>
+        {% endif %}
+        <div></div>
+        {% endfor %}
+    </div>
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+{% endblock main %}

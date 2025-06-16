@@ -1,9 +1,22 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
+<div class="title-article">
     <h1>Gestion des articles</h1>
-
     <h2>Créer un nouvel article</h2>
+    </div>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
     <form method="post" enctype="multipart/form-data" action="{{ path('admin-create-article') }}">
         <div class="form-group">
             <label for="title">Titre :</label>
@@ -17,26 +30,36 @@
             <label for="image">Image :</label>
             <input type="file" name="image" id="image" accept="image/*" required>
         </div>
-        <button type="submit">Créer l'article</button>
+        <button type="submit"  class="btn btn-primary">Créer l'article</button>
     </form>
 
-    <h2>Articles existants</h2>
+    <h2 class="title-article">Articles existants</h2>
     <ul>
         {% for article in articles %}
             <li>
-                <strong>{{ article.title }}</strong>
-                <br>
-                {{ article.content|slice(0, 100) ~ '...' }}
-                <br>
+                <article class="admin-article">
+                <div>
+
+                    <h3>{{ article.title }}</h3>
+    
+                    <p>{{ article.content|slice(0, 100) ~ '...' }}<p>
+        
+                </div>
+                <div>
                 {% if article.image %}
                     <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}">
                 {% endif %}
-                <br>
-                <a href="{{ path('admin-update-article', {'id': article.id}) }}" class="btn btn-primary">Modifier l'article</a>
+                </div>
+                </article>
+            
+            
+               
                 <form method="post" action="{{ path('admin-delete-article', {'id': article.id}) }}">
+                 <a href="{{ path('admin-update-article', {'id': article.id}) }}" class="btn btn-warning">Modifier l'article</a>
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_article_' ~ article.id) }}">
-                    <button type="submit" onclick="return confirm('Supprimer cet article ?')" class="btn btn-primary">Supprimer l'article</button>
+                    <button type="submit" onclick="return confirm('Supprimer cet article ?')" class="btn btn-danger">Supprimer l'article</button>
                 </form>
+              
             </li>
         {% else %}
             <li>Aucun article pour le moment.</li>

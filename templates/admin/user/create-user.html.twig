@@ -1,11 +1,16 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
-<button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'">&#8592; Retour à la gestion des utilisateurs</a></button>
-    <h1>Créer un utilisateur</h1>
+<button type="button" onclick="window.location.href='{{ path('admin-list-admins') }}'"  class="btn btn-primary">&#8592; Retour à la gestion des utilisateurs</a></button>
+<section id="admin-create-user">
+    <h1 class="create-user">Créer un utilisateur</h1>
     
-    <p>Remplissez le formulaire ci-dessous pour créer un nouvel utilisateur.</p>
-    <form method="post">
+    <p class="create-user">Remplissez le formulaire ci-dessous pour créer un nouvel utilisateur.</p>
+    <form method="post" id="create-user-form">
+        <div class="form-group">
+            <label for="pseudo">Pseudo :</label>
+            <input type="pseudo" name="pseudo" id="pseudo" required>
+        </div>
         <div class="form-group">
             <label for="email">Email :</label>
             <input type="email" name="email" id="email" required>
@@ -21,7 +26,20 @@
                 <option value="ROLE_ADMIN">Administrateur</option>
             </select>
         </div>
-        <button type="submit">Créer</button>
-        <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'">Annuler</a></button>
+        <button type="submit"  class="btn btn-primary">Créer</button>
+        <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'"  class="btn btn-danger">Annuler</a></button>
     </form>
+</section>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
 {% endblock %}

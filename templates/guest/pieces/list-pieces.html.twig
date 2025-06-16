@@ -17,8 +17,8 @@
                 <div class="piece">
                     <h2>{{ piece.name }}</h2>
                     <p>{{ piece.description }}</p>
-                    <p>Categorie: {{ piece.name }}</p>
-                    <p>Created at: {{ piece.createdAt|date('Y-m-d H:i') }}</p>
+                    <p>Categorie : {{ piece.name }}</p>
+                    <p>Créé le : {{ piece.createdAt|date('Y-m-d H:i') }}</p>
                     {% if piece.image %}
                         <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="img-fluid"
                     {% endif %}

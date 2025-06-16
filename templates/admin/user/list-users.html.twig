@@ -2,8 +2,10 @@
 
 {% block main %}
 
+<section id="admin-user-menu">
+
 <h1>Gestion des utilisateurs</h1>
-<button type="button" onclick="window.location.href='{{ path('admin-create-user') }}'">Créer un utilisateur</button>
+<button type="button" onclick="window.location.href='{{ path('admin-create-user') }}'"  class="btn btn-primary">Créer un utilisateur</button>
 
 
 {% if app.session.flashbag.has('success') %}
@@ -17,7 +19,7 @@
         {{ app.session.flashbag.get('error')[0] }}
     </div>
 {% endif %}
-<table>
+<table width="80%" border="1">
     <thead>
         <tr>
             <th>ID</th>
@@ -33,11 +35,14 @@
             <td>{{ user.email }}</td>
             <td>{{ user.roles | join(', ') }}</td>
             <td>
-                <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'">Modifier</button>
-                <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'">Supprimer</button>
+                <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'" class="btn btn-warning">Modifier</button>
+                <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'"  class="btn btn-danger">Supprimer</button>
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+
+</section>
+
 {% endblock %}
