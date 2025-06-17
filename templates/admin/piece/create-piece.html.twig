@@ -5,31 +5,22 @@
 
 <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'" class="btn btn-primary">&#8592; Retour à la gestion des pièces</a></button>
     <section id="admin-user-menu" width="80%" border="1">
-    <main id="create-piece">
-
-        <h1>Créer une nouvelle pièce</h1>
-
-        <form method="post" action="{{ path('admin-create-piece') }}">
-
-            <div class="form-group">
-                <label for="name">Nom de la pièce :</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description :</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Créer la pièce</button>
-
-            <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'" class="btn btn-danger">Annuler</a></button>
-
-        </form>
-
-    </main>
-     
-</section>
+        <main id="create-piece">
+            <h1>Créer une nouvelle pièce</h1>
+                <form method="post" action="{{ path('admin-create-piece') }}">
+                    <div class="form-group">
+                        <label for="name">Nom de la pièce :</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description :</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </div>
+                        <button type="submit" class="btn btn-primary">Créer la pièce</button>
+                        <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'" class="btn btn-danger">Annuler</a></button>
+                </form>
+        </main>    
+    </section>
 
     {% for flash_message in app.flashes('success') %}
         <div class="alert alert-success">
