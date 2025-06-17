@@ -6,23 +6,22 @@
 
 {% block main %}
         
-<div class="profil-bg bg-update-piece">
-    <div class="bg-image"></div>
-    <div class="profil-content">
-        <h2 id="formPiece">Modifier la pièces</h2>
+    <div class="profil-bg bg-update-piece">
+        <div class="bg-image"></div>
+            <div class="profil-content">
+                <h2 id="formPiece">Modifier la pièce</h2>
+                    {{ form(insertPieceForm) }}
+            </div>
+        </div>
+            <div class="btn-back">
+                <a href="{{ path('list-pieces') }}" class="btn btn-primary">Retour à la liste des pièces</a>
+            </div>  
 
-        {% for flash_message in app.flashes('success') %}
-            <div class="alert alert-success">{{ flash_message }}</div>
-        {% endfor %}
-        {% for flash_message in app.flashes('error') %}
-            <div class="alert alert-danger">{{ flash_message }}</div>
-        {% endfor %}
-
-            {{ form(insertPieceForm) }}
- </div>
-</div>
-    <div class="btn-back">
-        <a href="{{ path('list-pieces') }}" class="btn-custom">Retour à la liste des pièces</a>
-    </div>           
-
+            {% for message in app.flashes('info') %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+            
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
 {% endblock main %}

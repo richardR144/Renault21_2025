@@ -3,6 +3,18 @@
 {% block main %}
     <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}">&#8592; Retour à la gestion des pièces</a></button>
 
+    <main id="delete">
+        <h1>Supprimer la pièce</h1>
+        <p>Êtes-vous sûr de vouloir supprimer la pièce "{{ piece.name }}" ?</p>
+
+        <form method="post" action="{{ path('admin-delete-piece', {'id': piece.id}) }}">
+            <p>Cette action est irréversible.</p>
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_piece' ~ piece.id) }}">
+            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+            <a href="{{ path('admin-list-pieces') }}" class="btn btn-primary">Annuler</a>
+        </form>
+    </main>
+
     {% if app.session.flashbag.has('success') %}
         <div class="alert alert-success">
             {{ app.session.flashbag.get('success')[0] }}
@@ -14,15 +26,4 @@
             {{ app.session.flashbag.get('error')[0] }}
         </div>
     {% endif %}
-    <main id="delete">
-        <h1>Supprimer la pièce</h1>
-        <p>Êtes-vous sûr de vouloir supprimer la pièce "{{ piece.name }}" ?</p>
-
-        <form method="post" action="{{ path('admin-delete-piece', {'id': piece.id}) }}">
-            <p>Cette action est irréversible.</p>
-            <input type="hidden" name="_token" value="{{ csrf_token('delete_piece' ~ piece.id) }}">
-            <button type="submit">Confirmer la suppression</button>
-            <a href="{{ path('admin-list-pieces') }}">Annuler</a>
-        </form>
-    </main>
 {% endblock main %}
