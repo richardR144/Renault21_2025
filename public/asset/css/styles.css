@@ -16,7 +16,7 @@
 
 
 
-    .logoHeader, .logoFooter{
+    .logoHeader, .logoFooter {
         width: 20px;
         padding: 10px;
 }
@@ -129,7 +129,7 @@
 }
 
 h1{
-    font-size: 36px;
+    font-size: 27px;
     font-weight: lighter;
     margin: 10px 0;
 }
@@ -202,9 +202,9 @@ h3{
         gap: 20px;
 }
 
-.items {
-    display: flex;
-    gap: 20px;
+    .items {
+        display: flex;
+        gap: 20px;
 }
 
     .items img{
@@ -226,6 +226,7 @@ h3{
     #hMoteur{
         margin-right: 16%;
         }
+
     .bouton{
         display: flex;
         justify-content: center;
@@ -292,12 +293,6 @@ h3{
         width: 100%;
 }
 
-
-        
-
-
-
-
         /*--------------------Main inscription ---------------*/            
     #imgForm img{
         width: 110%;            
@@ -340,7 +335,6 @@ h3{
         transform: scale(1.1); /* Effet de zoom */
         box-shadow: 0 6px 12px rgba(30, 80, 220, 0.5); 
 }
-
 
            
 /*------------------formulaire inscription-------------------*/    
@@ -529,25 +523,25 @@ input[type="file"] {
         border-radius: 8px;
     }
 /*------------------Détails-category-----------------*/
-.title-category {
-    text-align: center;
-    font-size: 2rem;
-    margin: 20px 0;
+    .title-category {
+        text-align: center;
+        font-size: 2rem;
+            margin: 20px 0;
 }   
 
-#list-pieces {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin: 0 auto;
-    gap: 20px;
+    #list-pieces {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 0 auto;
+        gap: 20px;
 }
 
-.piece-select-form{
-    width: 50%;
-    align-items: center;
-    text-align: center;
+    .piece-select-form{ 
+        width: 50%;
+        align-items: center;
+        text-align: center;
 }
 
 

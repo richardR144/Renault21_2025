@@ -177,7 +177,7 @@ class PieceController extends AbstractController {  //AbstractController permet 
         ]);
     }
 
-
+    /* Serach-result pour rechercher une pièce précise et récupérer le champs tapé dans la recherche
     #[Route('/Guest/pieces/search-results', name:'search-results', methods: ['GET'])]
     public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response{
     $query = $request->query->get('q', ''); // je récupère le texte tapé dans le champ de recherche q dans l'url
@@ -199,6 +199,6 @@ class PieceController extends AbstractController {  //AbstractController permet 
     return $this->render('guest/pieces/search-results.html.twig', [
         'pieces' => $pieces  //j'affiche la page des résultats, en passant la liste des trouvées au twig    
     ]);
-    }
+    }*/
    
 }
