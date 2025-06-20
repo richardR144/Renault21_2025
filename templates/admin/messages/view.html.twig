@@ -1,0 +1,52 @@
+{% extends 'admin/base.html.twig' %}
+
+
+{% block main %}
+
+<div class="title-message">
+    <h1>Gestion des messages</h1>
+    <h2>Liste des messages</h2>
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <ul>
+        {% for message in messages %}
+            <li>
+                <article class="admin-message">
+                    <div>
+                        <h3>{{ message.subject }}</h3>
+                        <p>{{ message.content|slice(0, 100) ~ '...' }}</p>
+                    </div>
+                    <div>
+                        <p><strong>De :</strong> {{ message.email }}</p>
+                        <p><strong>Date :</strong> {{ message.createdAt|date('d/m/Y H:i') }}</p>
+                    </div>
+                </article>
+
+                <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+                    <button type="submit" onclick="return confirm('Supprimer ce message ?')" class="btn btn-danger">Supprimer le message</button>
+                </form>
+            </li>
+        {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+{% endblock main}

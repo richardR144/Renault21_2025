@@ -43,6 +43,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user', cascade: ['remove'], orphanRemoval: true)]
     private Collection $piece;
 
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
+    private Collection $joinColumn;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
+    private Collection $isRead;
+
+    public function __construct()
+    {
+        $this->joinColumn = new ArrayCollection();
+        $this->isRead = new ArrayCollection();
+    }
+
     public function _construct():void {
         $this->roles = ['ROLE_USER'];
         $this->piece = new ArrayCollection();
@@ -164,6 +182,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePiece(Piece $piece): static
     {
         $this->piece->removeElement($piece);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getJoinColumn(): Collection
+    {
+        return $this->joinColumn;
+    }
+
+    public function addJoinColumn(Message $joinColumn): static
+    {
+        if (!$this->joinColumn->contains($joinColumn)) {
+            $this->joinColumn->add($joinColumn);
+            $joinColumn->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJoinColumn(Message $joinColumn): static
+    {
+        if ($this->joinColumn->removeElement($joinColumn)) {
+            // set the owning side to null (unless already changed)
+            if ($joinColumn->getSender() === $this) {
+                $joinColumn->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getIsRead(): Collection
+    {
+        return $this->isRead;
+    }
+
+    public function addIsRead(Message $isRead): static
+    {
+        if (!$this->isRead->contains($isRead)) {
+            $this->isRead->add($isRead);
+            $isRead->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIsRead(Message $isRead): static
+    {
+        if ($this->isRead->removeElement($isRead)) {
+            // set the owning side to null (unless already changed)
+            if ($isRead->getReceiver() === $this) {
+                $isRead->setReceiver(null);
+            }
+        }
 
         return $this;
     }
