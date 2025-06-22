@@ -19,17 +19,15 @@
     <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
         <button type="submit" onclick="return confirm('Supprimer ce message ?')" class="btn btn-danger">Supprimer le message</button>
-        <a href="{{ path('admin-messages') }}" class="btn btn-secondary">Annuler</a>
+        <a href="{{ path('admin-messages-delete-message') }}" class="btn btn-primary">Annuler</a>
     </form>
 </div>
 {% endblock main %}
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/admin/messages.css') }}">
-{% endblock stylesheets %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/admin/messages.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Additional JavaScript can be added here if needed
+        });
+    </script>
 {% endblock javascripts %}
-{% block title %}Suppression du message{% endblock title %}
-{% block description %}Page de confirmation de suppression d'un message dans l'interface d'administration.{% endblock description %}

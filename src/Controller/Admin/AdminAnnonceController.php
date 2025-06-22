@@ -15,17 +15,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]   
 class AdminAnnonceController extends AbstractController
 {
-    #[Route('/admin/annonces', name: 'admin-annonces-list', methods: ['GET'])]
+    #[Route('/admin/annonces', name: 'list-annonces', methods: ['GET'])]
     public function listAnnonce(AnnonceRepository $annonceRepository): Response
     {
         $annonces = $annonceRepository->findAll();
 
-        return $this->render('admin/annonces/list.html.twig', [
+        return $this->render('admin/annonces/list-annonces.html.twig', [
             'annonces' => $annonces
         ]);
     }
 
-    #[Route('/admin/annonces/create', name: 'admin-annonces-create', methods: ['GET', 'POST'])]
+    #[Route('/admin/annonces/create', name: 'create-annonce', methods: ['GET', 'POST'])]
     public function createAnnonce(Request $request, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
     {
         if ($request->isMethod('POST')) {
@@ -69,10 +69,10 @@ class AdminAnnonceController extends AbstractController
                 $this->addFlash('error', 'Impossible de créer l\'annonce');
             }
         }
-        return $this->render('admin/annonces/create.html.twig');
+        return $this->render('admin/annonces/create-annonce.html.twig');
     }
 
-    #[Route('/admin/annonces/delete/{id}', name: 'admin-annonces-delete', methods: ['POST'])]
+    #[Route('/admin/annonces/delete/{id}', name: 'delete-annonce', methods: ['POST'])]
     public function deleteAnnonce(int $id, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
     {
         try {
@@ -90,17 +90,17 @@ class AdminAnnonceController extends AbstractController
             $this->addFlash('error', 'Impossible de supprimer l\'annonce');
         }
 
-        return $this->redirectToRoute('admin-annonces-list');
+        return $this->redirectToRoute('list-annonces');
     }
 
-    #[Route('/admin/annonces/{id}', name: 'admin-annonces-show', methods: ['GET'])]
+    #[Route('/admin/annonces/{id}', name: 'show-annonces', methods: ['GET'])]
     public function showAnnonce(int $id, AnnonceRepository $annonceRepository): Response
     {
         $annonce = $annonceRepository->find($id);
         if (!$annonce) {
             throw $this->createNotFoundException('Annonce non trouvée');
         }
-        return $this->render('admin/annonces/show.html.twig', [
+        return $this->render('admin/annonces/show-annonce.html.twig', [
             'annonce' => $annonce,
         ]);
     }

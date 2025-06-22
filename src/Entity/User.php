@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Entity;
+// src/Entity/User.php
+use App\Entity\Piece;
+use App\Entity\Message;
+use App\Entity\Annonce;
 use App\Entity\Image;
 use App\Entity\Description;
 use App\Repository\UserRepository;
@@ -12,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Table(name: 'user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

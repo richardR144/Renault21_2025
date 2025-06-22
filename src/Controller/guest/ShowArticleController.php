@@ -21,7 +21,7 @@ class ShowArticleController extends AbstractController
         ]);
     }
     #[Route('/pantheon/article/{id}', name: 'show-article')]
-    public function showArticle(int $id, Repository $repository, Article $article): Response
+    public function showArticle(int $id, Repository $repository): Response
     {
         $article = $repository->find($id);
         if (!$article) {
