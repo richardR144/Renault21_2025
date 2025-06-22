@@ -5,7 +5,7 @@
 {% block main %}
 <div class="list-messages">
     <h1 class="text-center mb-4">Liste des messages</h1>
-
+    <a href="{{ path('create-message') }}" class="btn btn-success mb-3">Créer un message</a>
     {% for flash_message in app.flashes('success') %}
         <div class="alert alert-success">{{ flash_message }}</div>
     {% endfor %}
@@ -15,22 +15,28 @@
 
     <div class="list-messages">
         {% for message in messages %}
-            <div class="message-item">
-                <form method="post" action="{{ path('guest-messages-list-messages', {'id': message.id}) }}">
-                   
-                    <div class="form-group">
-                        <label for="content-{{ message.id }}">Contenu</label>
-                        <textarea id="content-{{ message.id }}" name="content" class="form-control" rows="5" required>{{ message.content }}</textarea>
-                    </div>
-                    <input type="hidden" name="_token" value="{{ csrf_token('read_message_' ~ message.id) }}">
-                    <button type="submit" class="btn btn-warning">Marquer comme lu</button>
-                    <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-primary">Annuler</a>
-                </form>
+            <div class="message-item mb-4 p-3 border rounded bg-light">
                 <p><strong>De :</strong> {{ message.sender.pseudo }} ({{ message.sender.email }})</p>
+                <p><strong>À :</strong> {{ message.receiver.pseudo }} ({{ message.receiver.email }})</p>
                 <p><strong>Envoyé le :</strong> {{ message.createdAt|date('Y-m-d H:i') }}</p>
-                <p><strong>Statut :</strong> {{ message.isRead ? 'Lu' : 'Non lu' }}</p>
-                <a href="{{ path('guest-messages-list-messages', {'id': message.id}) }}" class="btn btn-primary">Lire les messages</a>
+                <p>
+                    <strong>Statut :</strong>
+                    {% if message.isRead %}
+                        <span class="badge badge-success" style="background-color:#28a745;color:white;padding:0.4em 1em;border-radius:0.5em;">Lu</span>
+                    {% else %}
+                        <span class="badge badge-danger" style="background-color:#dc3545;color:white;padding:0.4em 1em;border-radius:0.5em;">Non lu</span>
+                    {% endif %}
+                </p>
+                <a href="{{ path('read-message', {'id': message.id}) }}" class="btn btn-primary btn-sm">Lire</a>
+                {% if not message.isRead %}
+                    <form method="post" action="{{ path('read-message', {'id': message.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('read_message_' ~ message.id) }}">
+                        <button type="submit" class="btn btn-warning btn-sm">Marquer comme lu</button>
+                    </form>
+                {% endif %}
             </div>
+        {% else %}
+            <div class="alert alert-info text-center">Aucun message trouvé.</div>
         {% endfor %}
     </div>
 </div>

@@ -2,7 +2,7 @@
 
 {% block main %}
 <div class="btn-back">
-    <a href="{{ path('admin-create-message') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
+    <a href="{{ path('admin-list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
 </div>
 <div class="width-message">
 <div class="title-message">
@@ -42,14 +42,11 @@
                 <td>{{ message.content|slice(0, 500) ~ '...' }}</td>
                 <td>{{ message.createdAt|date('d/m/Y H:i') }}</td>
                 <td>
-                    
-                    <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}">
-                        <a href="{{ path('admin-update-message', {'id': message.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <a href="{{ path('admin-update-message', {'id': message.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}" style="display:block; width:50%; height:80%;padding:1%;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
                         <button type="submit" onclick="return confirm('Supprimer ce message ?')" class="btn btn-danger btn-sm">Supprimer</button>
-                        <a href="{{ path('admin-list-messages', {'id': message.id}) }}" class="btn btn-primary btn-sm">Voir</a>
                     </form>
-                    
                 </td>
             </tr>
         {% else %}

@@ -1,0 +1,28 @@
+{% extends 'guest/base.html.twig'%}
+
+{% block main %}
+<div class="btn-back">
+    <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
+</div>
+    <div class="profil-bg bg-delete-message">
+        <div class="bg-image"></div>
+        <div class="profil-content">
+            <h2>Supprimer le message</h2>
+
+            <p>Êtes-vous sûr de vouloir supprimer ce message ?</p>
+
+            <form method="post" action="{{ path('delete-message', {'id': message.id}) }}">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <a href="{{ path('list-messages') }}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </div>
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+{% endblock main %}

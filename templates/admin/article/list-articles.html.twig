@@ -52,8 +52,6 @@
                 </div>
                 </article>
             
-            
-               
                 <form method="post" action="{{ path('admin-delete-article', {'id': article.id}) }}">
                  <a href="{{ path('admin-update-article', {'id': article.id}) }}" class="btn btn-warning">Modifier l'article</a>
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_article_' ~ article.id) }}">

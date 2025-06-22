@@ -13,26 +13,37 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 // Contrôleur pour la gestion des messages des utilisateurs invités (guest)
 
 class MessagesController extends AbstractController {
-    #[Route('/messages', name: 'list-messages', methods: ['GET'])]
+    #[Route('/guest/messages/list-messages', name: 'list-messages', methods: ['GET', 'POST'])]
     public function listMessages(MessageRepository $messageRepository, UserRepository $userRepository): Response {
-        $message = $messageRepository->findAll();
         $user = $this->getUser();
+        $messages = $messageRepository->findBy(['receiver' => $user], ['createdAt' => 'DESC']);
+         
         return $this->render('guest/messages/list-messages.html.twig', [
-            'messages' => $message
+            'messages' => $messages
         ]);
     }
 
-    #[Route('/messages/view/{id}', name: 'view', methods: ['GET'])]
-    public function viewMessage(int $id, MessageRepository $messageRepository, UserRepository $userRepository): Response {
-        $message = $messageRepository->find($id);
-        if (!$message) {
-            throw $this->createNotFoundException('Message non trouvé');
-        }
+    #[Route('/messages/read/{id}', name: 'read-message', methods: ['GET', 'POST'])]
+    public function readMessage(int $id, Request $request, MessageRepository $messageRepository, UserRepository $userRepository, EntityManagerInterface $entityManager): Response {
+    $message = $messageRepository->find($id);
 
-        return $this->render('guest/messages/view.html.twig', [
-            'message' => $message
-        ]);
+    if (!$message) {
+        throw $this->createNotFoundException('Message non trouvé');
     }
+
+    if ($request->isMethod('POST')) {
+        $isRead = $request->request->get('isRead', 0);
+        $message->setIsRead($isRead ? true : false);
+        $entityManager->flush();
+        return $this->redirectToRoute('list-messages');
+    }
+
+    // Ne pas modifier le statut en GET !
+    return $this->render('guest/messages/read-message.html.twig', [
+        'message' => $message
+    ]);
+   
+}
 
     #[Route('/messages/delete/{id}', name: 'delete-message', methods: ['POST'])]
     public function deleteMessage(int $id, MessageRepository $messageRepository, UserRepository $userRepository, EntityManagerInterface $entityManager): Response {
@@ -47,7 +58,7 @@ class MessagesController extends AbstractController {
         return $this->redirectToRoute('list-messages');
     }
 
-    #[Route('/messages/create', name: 'create-message', methods: ['GET'])]
+    #[Route('/messages/create', name: 'create-message', methods: ['GET', 'POST'])]
     public function createMessage(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response {
         if ($request->isMethod('POST')) {
             $content = $request->request->get('content');

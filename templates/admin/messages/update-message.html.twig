@@ -4,6 +4,7 @@
 <div class="btn-back">
     <a href="{{ path('admin-list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
 </div>
+<div class="width-message">
 <div class="title-message">
     <h1>Gestion des messages</h1>
     <h2>Modifier un message</h2>
@@ -37,6 +38,17 @@
         {{ form_end(form) }}
     </div>
 </section>
+</div>
+
+{% if form.vars.errors|length > 0 %}
+    <div class="alert alert-danger mt-3">
+        <ul>
+            {% for error in form.vars.errors %}
+                <li>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 {% endblock main %}
 
 

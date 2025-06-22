@@ -3,24 +3,36 @@
 {% block metatitle %}Créer un message{% endblock metatitle %}
 
 {% block main %}
+    <div class="btn-back">
+        <a href="{{ path('list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
+    </div>
     <div class="container">
         <h1 class="text-center mb-4">Créer un message</h1>
 
         {% for flash_message in app.flashes('success') %}
             <div class="alert alert-success">{{ flash_message }}</div>
         {% endfor %}
-
         {% for flash_message in app.flashes('error') %}
             <div class="alert alert-danger">{{ flash_message }}</div>
         {% endfor %}
 
-        <form method="post" action="{{ path('guest-messages-create-message') }}">
-            <div class="form-group">
-                <label for="content">Contenu</label>
-                <textarea id="content" name="content" class="form-control" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Créer le message</button>
-            <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-danger">Annuler</a>
-        </form>
+        <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+            <form method="post" action="{{ path('create-message') }}">
+                <div class="form-group mb-3">
+                    <label for="receiver_id"><strong>Destinataire</strong></label>
+                    <select id="receiver_id" name="receiver_id" class="form-control" required>
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.email }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="content"><strong>Contenu</strong></label>
+                    <textarea id="content" name="content" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Créer le message</button>
+                <a href="{{ path('list-messages') }}" class="btn btn-primary ms-2">Annuler</a>
+            </form>
+        </div>
     </div>
 {% endblock main %}

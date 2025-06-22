@@ -27,8 +27,8 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'joinColumn')]
     private ?User $receiver = null;
 
-    #[ORM\Column]
-    private ?bool $isRead = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $isRead = false;
 
     public function getId(): ?int
     {
