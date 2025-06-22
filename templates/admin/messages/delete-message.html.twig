@@ -1,33 +1,31 @@
 {% extends 'admin/base.html.twig' %}
+
 {% block main %}
 <div class="title-message">
-    <h1>Gestion des messages</h1>       
+    <h1>Gestion des messages</h1>
     <h2>Suppression du message</h2>
-
-    {% for flash_message in app.flashes('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-
-    {% for flash_message in app.flashes('error') %}
-        <div class="alert alert-danger">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-    <p>Êtes-vous sûr de vouloir supprimer ce message ?</p>
-    <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
-        <button type="submit" onclick="return confirm('Supprimer ce message ?')" class="btn btn-danger">Supprimer le message</button>
-        <a href="{{ path('admin-messages-delete-message') }}" class="btn btn-primary">Annuler</a>
-    </form>
 </div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<section>
+    <a href="{{ path('admin-list-messages') }}" class="btn btn-secondary mb-3">Retour à la liste des messages</a>
+    <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+        <p>Êtes-vous sûr de vouloir supprimer ce message ?</p>
+        <form method="post" action="{{ path('admin-messages-delete-message', {'id': message.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+            <button type="submit" onclick="return confirm('Supprimer ce message ?')" class="btn btn-danger">Supprimer le message</button>
+            <a href="{{ path('admin-list-messages') }}" class="btn btn-primary ms-2">Annuler</a>
+        </form>
+    </div>
+</section>
 {% endblock main %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Additional JavaScript can be added here if needed
-        });
-    </script>
-{% endblock javascripts %}

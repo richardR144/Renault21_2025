@@ -1,0 +1,37 @@
+{% extends 'guest/base.html.twig'%}
+
+{% block metatitle %}Liste des messages | guest Renault 21 TD{% endblock metatitle %}
+
+{% block main %}
+<div class="list-messages">
+    <h1 class="text-center mb-4">Liste des messages</h1>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">{{ flash_message }}</div>
+    {% endfor %}
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flash_message }}</div>
+    {% endfor %}
+
+    <div class="list-messages">
+        {% for message in messages %}
+            <div class="message-item">
+                <form method="post" action="{{ path('guest-messages-list-messages', {'id': message.id}) }}">
+                   
+                    <div class="form-group">
+                        <label for="content-{{ message.id }}">Contenu</label>
+                        <textarea id="content-{{ message.id }}" name="content" class="form-control" rows="5" required>{{ message.content }}</textarea>
+                    </div>
+                    <input type="hidden" name="_token" value="{{ csrf_token('read_message_' ~ message.id) }}">
+                    <button type="submit" class="btn btn-warning">Marquer comme lu</button>
+                    <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-primary">Annuler</a>
+                </form>
+                <p><strong>De :</strong> {{ message.sender.pseudo }} ({{ message.sender.email }})</p>
+                <p><strong>Envoyé le :</strong> {{ message.createdAt|date('Y-m-d H:i') }}</p>
+                <p><strong>Statut :</strong> {{ message.isRead ? 'Lu' : 'Non lu' }}</p>
+                <a href="{{ path('guest-messages-list-messages', {'id': message.id}) }}" class="btn btn-primary">Lire les messages</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock main %}

@@ -1,0 +1,27 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block metatitle %}Mettre à jour le message | guest Renault 21 TD{% endblock metatitle %}
+
+{% block main %}
+    <div class="container">
+        <h1 class="text-center mb-4">Mettre à jour le message</h1>
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success">{{ flash_message }}</div>
+        {% endfor %}
+
+        {% for flash_message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ flash_message }}</div>
+        {% endfor %}
+        <form method="post" action="{{ path('guest-messages-update-message', {'id': message.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('update_message_' ~ message.id) }}">
+            <div class="form-group">
+                <label for="content">Contenu</label>
+                <textarea id="content" name="content" class="form-control" rows="5" required>{{ message.content }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Mettre à jour le message</button>
+            <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-primary">Annuler</a>
+        </form>
+
+       
+    </div>
+{% endblock main %}

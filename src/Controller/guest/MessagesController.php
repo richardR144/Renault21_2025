@@ -15,10 +15,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MessagesController extends AbstractController {
     #[Route('/messages', name: 'list-messages', methods: ['GET'])]
     public function listMessages(MessageRepository $messageRepository, UserRepository $userRepository): Response {
-        $messages = $messageRepository->findAll();
+        $message = $messageRepository->findAll();
         $user = $this->getUser();
-        return $this->render('Guest/messages/list-messages.html.twig', [
-            'messages' => $messages
+        return $this->render('guest/messages/list-messages.html.twig', [
+            'messages' => $message
         ]);
     }
 
@@ -29,7 +29,7 @@ class MessagesController extends AbstractController {
             throw $this->createNotFoundException('Message non trouvé');
         }
 
-        return $this->render('Guest/messages/view.html.twig', [
+        return $this->render('guest/messages/view.html.twig', [
             'message' => $message
         ]);
     }
@@ -47,23 +47,23 @@ class MessagesController extends AbstractController {
         return $this->redirectToRoute('list-messages');
     }
 
-    #[Route('/messages/create', name: 'create-message', methods: ['GET', 'POST'])]
+    #[Route('/messages/create', name: 'create-message', methods: ['GET'])]
     public function createMessage(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response {
         if ($request->isMethod('POST')) {
             $content = $request->request->get('content');
             $sender = $this->getUser();
-            $recipientId = $request->request->get('receiver_id');
-            $recipient = $userRepository->find($recipientId);
+            $receiverId = $request->request->get('receiver_id');
+            $receiver = $userRepository->find($receiverId);
 
-            if (!$recipient) {
+            if (!$receiver) {
                 throw $this->createNotFoundException('Destinataire non trouvé');
             }
 
             $message = new Message();
             $message->setContent($content);
             $message->setSender($sender);
-            $message->setReceiver($recipient);
-            $message->setCreatedAt(new \DateTime());
+            $message->setReceiver($receiver);
+            $message->setCreatedAt(new \DateTime('now'));
 
             $entityManager->persist($message);
             $entityManager->flush();
@@ -71,8 +71,28 @@ class MessagesController extends AbstractController {
             return $this->redirectToRoute('list-messages');
         }
 
-        return $this->render('Guest/messages/create.html.twig', [
+        return $this->render('guest/messages/create-message.html.twig', [
             'users' => $userRepository->findAll()
+        ]);
+    }
+    #[Route('/messages/update/{id}', name: 'update-message', methods: ['GET', 'POST'])]
+    public function updateMessage(int $id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response {
+        $message = $messageRepository->find($id);
+        if (!$message) {
+            throw $this->createNotFoundException('Message non trouvé');
+        }
+
+        if ($request->isMethod('POST')) {
+            $content = $request->request->get('content');
+            $message->setContent($content);
+            $entityManager->persist($message);
+            $entityManager->flush();    
+
+            return $this->redirectToRoute('list-messages');
+        }
+
+        return $this->render('guest/messages/update-message.html.twig', [
+            'message' => $message
         ]);
     }
 }

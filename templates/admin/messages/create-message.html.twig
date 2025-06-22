@@ -1,0 +1,40 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+<div class="title-message">
+    <h1>Gestion des messages</h1>
+    <h2>Créer un message</h2>
+</div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<section>
+    <a href="{{ path('admin-list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
+    <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.receiver) }}
+                {{ form_widget(form.receiver, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.receiver) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.content) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Créer le message</button>
+        {{ form_end(form) }}
+    </div>
+</section>
+{% endblock main %}
+    
+
