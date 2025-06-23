@@ -1,61 +1,90 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}Profile{% endblock metatitle %}
+{% block metatitle %}Profile
+{% endblock metatitle %}
 
 
 {% block main %}
-<div class="profil-bg bg-profil">
-    <div class="bg-image"></div>
-    
-        <div class="profil-content profil-content-scroll">
-            {% for flash_message in app.flashes('success') %}
-                <div class="alert alert-success">{{ flash_message }}</div>
-            {% endfor %}
+	<div class="profil-bg bg-profil">
+		<div class="bg-image"></div>
 
-            {% for flash_message in app.flashes('error') %}
-                <div class="alert alert-danger">{{ flash_message }}</div>
-            {% endfor %}
-        <h1>Bonjour et bienvenue {{ user.pseudo }}</h1>
+		<div class="profil-content profil-content-scroll">
+			{% for flash_message in app.flashes('success') %}
+				<div class="alert alert-success">{{ flash_message }}</div>
+			{% endfor %}
 
-        <p>Voici votre profil :</p>
-        <ul>
-            <li><strong>Pseudo :</strong> {{ user.pseudo }}</li>
-            <li><strong>Email :</strong> {{ user.email }}</li>        
-        </ul>
+			{% for flash_message in app.flashes('error') %}
+				<div class="alert alert-danger">{{ flash_message }}</div>
+			{% endfor %}
+			<h1>Bonjour et bienvenue
+				{{ user.pseudo }}</h1>
 
-        <div class="routeCreate-piece">
-            <h2>Créer une nouvelle pièce</h2>
-            <a href="{{ path('create-piece') }}" class="btn-custom">Formulaire de création</a>
+			<p>Voici votre profil :</p>
+			<ul>
+				<li>
+					<strong>Pseudo :</strong>
+					{{ user.pseudo }}</li>
+				<li>
+					<strong>Email :</strong>
+					{{ user.email }}</li>
+			</ul>
+
+			<div class="routeCreate-piece">
+				<h2>Créer une nouvelle pièce</h2>
+				<a href="{{ path('create-piece') }}" class="btn-custom">Formulaire de création</a>
+			</div>
+
+			<div class="routeList-piece">
+				<h2>Liste des pièces</h2>
+				<a href="{{ path('profil-piece') }}" class="btn-custom">Voir mes pièces</a>
+			</div>
+
+			{% for piece in user.piece %}
+				<div class="update-piece">
+					<span>{{ piece.name }}</span>
+					<h2>Modifier une pièce</h2>
+					<a href="{{ path('update-piece', {'id': piece.id}) }}" class="btn-custom">Modifier votre pièce</a>
+				</div>
+				<div class="delete-piece">
+					<span>{{ piece.name }}</span>
+					<h2>Supprimer une pièce</h2>
+					<a href="{{ path('delete-piece', {'id': piece.id}) }}" class="btn-custom btn-danger">Supprimer votre pièce</a>
+				</div>
+			{% endfor %}
+
+			<h2>Messages reçus</h2>
+
+			{% if messages is defined and messages|length > 0 %}
+				{% for message in messages %}
+    <div class="card p-4 shadow-sm mb-4 bg-primary text-white" style="max-width: 350px; margin: auto;">
+        <p>
+            <strong>De :</strong>
+            {{ message.sender.pseudo }} ({{ message.sender.email }})
+        </p>
+        <p>
+            <strong>Envoyé le :</strong>
+            {{ message.createdAt|date('Y-m-d H:i') }}
+        </p>
+        <div class="border p-3 mb-2 bg-white text-dark" style="border-radius: 8px;">
+            {{ message.content }}
         </div>
-
-        <div class="routeList-piece">
-            <h2>Liste des pièces</h2>
-            <a href="{{ path('profil-piece') }}" class="btn-custom">Voir mes pièces</a>
-        </div>
-
-        {% for piece in user.piece %}
-            <div class="update-piece">
-                <span>{{ piece.name }}</span>
-                <h2>Modifier une pièce</h2>
-                <a href="{{ path('update-piece', {'id': piece.id}) }}" class="btn-custom">Modifier votre pièce</a>
-            </div>
-            <div class="delete-piece">
-                <span>{{ piece.name }}</span>
-                <h2>Supprimer une pièce</h2>
-                <a href="{{ path('delete-piece', {'id': piece.id}) }}" class="btn-custom btn-danger">Supprimer votre pièce</a>
-            </div>
-        {% endfor %}
-
-        {% if app.user %}
-            <div class="logout">
-                <a href="{{ path('logout') }}" class="btn-custom">Se déconnecter</a>
-            </div>
-        {% else %}
-            <div class="login">
-                <a href="{{ path('connexion') }}" class="btn-custom btn-danger">Se connecter</a>
-            </div>
-        {% endif %}
     </div>
-</div>
-    
- {% endblock main %}
+{% endfor %}
+			{% else %}
+				<div class="alert alert-info">Aucun message reçu.</div>
+			{% endif %}
+
+
+			{% if app.user %}
+				<div class="logout">
+					<a href="{{ path('logout') }}" class="btn-custom">Se déconnecter</a>
+				</div>
+			{% else %}
+				<div class="login">
+					<a href="{{ path('connexion') }}" class="btn-custom btn-danger">Se connecter</a>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock main %}

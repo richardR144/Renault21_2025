@@ -10,12 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use App\Repository\MessageRepository;
 
 class ProfilController extends AbstractController
 {
     #[Route('/Guest/profil', name: 'profil')]
-    public function profilUser(Request $request, UserRepository $userRepository): Response
+    public function profilUser(Request $request, UserRepository $userRepository, MessageRepository $messageRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         
@@ -25,8 +25,11 @@ class ProfilController extends AbstractController
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
+        $messages = $messageRepository->findBy(['receiver' => $user], ['createdAt' => 'DESC']);
+
         return $this->render('guest/profil.html.twig', [
             'user' => $user,
+            'messages' => $messages,
         ]);
     }
 

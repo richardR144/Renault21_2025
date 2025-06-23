@@ -27,12 +27,8 @@
                         <span class="badge badge-danger" style="background-color:#dc3545;color:white;padding:0.4em 1em;border-radius:0.5em;">Non lu</span>
                     {% endif %}
                 </p>
-                <a href="{{ path('read-message', {'id': message.id}) }}" class="btn btn-primary btn-sm">Lire</a>
+                <a href="{{ path('read-message', {'id': message.id}) }}" class="btn btn-primary btn-sm" style="width:100px">Lire</a>
                 {% if not message.isRead %}
-                    <form method="post" action="{{ path('read-message', {'id': message.id}) }}" style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('read_message_' ~ message.id) }}">
-                        <button type="submit" class="btn btn-warning btn-sm">Marquer comme lu</button>
-                    </form>
                 {% endif %}
             </div>
         {% else %}
