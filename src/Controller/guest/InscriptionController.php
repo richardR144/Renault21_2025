@@ -26,7 +26,10 @@ namespace App\Controller\Guest;
                 $password = $request->request->get('password');
                 $verifPassword = $request->request->get('verifPassword');
 
-              
+                if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/', $password)) {
+                    $this->addFlash('error', 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un caractère spécial.');
+                    return $this->render('guest/user-inscription.html.twig');
+                }
                 
                 if ($password !== $verifPassword) { // je vérifie que le mot de passe et la vérification sont identiques
                     $this->addFlash('error', 'Les mots de passe ne correspondent pas.');
