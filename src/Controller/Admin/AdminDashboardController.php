@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\ArticleRepository;
-
+use App\Repository\CategoryRepository;
 
 #[IsGranted('ROLE_ADMIN')]
 class AdminDashboardController extends AbstractController{
@@ -16,9 +16,14 @@ class AdminDashboardController extends AbstractController{
     {
         return $this->render('admin/dashboard.html.twig');
     }
-    public function dashboard(): Response
+    
+   #[Route('/admin/categories', name: 'admin-list-categories')]
+    public function listCategories(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('admin/dashboard.html.twig');
+        $categories = $categoryRepository->findAll();
+        return $this->render('admin/categories/list-categories.html.twig', [
+            'categories' => $categories,
+        ]);
     }
 
     #[Route('/admin/articles', name: 'admin-list-articles')]
@@ -30,4 +35,10 @@ class AdminDashboardController extends AbstractController{
     ]);
 }
 
+    #[Route('/admin/messages', name: 'admin-list-messages')]
+    public function listMessages(): Response
+    {
+        // This method can be used to render a list of messages if needed
+        return $this->render('admin/messages/list-messages.html.twig');
+    }
 }

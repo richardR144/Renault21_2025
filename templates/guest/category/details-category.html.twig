@@ -1,0 +1,28 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block metatitle %}Détails de la catégorie | Renault 21 TD{% endblock metatitle %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/category-details.css') }}">
+{% endblock stylesheets %}
+
+{% block main %}
+<div class="container">
+    <h1 class="text-center mb-4">Catégorie : {{ category.name }}</h1>
+    <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+        <h2 class="h5">Pièces associées</h2>
+        {% if pieces is not empty %}
+            <ul class="list-group">
+                {% for piece in pieces %}
+                    <li class="list-group-item">{{ piece.name }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info text-center mb-0">Aucune pièce dans cette catégorie.</div>
+        {% endif %}
+        <div class="mt-3">
+            <a href="{{ path('list-categories') }}" class="btn btn-primary">Retour à la liste des catégories</a>
+        </div>
+    </div>
+</div>
+{% endblock main %}

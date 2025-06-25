@@ -1,0 +1,36 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+<div class="btn-back">
+    <a href="{{ path('admin-list-categories') }}" class="btn btn-primary mb-3">Retour à la liste des catégories</a>
+</div>
+<div class="width-message">
+    <div class="title-message">
+        <h1>Gestion des catégories</h1>
+        <h2>Suppression de la catégorie</h2>
+    </div>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <section>
+        <a href="{{ path('admin-list-categories') }}" class="btn btn-secondary mb-3">Retour à la liste des catégories</a>
+        <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+            <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>{{ category.name }}</strong> ?</p>
+            <form method="post" action="{{ path('admin-delete-category', {'id': category.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
+                <button type="submit" onclick="return confirm('Supprimer cette catégorie ?')" class="btn btn-danger">Supprimer la catégorie</button>
+                <a href="{{ path('admin-list-categories') }}" class="btn btn-primary ms-2">Annuler</a>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock main %}

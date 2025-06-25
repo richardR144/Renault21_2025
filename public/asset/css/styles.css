@@ -585,8 +585,12 @@ input[type="file"] {
     margin-left: 20%;
 }
 
-/*-----------------guest Read-message (badge-admin)------------ */
-
+/*-----------------Admin list-categories (dashboard-admin)------------ */
+.dashboard-h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin: 20px 0;
+}
 
 /*----------------list-message guest-------------------------*/
 

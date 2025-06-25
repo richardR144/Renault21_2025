@@ -1,10 +1,10 @@
 {% extends ('guest/base.html.twig') %}
 
-
+{% block metatitle %}Détails de la catégorie | Renault 21 TD{% endblock metatitle %}
 
 
 {% block main %}
-     <button type="button" onclick="window.location.href='{{ path('list-pieces') }}'" class="btn btn-primary">&#8592; Retour à la liste des pièces</button>
+     <button type="button" onclick="window.location.href='{{ path('list-categories') }}'" class="btn btn-primary">&#8592; Retour à la liste des categories</button>
     <main id="details-category">
         <h2 class="title-category">Catégorie : {{ category.name }}</h2>
         <p class="title-category">Bienvenue sur la page de la catégorie <strong>{{ category.name }}</strong>.</p>

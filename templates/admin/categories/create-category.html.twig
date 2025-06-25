@@ -1,0 +1,48 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+<div class="btn-back">
+    <a href="{{ path('admin-list-categories') }}" class="btn btn-primary mb-3">Retour à la liste des catégories</a>
+</div>
+<div class="width-message">
+    <div class="title-message">
+        <h1>Gestion des catégories</h1>
+        <h2>Créer une catégorie</h2>
+    </div>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <section>
+        <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+            <form method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('create_category') }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom de la catégorie</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Créer la catégorie</button>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock main %}
+
+{#{% if form.vars.errors|length > 0 %}
+    <div class="alert alert-danger mt-3">
+        <ul>
+            {% for error in form.vars.errors %}
+                <li>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock main %}#}
