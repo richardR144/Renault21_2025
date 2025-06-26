@@ -9,8 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 // Contrôleur pour la gestion des messages des utilisateurs invités (guest)
+
 
 class MessagesController extends AbstractController {
     #[Route('/guest/messages/list-messages', name: 'list-messages', methods: ['GET', 'POST'])]

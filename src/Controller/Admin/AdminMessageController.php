@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
+
 class AdminMessageController extends AbstractController
 {
 
@@ -41,7 +42,7 @@ class AdminMessageController extends AbstractController
         ]);
     }
 
-
+    #[IsGranted('ROLE_MODERATOR')]
     #[Route('/admin/messages/list-messages', name: 'admin-list-messages', methods: ['GET', 'POST'])]
     public function listMessages(MessageRepository $messageRepository): Response
     {
@@ -65,7 +66,8 @@ class AdminMessageController extends AbstractController
 
         return $this->redirectToRoute('admin-list-messages');
     }
-
+    
+    #[IsGranted('ROLE_MODERATOR')]
     #[Route('/admin/messages/update/{id}', name: 'admin-update-message', methods: ['GET', 'POST'])]
     public function updateMessage(int $id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
     {

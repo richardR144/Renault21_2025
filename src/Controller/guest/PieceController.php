@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Form\InsertPieceType;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+
 class PieceController extends AbstractController {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
     
     #[Route('/guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
