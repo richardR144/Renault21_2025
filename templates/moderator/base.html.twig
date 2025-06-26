@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Site d\'_echange_ou_de_vente_de_pieces_auto{% endblock %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <meta name="author" content="Richard R"/>
+    <title>	{% block metatitle %}Accueil | admin Renault 21 TD{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
+          {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
+    <link rel="stylesheet" href="{{ asset('asset/css/profil.css') }}">   
+</head>
+<body>
+{% block header %}
+    <header>
+        <nav class="navHeader">
+            <div class="logoHeader">
+                <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-header">
+            </div>
+            <div id="burger">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <ul class="ulHeader">
+                <li class="liHeader"><a href="{{ path('admin-dashboard') }}">Tableau de bord</a></li>
+                <li class="liHeader"><a href="{{ path('admin-list-pieces') }}">Gestion des pièces</a></li>
+                <li class="liHeader"><a href="{{ path('admin-list-articles') }}">Gestion des articles</a></li>
+                <li class="liHeader"><a href="{{ path('home') }}">Retour au site</a></li>
+                <li class="liHeader"><a href="{{ path('logout') }}" class="btn btn-primary">Se déconnecter</a>   
+                </li>
+            </ul>
+        </nav>   
+    </header>
+    {% for flash_message in app.flashes('success') %}
+            <h2 class="alert alert-success color-success">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <h2 class="alert alert-danger color-error">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
+    
+{% endblock header %}
+
+        
+            {% block main %}
+         
+            {% endblock main %}
+
+{% block footer %}
+    <footer>
+        <nav class="navFooter">
+            <div class="logoFooter">
+                <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-renault">
+            </div>
+        <ul class="ulFooter">
+            {#<li class="liFooter"><a href="{{ path('cgu') }}">CGU</a></li>
+            <li class="liFooter"><a href="{{ path('politique_de_confidentialité') }}">Politique de confidentialité</a></li>
+            <li class="liFooter"><a href="{{ path('newsletters') }}">Newsletters</a></li>#}
+            <li class="liFooter">
+                <label>
+                    <input required type="email" placeholder="Entrez votre email">
+                </label>
+            </li>
+        </ul>
+        </nav>
+    </footer>
+{% endblock footer %}
+</body>
+</html>

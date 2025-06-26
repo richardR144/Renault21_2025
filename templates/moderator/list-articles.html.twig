@@ -1,0 +1,41 @@
+{% extends 'moderator/base.html.twig' %}
+
+{% block main %}
+<div class="title-article">
+    <h1>Gestion des articles</h1>
+    <h2>Articles existants</h2>
+</div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<ul>
+    {% for article in articles %}
+        <li>
+            <article class="moderator-article">
+                <div>
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.content|slice(0, 500) ~ '...' }}</p>
+                </div>
+                <div>
+                    {% if article.image %}
+                        <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}">
+                    {% endif %}
+                </div>
+            </article>
+            <a href="{{ path('moderator-update-article', {'id': article.id}) }}" class="btn btn-warning">Modifier l'article</a>
+        </li>
+    {% else %}
+        <li>Aucun article pour le moment.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

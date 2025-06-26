@@ -1,0 +1,42 @@
+{% extends 'moderator/base.html.twig' %}
+
+{% block main %}
+<div class="title-piece">
+    <h1>Gestion des pièces</h1>
+    <h2>Pièces existantes</h2>
+</div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<ul>
+    {% for piece in pieces %}
+        <li>
+            <article class="moderator-piece">
+                <div>
+                    <h3>{{ piece.name }}</h3>
+                    <p>{{ piece.description|slice(0, 100) ~ '...' }}</p>
+                    <p>Prix : {{ piece.price }} €</p>
+                </div>
+                <div>
+                    {% if piece.image %}
+                        <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}">
+                    {% endif %}
+                </div>
+            </article>
+            <a href="{{ path('moderator-update-piece', {'id': piece.id}) }}" class="btn btn-warning">Modifier la pièce</a>
+        </li>
+    {% else %}
+        <li>Aucune pièce pour le moment.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

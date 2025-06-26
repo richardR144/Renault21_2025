@@ -1,0 +1,40 @@
+{% extends 'moderator/base.html.twig' %}
+
+{% block main %}
+<div class="title-article">
+    <h1>Modifier l'article</h1>
+</div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="title" class="form-label">Titre</label>
+        <input type="text" id="title" name="title" class="form-control" value="{{ article.title }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Contenu</label>
+        <textarea id="content" name="content" class="form-control" required>{{ article.content }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        {% if article.image %}
+            <div>
+                <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}" style="max-width: 200px;">
+            </div>
+        {% endif %}
+        <input type="file" id="image" name="image" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Mettre à jour l'article</button>
+</form>
+{% endblock %}

@@ -20,6 +20,7 @@ security:
                 login_path: connexion
                 check_path: connexion
                 default_target_path: redirection-apres-login
+                success_handler: App\Security\LoginSuccessHandler
             logout:
                 path: logout
                 target: accueil

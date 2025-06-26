@@ -1,0 +1,44 @@
+{% extends 'moderator/base.html.twig' %}
+
+{% block main %}
+<div class="title-piece">
+    <h1>Modifier la pièce</h1>
+</div>
+
+{% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom</label>
+        <input type="text" id="title" name="title" class="form-control" value="{{ piece.name }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="description" class="form-control" required>{{ piece.description }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Prix (€)</label>
+        <input type="number" id="price" name="price" class="form-control" value="{{ piece.price }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        {% if piece.image %}
+            <div>
+                <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 200px;">
+            </div>
+        {% endif %}
+        <input type="file" id="image" name="image" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Mettre à jour la pièce</button>
+</form>
+{% endblock %}
