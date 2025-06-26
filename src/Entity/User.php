@@ -76,7 +76,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pseudo = $pseudo;
         $this->email = $email;
         $this->password = $passwordHashed;
-        $this->roles = [$role];
+        $this->roles = is_array($role) ? $role : [$role];
     }
 
     
