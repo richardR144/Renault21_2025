@@ -42,11 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
-    /**
-     * @var Collection<int, Piece>
-     */
+   
     #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user', cascade: ['remove'], orphanRemoval: true)]
-    private Collection $piece;
+    private Collection $pieces;
 
     /**
      * @var Collection<int, Message>
@@ -64,11 +62,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->joinColumn = new ArrayCollection();
         $this->isRead = new ArrayCollection();
-    }
-
-    public function _construct():void {
         $this->roles = ['ROLE_USER'];
-        $this->piece = new ArrayCollection();
+        $this->pieces = new ArrayCollection();
     }
 
     public function createUser(string $pseudo, string $email, string $passwordHashed, string $role = 'ROLE_USER'): void
@@ -145,6 +140,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+    
+    
     /**
      * @see UserInterface
      */
@@ -163,30 +164,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Piece>
-     */
-    public function getPiece(): Collection
-    {
-        return $this->piece;
-    }
-
-    public function addPiece(Piece $piece): static
-    {
-        if (!$this->piece->contains($piece)) {
-            $this->piece->add($piece);    
-        }
-
-        return $this;
-    }
-
-    public function removePiece(Piece $piece): static
-    {
-        $this->piece->removeElement($piece);
 
         return $this;
     }

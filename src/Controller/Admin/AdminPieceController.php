@@ -24,23 +24,39 @@ class AdminPieceController extends AbstractController
         $category = $categoryRepository->findAll();
 
         if ($request->isMethod('POST')) {
-            $title = $request->request->get('title');
+            $name= $request->request->get('name');
             $description = $request->request->get('description');
+            $exchange = $request->request->get('exchange');
+            $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
             $price = $request->request->get('price');
             $userId = $request->request->get(key: 'userId');
+            $categoryId = $request->request->get('categoryId');
             $image = $request->files->get('image'); 
-            $categoryId = $request->request->get('category-id');
+
+            if (!$categoryId) {
+            $this->addFlash('error', 'Veuillez sélectionner une catégorie.');
+            return $this->redirectToRoute('admin-create-piece');
+        }
+            
+            $category = $categoryRepository->find($categoryId);
+
+            if (!$category) {
+                $this->addFlash('error', 'Catégorie introuvable.');
+                return $this->redirectToRoute('admin-create-piece');
+            }
 
             $piece = new Piece();
 
-            $user = $categoryRepository->find($userId);
-            $category = $categoryRepository->find($categoryId);
+            $piece->setName($name);
+            $piece->setDescription($description);
+            $piece->setExchange($exchange);
+            $piece->setPrice($price);
+            $piece->setCategory($category);
+            $piece->setImage($image);
 
 
             try {
-                // j'envoie le nom de l'image au constructeur de piece pour
-                // stocker le nom de l'image dans le produit
-                $piece = new Piece($title, $description, $price, $category); //envoyer une catégory complète
+                $piece = new Piece($name, $description, $price, $category); //envoyer une catégory complète
 
                 $entityManager->persist($piece);
                 $entityManager->flush();
@@ -84,7 +100,7 @@ class AdminPieceController extends AbstractController
             $entityManager->flush();
 
             // Ajoute un message flash de succès
-            $this->addFlash('success', 'Piece supprimé !');
+            $this->addFlash('success', 'Piece supprimée !');
 
         } catch(Exception $exception) {
             // En cas d'erreur, ajoute un message flash d'erreur
@@ -102,33 +118,35 @@ class AdminPieceController extends AbstractController
 
         if ($request->isMethod('POST')) {
 
-            $title = $request->request->get('title');
+            $Name = $request->request->get('name');
             $description = $request->request->get('description');
-            $exchange = $request->request->get(key: 'exchange');
+            $exchange = $request->request->get('exchange');
+            $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
             $price = $request->request->get('price');
-            $categoryId = $request->request->get('category-id');
-            $userId = $request->request->get(key: 'userId');
-
-
-
+            $categoryId = $request->request->get('categoryId');
+            $image = $request->files->get('image'); // Récupération de l'image
+            if (!$categoryId) {
+                $this->addFlash('error', 'Veuillez sélectionner une catégorie.');
+                return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
+}
             $category = $categoryRepository->find($categoryId);
-
-            // méthode 1 : modifier les données d'une piece avec les fonctions setters
-            //$piece->setTitle($title);
-            //$piece->setDescription($description);
-            //$piece->setPrice($price);
-            //$piece->setcategory($category);
-
-
-            // méthode 2 : modifier les données d'une piece avec une fonction update dans l'entité
-
+            if (!$category) {
+                $this->addFlash('error', 'Catégorie introuvable.');
+                return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
+}
+            
             try {
-                $piece->update($title, $description, $exchange, $price, $category);
+                $piece->setName($Name);
+                $piece->setDescription($description);
+                $piece->setExchange($exchange);
+                $piece->setPrice($price);
+                $piece->setCategory($category);
+                $piece->setImage($image);
 
                 $entityManager->persist($piece);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Piece supprimée !');
+                $this->addFlash('success', 'Piece modifiée !');
 
             } catch (\Exception $exception) {
                 $this->addFlash('error', $exception->getMessage());
