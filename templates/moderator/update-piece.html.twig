@@ -21,10 +21,10 @@
 
 <form method="post" enctype="multipart/form-data">
     <div class="row gap-4">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <div class="mb-3">
                 <label for="name" class="form-label">Nom</label>
-                <input type="text" id="title" name="title" class="form-control" value="{{ piece.name }}" required>
+                <input type="text" id="name" name="name" class="form-control" value="{{ piece.name }}" required>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -42,7 +42,7 @@
         </div>
         <div class="col-md-4 d-flex align-items-center justify-content-center">
             {% if piece.image %}
-                <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
             {% endif %}
         </div>
     </div>

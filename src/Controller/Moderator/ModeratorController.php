@@ -66,10 +66,15 @@ class ModeratorController extends AbstractController
     #[Route('/moderator/piece/{id}/update', name: 'moderator-update-piece')]
     public function updatePiece(Request $request, Piece $piece, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response 
     {
-        if ($request->isMethod('POST')) {
-            $piece->setName($request->request->get('name'));
-            $piece->setDescription($request->request->get('description'));
-            $piece->setPrice($request->request->get('price'));
+    if ($request->isMethod('POST')) {
+        $name = $request->request->get('name');
+        if ($name === null || $name === '') {
+            $this->addFlash('error', 'Le nom de la pièce est obligatoire.');
+            return $this->redirectToRoute('moderator-update-piece', ['id' => $piece->getId()]);
+        }
+        $piece->setName($name);
+        $piece->setDescription($request->request->get('description'));
+        $piece->setPrice($request->request->get('price'));
 
             $categoryId = $request->request->get('category-id');
             if ($categoryId) {
