@@ -1,17 +1,8 @@
 {% extends 'moderator/base.html.twig' %}
 
 {% block main %}
-    <div class="moderator-dashboard">
-        <p>Bienvenue, {{ app.user.pseudo }} !</p>
-        <h1>Bienvenue sur le tableau de bord modérateur</h1>
-        <ul class="moderator-menu">
-            <li><a href="{{ path('moderator-list-pieces') }}" class="btn btn-primary mb-2">Modération des pièces</a></li>
-            <li><a href="{{ path('moderator-list-articles') }}" class="btn btn-primary mb-2">Modération des articles</a></li>
-            {# Ajoute d'autres liens utiles pour les modérateurs ici #}
-        </ul>
-    </div>
 
-    {% for flash_message in app.flashes('success') %}
+      {% for flash_message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ flash_message }}
         </div>
@@ -22,4 +13,13 @@
             {{ flash_message }}
         </div>
     {% endfor %}
+    
+    <div class="moderator-dashboard">
+        <p>Bienvenue, {{ app.user.pseudo }} !</p>
+        <h1>Bienvenue sur le tableau de bord modérateur</h1>
+        <ul class="moderator-menu">
+            <li><a href="{{ path('moderator-list-pieces') }}" class="btn btn-primary mb-2">Modération des pièces</a></li>
+            <li><a href="{{ path('moderator-list-articles') }}" class="btn btn-primary mb-2">Modération des articles</a></li>
+        </ul>
+    </div>
 {% endblock %}

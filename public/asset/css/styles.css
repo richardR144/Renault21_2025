@@ -313,6 +313,7 @@ h3{
 }
 
         /*-------------- bouton parent----------------------*/
+    
 
     .btn-group button {
         background-color: rgba(231, 231, 231, 0.3);
@@ -797,13 +798,42 @@ footer {
     color: #fff;
 }
 
-/* ----------- Espace entre les boutons d'action ----------- */
-.table td .btn,
-.table td form {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 4px;
+/* ----------- Espace entre les boutons d'action Articles Moderator ----------- */
+
+
+
+
+/*----------------------Moderator modification piece et article----------------*/
+#main-update-piece, #main-update-article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    height: 70vh;
 }
+
+
+.title-piece{
+    text-align: center;
+}
+
+.form-image-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding-left: 32px; /* espace horizontal entre le formulaire et l'image */
+}
+
+.form-image-right img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(30,80,220,0.10);
+}
+
 
 /* ----------- Responsive pour la table et les boutons ----------- 
 @media (max-width: 900px) {

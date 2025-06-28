@@ -1,42 +1,36 @@
 {% extends 'moderator/base.html.twig' %}
 
 {% block main %}
-<div class="title-piece">
-    <h1>Gestion des pièces</h1>
-    <h2>Pièces existantes</h2>
-</div>
-
-{% for flash_message in app.flashes('success') %}
-    <div class="alert alert-success">
-        {{ flash_message }}
-    </div>
-{% endfor %}
-
-{% for flash_message in app.flashes('error') %}
-    <div class="alert alert-danger">
-        {{ flash_message }}
-    </div>
-{% endfor %}
-
-<ul>
+<table class="table table-striped align-middle" style="margin-left:2%;">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Prix (€)</th>
+            <th>Image</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for piece in pieces %}
-        <li>
-            <article class="moderator-piece">
-                <div>
-                    <h3>{{ piece.name }}</h3>
-                    <p>{{ piece.description|slice(0, 100) ~ '...' }}</p>
-                    <p>Prix : {{ piece.price }} €</p>
-                </div>
-                <div>
-                    {% if piece.image %}
-                        <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}">
-                    {% endif %}
-                </div>
-            </article>
-            <a href="{{ path('moderator-update-piece', {'id': piece.id}) }}" class="btn btn-warning">Modifier la pièce</a>
-        </li>
+        <tr>
+            <td>{{ piece.name }}</td>
+            <td>{{ piece.description }}</td>
+            <td>{{ piece.price }}</td>
+            <td>
+                {% if piece.image %}
+                    <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                {% endif %}
+            </td>
+            <td class="text-center">
+                <a href="{{ path('moderator-update-piece', {'id': piece.id}) }}" class="btn btn-warning btn-sm">Modifier la pièce</a>
+            </td>
+        </tr>
     {% else %}
-        <li>Aucune pièce pour le moment.</li>
+        <tr>
+            <td colspan="5" class="text-center">Aucune pièce pour le moment.</td>
+        </tr>
     {% endfor %}
-</ul>
+    </tbody>
+</table>
 {% endblock %}

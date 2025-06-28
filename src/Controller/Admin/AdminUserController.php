@@ -14,7 +14,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 #[IsGranted('ROLE_ADMIN')]
-
 class AdminUserController extends AbstractController
 {
     #[Route(path: '/admin/create-user', name: 'admin-create-user', methods: ['GET', 'POST'])]
@@ -58,7 +57,8 @@ class AdminUserController extends AbstractController
         // Affiche le formulaire de création si la méthode n'est pas POST
             return $this->render('admin/user/create-user.html.twig');
     }
-    #[IsGranted('ROLE_MODERATOR')]
+    
+
     #[Route(path: '/admin/list-admins', name: 'admin-list-admins', methods: ['GET'])]
     public function listAdmins(UserRepository $userRepository): Response
     {
@@ -94,7 +94,7 @@ class AdminUserController extends AbstractController
 
 
 //Pour éditer l'utilisateur dans le dashboard admin
-    #[IsGranted('ROLE_MODERATOR')]
+
     #[Route(path: '/admin/edit-user/{id}', name: 'admin-edit-user', methods: ['GET', 'POST'])]
     public function editUser(int $id, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
 {

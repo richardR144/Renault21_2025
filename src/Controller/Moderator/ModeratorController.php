@@ -21,12 +21,13 @@ class ModeratorController extends AbstractController
     #[Route('/moderator/articles', name: 'moderator-list-articles')]
     public function listArticles(ArticleRepository $repository): Response
     {
+        
         $articles = $repository->findAll();
         return $this->render('moderator/list-articles.html.twig', [
             'articles' => $articles,
         ]);
     }
-
+        
     #[Route('/moderator/article/{id}/update', name: 'moderator-update-article')]
     public function updateArticle(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {

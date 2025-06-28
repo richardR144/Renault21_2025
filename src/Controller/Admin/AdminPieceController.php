@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
-
 class AdminPieceController extends AbstractController
 {
     #[Route('/admin/create-piece', name: 'admin-create-piece', methods: ['GET', 'POST'])]
@@ -60,7 +59,7 @@ class AdminPieceController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_MODERATOR')]
+    
     #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET', 'POST'])]
     public function listPieces(PieceRepository $pieceRepository): Response {
         $piece = $pieceRepository->findAll();
@@ -94,7 +93,8 @@ class AdminPieceController extends AbstractController
 
         return $this->redirectToRoute('admin-list-pieces');
     }
-    #[IsGranted('ROLE_MODERATOR')]
+    
+
     #[Route('/admin/update-piece/{id}', name: 'admin-update-piece', methods: ['GET', 'POST'])]
     public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
 

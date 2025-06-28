@@ -1,6 +1,8 @@
 {% extends 'moderator/base.html.twig' %}
 
 {% block main %}
+<button type="button" onclick="window.location.href='{{ path('moderator-list-pieces') }}'" class="btn btn-primary">&#8592; Retour à la modification des pièces</button>
+<div id="main-update-piece">
 <div class="title-piece">
     <h1>Modifier la pièce</h1>
 </div>
@@ -18,27 +20,33 @@
 {% endfor %}
 
 <form method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="name" class="form-label">Nom</label>
-        <input type="text" id="title" name="title" class="form-control" value="{{ piece.name }}" required>
-    </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea id="description" name="description" class="form-control" required>{{ piece.description }}</textarea>
-    </div>
-    <div class="mb-3">
-        <label for="price" class="form-label">Prix (€)</label>
-        <input type="number" id="price" name="price" class="form-control" value="{{ piece.price }}" required>
-    </div>
-    <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        {% if piece.image %}
-            <div>
-                <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 200px;">
+    <div class="row gap-4">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ piece.name }}" required>
             </div>
-        {% endif %}
-        <input type="file" id="image" name="image" class="form-control">
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" class="form-control" required>{{ piece.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Prix (€)</label>
+                <input type="number" id="price" name="price" class="form-control" value="{{ piece.price }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-warning">Modifier la pièce</button>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+            {% if piece.image %}
+                <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+            {% endif %}
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Mettre à jour la pièce</button>
 </form>
-{% endblock %}
+
+{% endblock main %}
+

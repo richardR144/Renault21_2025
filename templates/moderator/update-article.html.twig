@@ -1,6 +1,8 @@
 {% extends 'moderator/base.html.twig' %}
 
 {% block main %}
+<button type="button" onclick="window.location.href='{{ path('moderator-list-articles') }}'" class="btn btn-primary">&#8592; Retour à la modification des articles</a></button>
+<div id="main-update-article">
 <div class="title-article">
     <h1>Modifier l'article</h1>
 </div>
@@ -18,23 +20,27 @@
 {% endfor %}
 
 <form method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="title" class="form-label">Titre</label>
-        <input type="text" id="title" name="title" class="form-control" value="{{ article.title }}" required>
-    </div>
-    <div class="mb-3">
-        <label for="content" class="form-label">Contenu</label>
-        <textarea id="content" name="content" class="form-control" required>{{ article.content }}</textarea>
-    </div>
-    <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        {% if article.image %}
-            <div>
-                <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}" style="max-width: 200px;">
+    <div class="row gap-4">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <label for="title" class="form-label">Titre :</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ article.title }}" required>
             </div>
-        {% endif %}
-        <input type="file" id="image" name="image" class="form-control">
+            <div class="mb-3">
+                <label for="content" class="form-label">Contenu :</label>
+                <textarea id="content" name="content" class="form-control" required>{{ article.content }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image :</label>
+                <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-warning">Valider l'article</button>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+            {% if article.image %}
+                <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{ article.title }}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+            {% endif %}
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Mettre à jour l'article</button>
 </form>
 {% endblock %}
