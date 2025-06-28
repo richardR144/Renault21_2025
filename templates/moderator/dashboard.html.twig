@@ -13,7 +13,7 @@
             {{ flash_message }}
         </div>
     {% endfor %}
-    
+    <div class="moderator-dashboard-center">
     <div class="moderator-dashboard">
         <p>Bienvenue, {{ app.user.pseudo }} !</p>
         <h1>Bienvenue sur le tableau de bord modérateur</h1>
@@ -21,5 +21,6 @@
             <li><a href="{{ path('moderator-list-pieces') }}" class="btn btn-primary mb-2">Modération des pièces</a></li>
             <li><a href="{{ path('moderator-list-articles') }}" class="btn btn-primary mb-2">Modération des articles</a></li>
         </ul>
+    </div>
     </div>
 {% endblock %}

@@ -798,9 +798,18 @@ footer {
     color: #fff;
 }
 
-/* ----------- Espace entre les boutons d'action Articles Moderator ----------- */
+/* ----------- dashboard Moderator ----------- */
 
-
+.moderator-dashboard-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+.moderator-dashboard {
+    text-align: center;
+}
 
 
 /*----------------------Moderator modification piece et article----------------*/
