@@ -56,7 +56,7 @@ class AdminPieceController extends AbstractController
 
 
             try {
-                $piece = new Piece($name, $description, $price, $category); //envoyer une catégory complète
+                $piece = new Piece($name, $description, $price, $category, $image); //envoyer une catégory complète
 
                 $entityManager->persist($piece);
                 $entityManager->flush();
