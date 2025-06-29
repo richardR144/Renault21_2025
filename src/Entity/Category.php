@@ -21,6 +21,9 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $Description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Image = null;
+
     /**
      * @var Collection<int, Piece>
      */
@@ -59,6 +62,17 @@ class Category
         $this->Description = $Description;
 
         return $this;
+    }
+
+    public function getImage(): ?string
+    {
+    return $this->Image;
+    }
+
+    public function setImage(?string $Image): static
+    {
+    $this->Image = $Image;
+    return $this;
     }
 
     /**

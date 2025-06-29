@@ -1,48 +1,39 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
-
 <section id="admin-user-menu">
+    <h1>Gestion des utilisateurs</h1>
+    <button type="button" onclick="window.location.href='{{ path('admin-create-user') }}'" class="btn btn-primary">Créer un utilisateur</button>
 
-<h1>Gestion des utilisateurs</h1>
-<button type="button" onclick="window.location.href='{{ path('admin-create-user') }}'"  class="btn btn-primary">Créer un utilisateur</button>
-
-
-{% if app.session.flashbag.has('success') %}
-    <div class="alert alert-success">
-        {{ app.session.flashbag.get('success')[0] }}
-    </div>
-{% endif %}
-
-{% if app.session.flashbag.has('error') %}
-    <div class="alert alert-danger">
-        {{ app.session.flashbag.get('error')[0] }}
-    </div>
-{% endif %}
-<table width="80%" border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Rôles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for user in users %}
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.roles | join(', ') }}</td>
-            <td>
-                <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'" class="btn btn-warning">Modifier</button>
-                <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'"  class="btn btn-danger">Supprimer</button>
-            </td>
-        </tr>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
-    </tbody>
-</table>
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
 
+    <table class="table table-striped align-middle" style="width:80%; border: 1px solid #1C1C1C;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Rôles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles | join(', ') }}</td>
+                <td>
+                    <button type="button" onclick="window.location.href='{{ path('admin-edit-user', {'id': user.id}) }}'" class="btn btn-warning">Modifier</button>
+                    <button type="button" onclick="if(confirm('Supprimer cet utilisateur ?')) window.location.href='{{ path('admin-delete-user', {'id': user.id}) }}'" class="btn btn-danger">Supprimer</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </section>
-
 {% endblock %}

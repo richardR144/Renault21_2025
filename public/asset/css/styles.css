@@ -264,27 +264,48 @@ h3{
 }
 
 /*------------------container3 Moteur et habitacle-----------------*/
-    .container3{
-        display: flex;
+    .container3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 18px;
         width: 98%;
-        justify-content: space-around;
         border: 3px solid #DADDD8;
         margin: 15px auto;
+        padding: 20px 0;
+        background: #fff;
+        justify-items: center;
+        align-items: start;
 }
 
-    .container3 h5, h6 {
-        display: flex;
-        justify-content: center;
+    .container3 > div {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px 5px 18px 5px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    max-width: 160px;
+    min-width: 120px;
+}
+
+.container3 > div:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+.container3 img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(30,80,220,0.08);
+}
+
+    .container3 h5, .container3 h6 {
+        margin-bottom: 8px;
         font-size: 1rem;
         font-weight: lighter;
-}
-
-    .container3 .moteur {
-        height: 400px;
-}
-
-    .container3 .habitacle {
-        height: 400px;
 }
     .moteur img{
         width: 86%;
@@ -967,6 +988,20 @@ footer {
             flex-direction: column;
             text-align: center;
         }
+
+    .container3 {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 10px 0;
+}
+    .container3 > div {
+        max-width: 120px;
+        padding: 8px 2px 12px 2px;
+}
+    .container3 img {
+        width: 60px;
+        height: 60px;
+}
 
 
         /*--------------Responsive FOOTER accueil-----------*/

@@ -55,12 +55,24 @@
                 <a href="{{ path('details-category', {'id' : 2}) }}">
                     <img src="{{ asset('asset/images/CompteurV.webp') }}" alt="compteur de R21 td"></a>
             </div>
-        </div>
-        <div class="bouton" id="allPieces">
-            <label>
-                <a href="{{ path('list-pieces') }}" class="btn btn-primary">Liste de toutes les pièces</a>
-            </label>
-        </div>
+            <div class="pneumatique">
+                <h6>Catégorie Pneumatique</h6>
+                    <a href="{{ path('details-category', {'id' : 3}) }}">
+                        <img src="{{ asset('asset/images/pneu-185-70-r13-86-t.jpg') }}" alt="pneu">
+                    </a>
+            </div>
+            <div class="electricite">
+                <h6>Catégorie Électricité</h6>
+                    <a href="{{ path('details-category', {'id' : 4}) }}">
+                        <img src="{{ asset('asset/images/schema.jpg') }}" alt="électricité">
+                    </a>
+            </div>
+            </div>
+                <div class="bouton" id="allPieces">
+                    <label>
+                        <a href="{{ path('list-pieces') }}" class="btn btn-primary">Liste de toutes les pièces</a>
+                    </label>
+            </div>
     </main>
 {% endblock main %}
 

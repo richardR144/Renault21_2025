@@ -20,11 +20,23 @@ class AdminCategoryController extends AbstractController
         if ($request->isMethod('POST')) {
             $category = new Category();
             $category->setName($request->request->get('name'));
-            $entityManager->persist($category);
-            $entityManager->flush();
+            $description = $request->request->get('description');
+            $imageFile = $request->files->get('image');
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            $imageFile->move($this->getParameter('kernel.project_dir').'/public/uploads/categories', $newFilename);
+            $category->setImage($newFilename);
+}
+            if ($description === null || trim($description) === '') {
+                $this->addFlash('error', 'La description est obligatoire.');
+            } else {
+                $category->setDescription($description);
+                $entityManager->persist($category);
+                $entityManager->flush();
 
-            $this->addFlash('success', 'Catégorie créée avec succès !');
-            return $this->redirectToRoute('admin-list-categories');
+                $this->addFlash('success', 'Catégorie créée avec succès !');
+                return $this->redirectToRoute('admin-list-categories');
+            }
         }
 
         return $this->render('admin/categories/create-category.html.twig');
@@ -39,24 +51,31 @@ class AdminCategoryController extends AbstractController
         ]);
     }
 
-
     #[Route('/admin/categories/{id}/update-category', name: 'admin-update-category', methods: ['GET', 'POST'])]
     public function updateCategory(int $id, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
-{
-    $category = $categoryRepository->find($id);
-    if (!$category) {
-        throw $this->createNotFoundException('Catégorie non trouvée');
+    {
+        $category = $categoryRepository->find($id);
+        if (!$category) {
+            throw $this->createNotFoundException('Catégorie non trouvée');
+        }
+
+        if ($request->isMethod('POST')) {
+            $category->setName($request->request->get('name'));
+            $description = $request->request->get('description');
+            if ($description === null || trim($description) === '') {
+                $this->addFlash('error', 'La description est obligatoire.');
+            } else {
+                $category->setDescription($description);
+                $entityManager->flush();
+                $this->addFlash('success', 'Catégorie modifiée avec succès.');
+                return $this->redirectToRoute('admin-list-categories');
+            }
+        }
+
+        return $this->render('admin/categories/update-category.html.twig', [
+            'category' => $category,
+        ]);
     }
-    if ($request->isMethod('POST') && $this->isCsrfTokenValid('update_category_' . $category->getId(), $request->request->get('_token'))) {
-        $category->setName($request->request->get('name'));
-        $entityManager->flush();
-        $this->addFlash('success', 'Catégorie modifiée avec succès.');
-        return $this->redirectToRoute('admin-list-categories');
-    }
-    return $this->render('admin/categories/update-category.html.twig', [
-        'category' => $category,
-    ]);
-}
 
     #[Route('/admin/categories/{id}/delete', name: 'admin-delete-category', methods: ['POST'])]
     public function deleteCategory(Request $request, Category $category, EntityManagerInterface $entityManager): Response
@@ -69,3 +88,5 @@ class AdminCategoryController extends AbstractController
         return $this->redirectToRoute('admin-list-categories');
     }
 }
+
+

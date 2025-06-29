@@ -2,7 +2,7 @@
 
 {% block main %}
 <div class="btn-back">
-    <a href="{{ path('admin-list-categories') }}" class="btn btn-primary mb-3">Retour à la liste des catégories</a>
+    <a href="{{ path('admin-list-categories') }}" class="btn btn-primary mb-1">Retour à la liste des catégories</a>
 </div>
 <div class="width-message">
     <div class="title-message">
@@ -23,11 +23,19 @@
 
     <section>
         <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data" action="{{ path('admin-create-category') }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('create_category') }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nom de la catégorie</label>
                     <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" name="description" id="description" class="form-control" required>
+                </div>
+                 <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" name="image" id="image" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Créer la catégorie</button>
             </form>
