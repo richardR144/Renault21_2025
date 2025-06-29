@@ -62,15 +62,24 @@ class AdminCategoryController extends AbstractController
         if ($request->isMethod('POST')) {
             $category->setName($request->request->get('name'));
             $description = $request->request->get('description');
-            if ($description === null || trim($description) === '') {
-                $this->addFlash('error', 'La description est obligatoire.');
-            } else {
-                $category->setDescription($description);
-                $entityManager->flush();
+
+            // Ajoute la gestion de l'image ici :
+            $imageFile = $request->files->get('image');
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            $imageFile->move($this->getParameter('kernel.project_dir').'/public/uploads/categories', $newFilename);
+            $category->setImage($newFilename);
+    }
+
+        if ($description === null || trim($description) === '') {
+            $this->addFlash('error', 'La description est obligatoire.');
+        } else {
+            $category->setDescription($description);
+            $entityManager->flush();
                 $this->addFlash('success', 'Catégorie modifiée avec succès.');
                 return $this->redirectToRoute('admin-list-categories');
-            }
         }
+    }
 
         return $this->render('admin/categories/update-category.html.twig', [
             'category' => $category,

@@ -38,8 +38,8 @@
                     <td class="text-center" style="padding: 1rem;">
                         <a href="{{ path('admin-update-category', {'id': category.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
                         <form method="post" action="{{ path('admin-delete-category', {'id': category.id}) }}" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
-                            <button type="submit" onclick="return confirm('Supprimer cette catégorie ?')" class="btn btn-danger btn-sm">Supprimer</button>
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
+                        <button type="submit" onclick="return confirm('Supprimer cette catégorie ?')" class="btn btn-danger btn-sm">Supprimer</button>
                         </form>
                     </td>
                 </tr>
