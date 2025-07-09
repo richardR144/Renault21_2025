@@ -27,16 +27,22 @@
                     <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
                     {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
-                    <li class="liHeader"><a href="{{ path('list-pieces') }}">Liste des pièces</a></li>
+                    <li class="liHeader"><a href="{{ path('list-pieces') }}">Pièces</a></li>
                     <li class="liHeader"><a href="{{ path('list-articles') }}">Panthéon</a></li>
                     <li class="liHeader"><a href="{{ path('profil') }}">Profile</a></li>
-                    <li class="liHeader"><a href="{{ path('list-messages') }}">Listes des messages</a></li>
-                    <li class="liHeader"><a href="{{ path('list-categories') }}">Listes des catégories</a></li>
+                    <li class="liHeader"><a href="{{ path('list-messages') }}">Messages</a></li>
+                    <li class="liHeader"><a href="{{ path('list-categories') }}">Catégories</a></li>
+                    <li class="liHeader">
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_dashboard') }}">Administration</a>
+                    {% endif %}
+                    </li>
+                    <li class="liHeader">
                     {% if app.user %}
                             <a href="{{ path('logout') }}" class="btn btn-primary">Se déconnecter</a>   
                     {% else %}   
                             <a href="{{ path('connexion') }}" class="btn btn-primary">Se connecter</a>  
-                    {% endif %}
+                    {% endif %} 
                     </li>
                 </ul>
         </nav>
