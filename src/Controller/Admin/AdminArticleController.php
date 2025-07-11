@@ -39,6 +39,7 @@ class AdminArticleController extends AbstractController {
             return $this->render('admin/article/create-article.html.twig');
         }
 
+        
         #[IsGranted('ROLE_MODERATOR')]
         #[Route('/admin/articles', name: 'admin-list-articles')]
         public function listArticles(ArticleRepository $repository): Response
@@ -49,7 +50,7 @@ class AdminArticleController extends AbstractController {
         ]);
     }
 
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN', message: 'Accès réservé aux admins ou modérateurs')]
     #[Route('/admin/article/{id}/update', name: 'admin-update-article')]
     public function updateArticle(Request $request, Article $article, EntityManagerInterface $entityManager): Response
 {

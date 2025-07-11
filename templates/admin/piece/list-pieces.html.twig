@@ -22,8 +22,13 @@
             <td>{{ piece.description }}</td>
             <td>{{ piece.price }}</td>
             <td>
-                <button type="button" onclick="window.location.href='{{ path('admin-update-piece', {'id': piece.id}) }}'" class="btn btn-warning">Modifier</button>
-                <button type="button" onclick="window.location.href='{{ path('admin-delete-piece', {'id': piece.id}) }}'" onclick="return confirm('Supprimer cette pièce ?')" class="btn btn-danger">Supprimer</button>
+                <form method="get" action="{{ path('admin-update-piece', {'id': piece.id}) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-warning btn-sm" style="padding: 14px; margin-right: 8px;">Modifier</button>
+                </form>
+                <form method="post" action="{{ path('admin-delete-piece', {'id': piece.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cette pièce ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_piece_' ~ piece.id) }}">
+                <button type="submit" class="btn btn-danger btn-sm" style="padding: 14px;">Supprimer</button>
+            </form>
             </td>
         </tr>
     {% endfor %}

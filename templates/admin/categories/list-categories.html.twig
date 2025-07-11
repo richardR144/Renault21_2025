@@ -35,11 +35,13 @@
                 <tr>
                     <td>{{ category.id }}</td>
                     <td>{{ category.name }}</td>
-                    <td class="text-center" style="padding: 1rem;">
-                        <a href="{{ path('admin-update-category', {'id': category.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                        <form method="post" action="{{ path('admin-delete-category', {'id': category.id}) }}" style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
-                        <button type="submit" onclick="return confirm('Supprimer cette catégorie ?')" class="btn btn-danger btn-sm">Supprimer</button>
+                    <td>
+                        <form method="get" action="{{ path('admin-update-category', {'id': category.id}) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-primary btn-sm" style="padding: 10px; margin-right: 8px;">Modifier</button>
+                        </form>
+                        <form method="post" action="{{ path('admin-delete-category', {'id': category.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cette catégorie ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 10px;">Supprimer</button>
                         </form>
                     </td>
                 </tr>

@@ -40,8 +40,10 @@
                 <td>{{ message.content|slice(0, 500) ~ '...' }}</td>
                 <td>{{ message.createdAt|date('d/m/Y H:i') }}</td>
                 <td>
-                    <button type="button" onclick="window.location.href='{{ path('admin-update-message', {'id': message.id}) }}'" class="btn btn-warning btn-sm">Modifier</button>
-                    <button type="button" onclick="if(confirm('Supprimer ce message ?')) window.location.href='{{ path('admin-delete-message', {'id': message.id}) }}'" class="btn btn-danger btn-sm">Supprimer</button>
+                    <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}" style="display:inline; padding: 10px; margin-left: 8px;" onsubmit="return confirm('Supprimer ce message ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
                 </td>
             </tr>
         {% else %}
