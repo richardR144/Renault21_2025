@@ -40,7 +40,7 @@ class AdminUserController extends AbstractController
                 $entityManager->flush();
                 
                 $this->addFlash('success', 'Utilisateur créé');
-                return $this->redirectToRoute('admin-list-admins');
+                return $this->redirectToRoute('admin-list-users');
 
             } catch (Exception $exception) {
 
@@ -59,7 +59,7 @@ class AdminUserController extends AbstractController
     }
     
 
-    #[Route(path: '/admin/list-admins', name: 'admin-list-admins', methods: ['GET'])]
+    #[Route(path: '/admin/list-users', name: 'admin-list-users', methods: ['GET'])]
     public function listAdmins(UserRepository $userRepository): Response
     {
 
@@ -70,8 +70,8 @@ class AdminUserController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/delete-user/{id}', name: 'admin-delete-user', methods: ['GET'])]
-    public function deleteUser(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    #[Route(path: '/admin/delete-user/{id}', name: 'admin-delete-user', methods: ['POST'])]
+    public function deleteUser(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         try {
             $user = $userRepository->find($id);
@@ -80,17 +80,33 @@ class AdminUserController extends AbstractController
                 throw new Exception('Utilisateur non trouvé');
             }
 
+            // Vérification CSRF
+        if ($this->isCsrfTokenValid('delete_user_' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'Utilisateur supprimé !');
-
+            }
         } catch (Exception $exception) {
             $this->addFlash('error', 'Impossible de supprimer l\'utilisateur');
         }
 
-        return $this->redirectToRoute('admin-list-admins');
+        return $this->redirectToRoute('admin-list-users');
     }
+
+    #[Route(path: '/admin/confirm-delete-user/{id}', name: 'admin-confirm-delete-user', methods: ['GET'])]
+public function confirmDeleteUser(int $id, UserRepository $userRepository): Response
+{
+    $user = $userRepository->find($id);
+
+    if (!$user) {
+        $this->addFlash('error', 'Utilisateur non trouvé');
+        return $this->redirectToRoute('admin-list-users');
+    }
+
+    return $this->render('admin/user/delete-user.html.twig', [
+        'user' => $user
+    ]);
+}
 
 
 //Pour éditer l'utilisateur dans le dashboard admin
@@ -102,7 +118,7 @@ class AdminUserController extends AbstractController
 
     if (!$user) {
         $this->addFlash('error', 'Utilisateur non trouvé');
-        return $this->redirectToRoute('admin-list-admins');
+        return $this->redirectToRoute('admin-list-users');
     }
 
     return $this->render('admin/user/edit-user.html.twig', [

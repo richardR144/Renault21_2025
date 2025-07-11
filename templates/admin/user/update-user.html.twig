@@ -5,6 +5,13 @@
     <main id="update-user">
         <h1>Modifier l'utilisateur</h1>
 
+        {% for flash_message in app.flashes('success') %}
+    <div class="alert alert-success">{{ flash_message }}</div>
+{% endfor %}
+{% for flash_message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ flash_message }}</div>
+{% endfor %}
+
         <form method="post" action="{{ path('admin-update-user', {'id': user.id}) }}">
 
             <input type="hidden" name="_token" value="{{ csrf_token('update_user' ~ user.id) }}">
@@ -23,19 +30,7 @@
 
             <button type="submit" class="btn btn-warning">Confirmer la modification</button>
 
-            <a href="{{ path('admin-list-admins') }}"class="btn btn-danger">Annuler</a>
+            <a href="{{ path('admin-list-users') }}" class="btn btn-danger">Annuler</a>
 </form>
     </main>
-
-    {% if app.session.flashbag.has('success') %}
-        <div class="alert alert-success">
-            {{ app.session.flashbag.get('success')[0] }}
-        </div>
-    {% endif %}
-
-    {% if app.session.flashbag.has('error') %}
-        <div class="alert alert-danger">
-            {{ app.session.flashbag.get('error')[0] }}
-        </div>
-    {% endif %}
 {% endblock %}

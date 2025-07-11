@@ -34,7 +34,7 @@
                     <li class="liHeader"><a href="{{ path('list-categories') }}">Catégories</a></li>
                     <li class="liHeader">
                     {% if app.user and is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('admin_dashboard') }}">Administration</a>
+                        <a href="{{ path('admin-dashboard') }}">Administration</a>
                     {% endif %}
                     </li>
                     <li class="liHeader">

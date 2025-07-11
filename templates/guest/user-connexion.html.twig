@@ -13,6 +13,16 @@
     <section class="article">
 <div class="tab-content">
     <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+         {% for flash_message in app.flashes('success') %}
+            <h2 class="alert alert-success color-success">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <h2 class="alert alert-danger color-error">
+                {{ flash_message }}
+            </h2>
+        {% endfor %}
          <form method="post">
             <div class="text-center mb-3">
                         <p>Se connecter avec </p>

@@ -5,19 +5,26 @@
 
     <main id="delete-user">
 
-        <h1>Supprimer l'utilisateur</h1>
+        <h1>Suppression de l'utilisateur</h1>
 
-        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur "{{ user.username }}" ?</p>
+        <a href="{{ path('admin-list-users') }}" class="btn btn-primary">&#8592; Retour à la liste des utilisateurs</a>
 
-        <form method="post" action="{{ path('admin-delete-user', {'id': user.id}) }}">
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
 
-            <input type="hidden" name="_token" value="{{ csrf_token('delete_user' ~ user.id) }}">
-
-            <button type="submit">Confirmer la suppression</button>
-
-            <a href="{{ path('admin-list-users') }}">Annuler</a>
-
-        </form>
+         <form method="post" action="{{ path('admin-delete-user', {'id': user.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
+    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+    <a href="{{ path('admin-list-users') }}" class="btn btn-secondary ms-2">Annuler</a>
+</form>
 
     </main>
 
