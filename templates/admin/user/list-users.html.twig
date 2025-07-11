@@ -28,10 +28,12 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles | join(', ') }}</td>
                 <td>
-                    <a href="{{ path('admin-edit-user', {'id': user.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <form method="post" action="{{ path('admin-delete-user', {'id': user.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                    <form method="get" action="{{ path('admin-edit-user', {'id': user.id}) }}" style="display:inline;" margin-right: 18px;">
+                        <button type="submit" class="btn btn-warning btn-sm" style="padding: 14px;">Modifier</button>
+                    </form>
+                    <form method="post" action="{{ path('admin-delete-user', {'id': user.id}) }}" style="display:inline; margin-left: 18px; onsubmit="return confirm('Supprimer cet utilisateur ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
-                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 14px;">Supprimer</button>
                     </form>
                 </td>
             </tr>
