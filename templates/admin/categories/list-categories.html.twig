@@ -37,7 +37,7 @@
                     <td>{{ category.name }}</td>
                     <td>
                         <form method="get" action="{{ path('admin-update-category', {'id': category.id}) }}" style="display:inline;">
-                            <button type="submit" class="btn btn-primary btn-sm" style="padding: 10px; margin-right: 8px;">Modifier</button>
+                            <button type="submit" class="btn btn-warning btn-sm" style="padding: 10px; margin-right: 8px;">Modifier</button>
                         </form>
                         <form method="post" action="{{ path('admin-delete-category', {'id': category.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cette catégorie ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">

@@ -21,7 +21,9 @@
 {% endfor %}
 
 <section>
-    <a href="{{ path('admin-create-message') }}" class="btn btn-success mb-3">Créer un message</a>
+    <div class="text-center mb-3">
+        <a href="{{ path('admin-create-message') }}" class="btn btn-success">Créer un message</a>
+    </div>
     <table class="table table-striped table-bordered mt-4">
         <thead class="table-primary">
             <tr>
@@ -40,6 +42,9 @@
                 <td>{{ message.content|slice(0, 500) ~ '...' }}</td>
                 <td>{{ message.createdAt|date('d/m/Y H:i') }}</td>
                 <td>
+                    <form method="get" action="{{ path('admin-update-message', {'id': message.id}) }}" style="display:inline; padding: 10px; margin-left: 8px;">
+                        <button type="submit" class="btn btn-warning btn-sm">Modifier</button>
+                    </form>
                     <form method="post" action="{{ path('admin-delete-message', {'id': message.id}) }}" style="display:inline; padding: 10px; margin-left: 8px;" onsubmit="return confirm('Supprimer ce message ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
                         <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>

@@ -5,7 +5,7 @@
 {% block main %}
 <div class="list-messages">
     <h1 class="text-center mb-4">Liste des messages</h1>
-    <a href="{{ path('create-message') }}" class="btn btn-success mb-3">Créer un message</a>
+    <a href="{{ path('create-message') }}" class="btn btn-primary mb-3">Créer un message</a>
     {% for flash_message in app.flashes('success') %}
         <div class="alert alert-success">{{ flash_message }}</div>
     {% endfor %}
@@ -27,7 +27,13 @@
                         <span class="badge badge-danger" style="background-color:#dc3545;color:white;padding:0.4em 1em;border-radius:0.5em;">Non lu</span>
                     {% endif %}
                 </p>
-                <a href="{{ path('read-message', {'id': message.id}) }}" class="btn btn-primary btn-sm" style="width:100px">Lire</a>
+                <form method="get" action="{{ path('read-message', {'id': message.id}) }}" style="display:inline; margin-right:14px; padding:2px; gap: 10px;">
+                    <button type="submit" class="btn btn-primary btn-sm" style="width:100px;">Lire</button>
+                </form>
+                <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" style="display:inline; margin-right:14px; padding:2px;" onsubmit="return confirm('Supprimer ce message ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+                    <button type="submit" class="btn btn-danger btn-sm" style="width:100px;">Supprimer</button>
+                </form>
                 {% if not message.isRead %}
                 {% endif %}
             </div>
