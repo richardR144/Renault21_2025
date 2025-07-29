@@ -23,3 +23,8 @@ framework:
             policy: 'sliding_window'
             limit: 100
             interval: '1 hour'
+
+#5 tentatives de connexion max en 15 minutes
+#3 inscriptions max par heure par IP
+#Protection contre le spam sur tous les formulaires
+#Messages d'erreur clairs pour l'utilisateur

@@ -1,0 +1,64 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block metatitle %}Résultats de recherche | Renault 21 TD{% endblock %}
+
+{% block main %}
+<main class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>Résultats de recherche pour "{{ query }}"</h2>
+            <p class="text-muted">{{ total_results }} pièce(s) trouvée(s)</p>
+            
+            {% if pieces|length > 0 %}
+                <div class="row">
+                    {% for piece in pieces %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                {% if piece.image %}
+                                    <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" class="card-img-top" alt="{{ piece.name }}" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-cog fa-3x text-muted"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ piece.name }}</h5>
+                                    <p class="card-text flex-grow-1">{{ piece.description|slice(0, 100) }}...</p>
+                                    
+                                    {% if piece.price %}
+                                        <p class="text-primary font-weight-bold h5">{{ piece.price }}€</p>
+                                    {% endif %}
+                                    
+                                    <div class="mb-2">
+                                        {% if piece.exchange %}
+                                            <span class="badge badge-info">Échange possible</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="mt-auto">
+                                        <a href="{{ path('details-piece', {id: piece.id}) }}" class="btn btn-primary btn-block">Voir la pièce</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <h4><i class="fas fa-search"></i> Aucune pièce trouvée</h4>
+                    <p>Essayez avec d'autres mots-clés ou parcourez notre <a href="{{ path('list-pieces') }}">catalogue de pièces</a>.</p>
+                    
+                    <hr>
+                    <h6>Suggestions :</h6>
+                    <ul>
+                        <li>Vérifiez l'orthographe</li>
+                        <li>Utilisez des mots-clés plus génériques</li>
+                        <li>Essayez "frein", "moteur", "carrosserie"</li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

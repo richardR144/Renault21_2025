@@ -16,6 +16,16 @@ class PieceRepository extends ServiceEntityRepository
         parent::__construct($registry, Piece::class);
     }
 
+public function searchByKeyword(string $keyword): array
+{
+    return $this->createQueryBuilder('p')
+        ->where('p.Name LIKE :keyword OR p.Description LIKE :keyword')
+        ->setParameter('keyword', '%' . $keyword . '%')
+        ->orderBy('p.id', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
     //    /**
     //     * @return Piece[] Returns an array of Piece objects
     //     */

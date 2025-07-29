@@ -63,6 +63,34 @@
         width: 60%;
     }
 
+    /* Barre de recherche dans le header */
+    .navbar-search {
+        flex-grow: 1;
+        max-width: 250px;
+    }
+
+    .navbar-search .form-inline {
+        width: 100%;
+    }
+
+    .navbar-search .form-control {
+        flex-grow: 1;
+        border-radius: 10px;
+        border-right: none;
+    }
+
+    .navbar-search .btn {
+        border-radius: 10px;
+        background-color: rgb(45, 97, 252);
+        border-color: rgb(45, 97, 252);
+        color: white;
+    }
+
+    .navbar-search .btn:hover {
+        background-color: rgb(30, 80, 220);
+        border-color: rgb(30, 80, 220);
+    }
+
     .liHeader {
         display: flex;
         justify-content: space-between;
@@ -357,7 +385,7 @@
         justify-content: center;
         width: 50px;
         height: 30px;
-        background-color: rgb(30, 80, 252);
+        background-color: #007bff;
         border: 2px solid #DADDD8;
         border-radius: 6px;
         text-decoration: none;
@@ -366,7 +394,7 @@
     }
 
     .btn-google:hover {
-        background-color: green;
+        background-color: #e55a2b;
         border-color: #DADDD8;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transform: translateY(-1px);
@@ -1070,6 +1098,11 @@
             position: relative;
         }
 
+        .navbar-search {
+            margin: 10px 0;
+            max-width: 100%;
+        }
+
         .logoHeader {
             width: 60px;
             margin-top: 0;
@@ -1115,8 +1148,6 @@
             width: 100%;
             margin: 10px 0;
         }
-
-
 
         /*-----------------Responsive MAIN accueil---------------------------*/
         section {

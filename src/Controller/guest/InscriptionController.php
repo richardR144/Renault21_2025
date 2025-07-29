@@ -39,7 +39,7 @@ class InscriptionController extends AbstractController
             }
 
             // Validation du mot de passe
-            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{15,}$/', $password)) {
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/', $password)) {
                 $this->addFlash('error', 'Le mot de passe doit contenir au moins 15 caractères, une majuscule, une minuscule et un caractère spécial.');
                 return $this->render('guest/user-inscription.html.twig');
             }
