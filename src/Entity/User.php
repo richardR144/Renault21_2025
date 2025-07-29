@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-// src/Entity/User.php
 use App\Entity\Piece;
 use App\Entity\Message;
 use App\Entity\Annonce;
@@ -36,12 +35,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
    
     #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user', cascade: ['remove'], orphanRemoval: true)]
     private Collection $pieces;
@@ -70,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->pseudo = $pseudo;
         $this->email = $email;
-        $this->password = $passwordHashed;
+        $this->password = $passwordHashed; // Peut être null pour Google
         $this->roles = is_array($role) ? $role : [$role];
     }
 
@@ -224,6 +225,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $isRead->setReceiver(null);
             }
         }
+
+        return $this;
+    }
+    
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+        $this->googleId = $googleId;
 
         return $this;
     }
