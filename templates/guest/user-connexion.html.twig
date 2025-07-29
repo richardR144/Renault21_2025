@@ -25,18 +25,18 @@
         {% endfor %}
          <form method="post">
             <div class="text-center mb-3">
-                        <p>Se connecter avec </p>
+                        <p>Se connecter avec :</p>
                             <div class="btn-group" role="group" aria-label="Social Media Buttons">
-                                <button data-mdb-ripple-init type="button" class="btn btn-secondary btn-floating mx-1">
-                                    <img src="{{ asset('asset/icones/logoGoogle.png') }}">
-                                </button>
+                                <a href="{{ path('connect-google-start') }}" class="btn-google">
+                                    <img src="{{ asset('asset/icones/logoGoogle.png') }}" alt="Google">
+                                </a>
                             </div>
-                        
-                                <p class="text-center">ou :</p>
+                        </div>
+                            <p class="text-center">ou :</p>
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 <label class="form-label" for="email">Email</label>
-                <input type="email" name="_username" id="email" class="form-control" />
+                    <input type="email" name="_username" id="email" class="form-control" />
                 
             </div>
 
@@ -52,8 +52,8 @@
                 <div class="col-md-6 d-flex justify-content-center">
                     <!-- Checkbox -->
                     <div class="form-check mb-3 mb-md-0">
+                        <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked/>   
                         <label class="form-check-label" for="loginCheck"> Se souvenir de moi </label>
-                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked/>   
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
     </section>
     </div>
     <div class="container2">
-        <h4>Le panthéon de la Renault 21 Turbo Diésel</h4>
+        <h4>Le panthéon de la Renault 21 Turbo Diesel</h4>
         <div class="bouton">
             <label>
                 <a href="{{ path('list-articles') }}" class="btn btn-primary">Entrez !</a>
