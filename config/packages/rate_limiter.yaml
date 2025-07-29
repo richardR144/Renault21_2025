@@ -1,0 +1,25 @@
+framework:
+    rate_limiter:
+        # Limite de connexion
+        login_attempts:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+            
+        # Limite d'inscription
+        registration_attempts:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+            
+        # Limite pour les formulaires de contact
+        contact_form:
+            policy: 'sliding_window'
+            limit: 2
+            interval: '10 minutes'
+            
+        # Limite globale par IP
+        global_api:
+            policy: 'sliding_window'
+            limit: 100
+            interval: '1 hour'
