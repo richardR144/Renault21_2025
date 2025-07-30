@@ -37,12 +37,12 @@
         display: flex;
         justify-content: space-between;
         background-color: rgb(28, 28, 28);
-        height: 12vh;
+        height: 13vh;
     }
 
     .logoHeader,
     .logoFooter {
-        width: 4%;
+        width: 5%;
     }
 
     .logoHeader {
@@ -66,17 +66,22 @@
     /* Barre de recherche dans le header */
     .navbar-search {
         flex-grow: 1;
-        max-width: 250px;
+        padding: 0px 5px 5px 5px;
+        margin: 0px 100px -20px 100px;
+        border-radius: 10px;
+        max-width: 255px;
     }
 
     .navbar-search .form-inline {
         width: 100%;
+        display: flex;
     }
 
     .navbar-search .form-control {
         flex-grow: 1;
         border-radius: 10px;
         border-right: none;
+
     }
 
     .navbar-search .btn {

@@ -19,15 +19,15 @@
             <div class="logoHeader">
                 <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-header">
             </div>
+            <div class="navbar-search">
+                {{ include('partial/_search-form.html.twig') }}
+            </div>
             <div id="burger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
                 <ul class="ulHeader">
-                    <div class="navbar-search">
-                        {{ include('partial/_search-form.html.twig') }}
-                    </div>
                     <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
                     {#<li class="liHeader"><a href="{{ path('annonces') }}">Annonces</a></li>#}
