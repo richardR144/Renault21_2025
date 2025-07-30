@@ -14,7 +14,7 @@ class CategoryController extends AbstractController {
 
     #[Route('/list-categories', name:'list-categories', methods: ['GET'])]
     public function listCategories(CategoryRepository $categoryRepository): Response {
-
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $categories = $categoryRepository->findAll();  // la méthode findAll() permet de récupérer toutes les catégories
 
         return $this->render('guest/category/list-categories.html.twig', [
@@ -27,6 +27,7 @@ class CategoryController extends AbstractController {
     #[Route('/details-category/{id}', name:'details-category', methods: ['GET'])]
     public function detailsCategory(int $id, PieceRepository $pieceRepository, CategoryRepository $categoryRepository): Response
 {
+    $this->denyAccessUnlessGranted('ROLE_USER');
     $category = $categoryRepository->find($id);
     if (!$category) {
         throw $this->createNotFoundException('Catégorie non trouvée');
@@ -37,7 +38,7 @@ class CategoryController extends AbstractController {
         'category' => $category,
     ]);
 
-    return $this->render('guest/pieces/details-category.html.twig', [
+    return $this->render('guest/category/details-category.html.twig', [
         'category' => $category,
         'pieces' => $pieces
     ]);

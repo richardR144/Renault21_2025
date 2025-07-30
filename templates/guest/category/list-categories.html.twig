@@ -1,28 +1,97 @@
-{% extends 'guest/base.html.twig' %}
-
-{% block metatitle %}Liste des catégories | Renault 21 TD{% endblock metatitle %}
-
 {% block main %}
-<div class="container">
-    <h1 class="text-center mb-4">Liste des catégories</h1>
-    <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
-        {% if categories is not empty %}
-            <ul class="list-group">
-                {% for category in categories %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2">
-                            {% if category.image %}
-                                <img src="{{ asset('uploads/categories/' ~ category.image) }}" alt="{{ category.name }}" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
-                            {% endif %}
-                        <span>{{ category.name }}</span>
+<div class="container mt-4">
+    {% if not app.user %}
+        {# Utilisateur NON connecté = Accès refusé #}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title">Accès restreint</h3>
+                        <p class="card-text">Vous devez être connecté pour voir les catégories de pièces.</p>
+                        
+                        <div class="mt-4">
+                            <a href="{{ path('connexion') }}" class="btn btn-primary mr-2">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                            <a href="{{ path('inscription') }}" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
                         </div>
-                        <a href="{{ path('details-category', {'id': category.id}) }}" class="btn btn-primary btn-sm">Détails de la catégorie</a>
-                    </li>
-                {% endfor %}
-            </ul>
+                        
+                        <hr class="my-4">
+                        <small class="text-muted">
+                            Ou parcourez le <a href="{{ path('list-pieces') }}">catalogue des pièces</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {# Utilisateur connecté = Contenu normal #}
+        <h1 class="text-center mb-5">Liste des catégories</h1>
+        
+        {% if categories is not empty %}
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <div class="list-group list-group-flush">
+                                {% for category in categories %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center border-0 py-3">
+                                        <div class="d-flex align-items-center">
+                                            {% if category.image %}
+                                                <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
+                                                     alt="{{ category.name }}" 
+                                                     class="me-3 rounded shadow-sm"
+                                                     style="width:48px; height:48px; object-fit:cover;">
+                                            {% else %}
+                                                <div class="me-3 bg-light rounded d-flex align-items-center justify-content-center"
+                                                     style="width:48px; height:48px;">
+                                                    <i class="fas fa-folder text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ category.name }}</h6>
+                                                <small class="text-muted">{{ category.pieces|length }} pièce(s)</small>
+                                            </div>
+                                        </div>
+                                        <a href="{{ path('details-category', {'id': category.id}) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i> Voir détails
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <div class="alert alert-info text-center mb-0">Aucune catégorie trouvée.</div>
+            <div class="alert alert-info text-center">
+                <h4><i class="fas fa-info-circle"></i> Aucune catégorie trouvée</h4>
+                <p>Il n'y a pas encore de catégories disponibles.</p>
+            </div>
         {% endif %}
-    </div>
+    {% endif %}
+
+    {# Flash messages #}
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info alert-dismissible fade show mt-4">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show mt-4">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    {% endfor %}
 </div>
 {% endblock main %}
