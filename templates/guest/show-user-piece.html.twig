@@ -5,39 +5,117 @@
 {% block metatitle %}Mes pièces | guest Renault 21 TD{% endblock metatitle %}
 
 {% block main %}
-    
-    <h1 class="text-center mb-4">Mes pièces</h1>
-        <div class="show-piece piece ">
-            {% for piece in pieces %}
-                <div class="show-user-piece">
-            <h2>{{ piece.name }}</h2>   
-        <p>{{ piece.description }}</p>
-
-        <p>Catégorie : {{ piece.category.name }}</p>
-
-        <p>Créé le : {{ piece.createdAt|date('Y-m-d H:i') }}</p>
-
-        {% if piece.image %}
-            <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="img-fluid">
+<main class="container mt-4">
+    {% if not app.user %}
+        {# Utilisateur NON connecté = Accès refusé #}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title">Accès restreint</h3>
+                        <p class="card-text">Vous devez être connecté pour accéder à vos pièces personnelles.</p>
+                        
+                        <div class="mt-4">
+                            <a href="{{ path('connexion') }}" class="btn btn-primary mr-2">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                            <a href="{{ path('inscription') }}" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <small class="text-muted">
+                            Ou parcourez le <a href="{{ path('list-pieces') }}">catalogue public</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {# Utilisateur connecté = Contenu normal #}
+        <h1 class="text-center mb-5">Mes pièces</h1>
+        
+        {% if pieces|length > 0 %}
+            <div class="row">
+                {% for piece in pieces %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100 shadow">
+                            {% if piece.image %}
+                                <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" 
+                                     alt="Image de {{ piece.name }}" 
+                                     class="card-img-top" 
+                                     style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-cog fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ piece.name }}</h5>
+                                <p class="card-text flex-grow-1">{{ piece.description|slice(0, 100) }}...</p>
+                                
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-tag"></i> {{ piece.category.name }}
+                                    </small>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> {{ piece.createdAt|date('d/m/Y H:i') }}
+                                    </small>
+                                </div>
+                                
+                                {% if piece.price %}
+                                    <p class="text-primary font-weight-bold h5">{{ piece.price }} €</p>
+                                {% elseif piece.exchange %}
+                                    <span class="badge badge-info">Échange possible</span>
+                                {% endif %}
+                                
+                                <div class="mt-auto">
+                                    <a href="{{ path('details-piece', {id: piece.id}) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Voir détails
+                                    </a>
+                                    <a href="#" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h4><i class="fas fa-info-circle"></i> Aucune pièce trouvée</h4>
+                <p>Vous n'avez pas encore ajouté de pièces.</p>
+                <a href="{{ path('list-pieces') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Créer une pièce
+                </a>
+            </div>
         {% endif %}
+    {% endif %}
 
-        <p>Proposé par : {{ piece.user.pseudo }}</p>
-        <p>Email : {{ piece.user.email }}</p>
-
-        {% if piece.price %}
-            <p>Prix : {{ piece.price }} €</p>
-        {% elseif piece.isExchange %}
-            <p>Échange possible</p>
-        {% endif %}
-        <div></div>
-        {% endfor %}
-    </div>
-
+    {# Flash messages (toujours affichés) #}
     {% for message in app.flashes('info') %}
-        <div class="alert alert-info">{{ message }}</div>
+        <div class="alert alert-info alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
     {% endfor %}
+    
     {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
     {% endfor %}
-
+</main>
 {% endblock main %}
