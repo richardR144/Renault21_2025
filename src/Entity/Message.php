@@ -30,6 +30,9 @@ class Message
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $isRead = false;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +95,17 @@ class Message
     {
         $this->isRead = $isRead;
 
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+    
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }

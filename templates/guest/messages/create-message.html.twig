@@ -3,17 +3,60 @@
 {% block metatitle %}Créer un message{% endblock metatitle %}
 
 {% block main %}
-    <div class="btn-back">
-        <a href="{{ path('list-messages') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des messages</a>
-    </div>
-    <div class="container">
+<div class="container mt-4">
+    {% if not app.user %}
+        {# Utilisateur NON connecté = Accès refusé #}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title">Accès restreint</h3>
+                        <p class="card-text">Vous devez être connecté pour envoyer des messages.</p>
+                        
+                        <div class="mt-4">
+                            <a href="{{ path('connexion') }}" class="btn btn-primary mr-2">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                            <a href="{{ path('inscription') }}" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <small class="text-muted">
+                            Ou parcourez le <a href="{{ path('list-pieces') }}">catalogue des pièces</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {# Utilisateur connecté = Contenu normal #}
+        <div class="btn-back">
+            <a href="{{ path('list-messages') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des messages
+            </a>
+        </div>
+        
         <h1 class="text-center mb-4">Créer un message</h1>
 
+        {# Flash messages #}
         {% for flash_message in app.flashes('success') %}
-            <div class="alert alert-success">{{ flash_message }}</div>
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash_message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
         {% endfor %}
         {% for flash_message in app.flashes('error') %}
-            <div class="alert alert-danger">{{ flash_message }}</div>
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash_message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
         {% endfor %}
 
         <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
@@ -21,18 +64,29 @@
                 <div class="form-group mb-3">
                     <label for="receiver_id"><strong>Destinataire</strong></label>
                     <select id="receiver_id" name="receiver_id" class="form-control" required>
+                        <option value="">-- Sélectionner un destinataire --</option>
                         {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.email }}</option>
+                            {% if user.id != app.user.id %}
+                                <option value="{{ user.id }}">{{ user.username ?? user.email }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group mb-3">
                     <label for="content"><strong>Contenu</strong></label>
-                    <textarea id="content" name="content" class="form-control" rows="5" required></textarea>
+                    <textarea id="content" name="content" class="form-control" rows="5" 
+                              placeholder="Écrivez votre message ici..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-success">Créer le message</button>
-                <a href="{{ path('list-messages') }}" class="btn btn-primary ms-2">Annuler</a>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Envoyer le message
+                    </button>
+                    <a href="{{ path('list-messages') }}" class="btn btn-outline-secondary ml-2">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
             </form>
         </div>
-    </div>
+    {% endif %}
+</div>
 {% endblock main %}

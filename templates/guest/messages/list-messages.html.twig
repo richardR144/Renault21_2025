@@ -3,43 +3,134 @@
 {% block metatitle %}Liste des messages | guest Renault 21 TD{% endblock metatitle %}
 
 {% block main %}
-<div class="list-messages">
-    <h1 class="text-center mb-4">Liste des messages</h1>
-    <a href="{{ path('create-message') }}" class="btn btn-primary mb-3">Créer un message</a>
-    {% for flash_message in app.flashes('success') %}
-        <div class="alert alert-success">{{ flash_message }}</div>
-    {% endfor %}
-    {% for flash_message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ flash_message }}</div>
-    {% endfor %}
+<div class="container mt-4">
+    {% if not app.user %}
+        {# Utilisateur NON connecté = Accès refusé #}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title">Accès restreint</h3>
+                        <p class="card-text">Vous devez être connecté pour voir vos messages.</p>
+                        
+                        <div class="mt-4">
+                            <a href="{{ path('connexion') }}" class="btn btn-primary mr-2">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                            <a href="{{ path('inscription') }}" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <small class="text-muted">
+                            Ou parcourez le <a href="{{ path('list-pieces') }}">catalogue des pièces</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {# Utilisateur connecté = Contenu normal #}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Mes messages</h1>
+            <a href="{{ path('create-message') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Nouveau message
+            </a>
+        </div>
 
-    <div class="list-messages">
-        {% for message in messages %}
-            <div class="message-item mb-4 p-3 border rounded bg-light">
-                <p><strong>De :</strong> {{ message.sender.pseudo }} ({{ message.sender.email }})</p>
-                <p><strong>À :</strong> {{ message.receiver.pseudo }} ({{ message.receiver.email }})</p>
-                <p><strong>Envoyé le :</strong> {{ message.createdAt|date('Y-m-d H:i') }}</p>
-                <p>
-                    <strong>Statut :</strong>
-                    {% if message.isRead %}
-                        <span class="badge badge-success" style="background-color:#28a745;color:white;padding:0.4em 1em;border-radius:0.5em;">Lu</span>
-                    {% else %}
-                        <span class="badge badge-danger" style="background-color:#dc3545;color:white;padding:0.4em 1em;border-radius:0.5em;">Non lu</span>
-                    {% endif %}
-                </p>
-                <form method="get" action="{{ path('read-message', {'id': message.id}) }}" style="display:inline; margin-right:14px; padding:2px; gap: 10px;">
-                    <button type="submit" class="btn btn-primary btn-sm" style="width:100px;">Lire</button>
-                </form>
-                <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" style="display:inline; margin-right:14px; padding:2px;" onsubmit="return confirm('Supprimer ce message ?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
-                    <button type="submit" class="btn btn-danger btn-sm" style="width:100px;">Supprimer</button>
-                </form>
-                {% if not message.isRead %}
-                {% endif %}
+        {# Flash messages #}
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash_message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash_message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
+        {% if messages is not empty %}
+            <div class="row">
+                {% for message in messages %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> {{ message.createdAt|date('d/m/Y H:i') }}
+                                </small>
+                                {% if message.isRead %}
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check"></i> Lu
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-primary">
+                                        <i class="fas fa-envelope"></i> Nouveau
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="card-body d-flex flex-column">
+                                <div class="mb-2">
+                                    <strong><i class="fas fa-user"></i> De :</strong> 
+                                    {{ message.sender.username ?? message.sender.pseudo ?? 'Utilisateur' }}
+                                </div>
+                                
+                                <div class="mb-3 flex-grow-1">
+                                    <p class="card-text">
+                                        {{ message.content|length > 100 ? message.content|slice(0, 100) ~ '...' : message.content }}
+                                    </p>
+                                </div>
+                                
+                                <div class="card-actions">
+                                    <a href="{{ path('read-message', {'id': message.id}) }}" 
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Lire
+                                    </a>
+                                    
+                                    {% if message.sender == app.user %}
+                                        <a href="{{ path('update-message', {'id': message.id}) }}" 
+                                           class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" 
+                                          style="display:inline;" 
+                                          onsubmit="return confirm('Supprimer ce message ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         {% else %}
-            <div class="alert alert-info text-center">Aucun message trouvé.</div>
-        {% endfor %}
-    </div>
+            <div class="text-center">
+                <div class="card shadow-sm">
+                    <div class="card-body py-5">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h4>Aucun message</h4>
+                        <p class="text-muted">Vous n'avez pas encore reçu de messages.</p>
+                        <a href="{{ path('create-message') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Envoyer votre premier message
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock main %}

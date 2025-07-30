@@ -1,28 +1,88 @@
 {% extends 'guest/base.html.twig'%}
 
+{% block metatitle %}Supprimer le message | guest Renault 21 TD{% endblock metatitle %}
+
 {% block main %}
-<div class="btn-back">
-    <a href="{{ path('guest-messages-list-messages') }}" class="btn btn-primary mb-3">Retour à la liste des messages</a>
-</div>
-    <div class="profil-bg bg-delete-message">
-        <div class="bg-image"></div>
-        <div class="profil-content">
-            <h2>Supprimer le message</h2>
-
-            <p>Êtes-vous sûr de vouloir supprimer ce message ?</p>
-
-            <form method="post" action="{{ path('delete-message', {'id': message.id}) }}">
-                <button type="submit" class="btn btn-danger">Supprimer</button>
-                <a href="{{ path('list-messages') }}" class="btn btn-secondary">Annuler</a>
-            </form>
+<div class="container mt-4">
+    {% if not app.user %}
+        {# Utilisateur NON connecté = Accès refusé #}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title">Accès restreint</h3>
+                        <p class="card-text">Vous devez être connecté pour gérer vos messages.</p>
+                        
+                        <div class="mt-4">
+                            <a href="{{ path('connexion') }}" class="btn btn-primary mr-2">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                            <a href="{{ path('inscription') }}" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <small class="text-muted">
+                            Ou parcourez le <a href="{{ path('list-pieces') }}">catalogue des pièces</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    {% else %}
+        {# Utilisateur connecté = Contenu normal #}
+        <div class="btn-back mb-3">
+            <a href="{{ path('list-messages') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des messages
+            </a>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-trash-alt fa-3x text-danger mb-3"></i>
+                        <h2 class="card-title">Supprimer le message</h2>
+                        <p class="card-text">Êtes-vous sûr de vouloir supprimer ce message ?</p>
+                        
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Attention !</strong> Cette action est irréversible.
+                        </div>
+                        
+                        <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" class="mt-4">
+                            <button type="submit" class="btn btn-danger mr-2">
+                                <i class="fas fa-trash"></i> Confirmer la suppression
+                            </button>
+                            <a href="{{ path('list-messages') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
-    {% for message in app.flashes('info') %}
-        <div class="alert alert-info">{{ message }}</div>
+    {# Flash messages #}
+    {% for flash_message in app.flashes('info') %}
+        <div class="alert alert-info alert-dismissible fade show mt-4">
+            {{ flash_message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
     {% endfor %}
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
+    {% for flash_message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show mt-4">
+            {{ flash_message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
     {% endfor %}
+</div>
 {% endblock main %}
