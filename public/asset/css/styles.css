@@ -67,9 +67,9 @@
     .navbar-search {
         flex-grow: 1;
         padding: 0px 5px 5px 5px;
-        margin: 0px 100px -20px 100px;
+        margin: 0px 100px -10px 100px;
         border-radius: 10px;
-        max-width: 255px;
+        max-width: 255px;    
     }
 
     .navbar-search .form-inline {
@@ -84,6 +84,10 @@
 
     }
 
+    .bg-dark {
+        background-color: #1C1C1C !important;
+    }
+
     .navbar-search .btn {
         border-radius: 10px;
         background-color: rgb(45, 97, 252);
@@ -92,7 +96,7 @@
     }
 
     .navbar-search .btn:hover {
-        background-color: rgb(30, 80, 220);
+        background-color: #80bdff;
         border-color: rgb(30, 80, 220);
     }
 

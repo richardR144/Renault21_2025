@@ -1,20 +1,32 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block title %}Détail de la pièce | guest Renault 21 TD{% endblock %}
+{% block meta_title %}Détail de la pièce | guest Renault 21 TD{% endblock %}
 
 
 
 {% block main %}
 <main id="mainDetailsPiece">
     <div class="container">
-        <h1 class="text-center mb-4">{{ piece.name }}</h1>
-        {% if piece.image %}
-            <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="mb-3" width="300">
-        {% endif %}
-        <p><strong>Description :</strong> {{ piece.description }}</p>
-        <p><strong>Catégorie :</strong> {{ piece.category.name }}</p>
-        <p><strong>Créée le :</strong> {{ piece.createdAt|date('d/m/Y H:i') }}</p>
-        <a href="{{ path('guest-pieces-list-pieces') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 text-center">
+                <h1 class="text-center mb-5 display-4">{{ piece.name }}</h1>
+                
+                {% if piece.image %}
+                    <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" 
+                         alt="Image de la pièce" 
+                         class="img-fluid rounded mb-4 d-block mx-auto shadow" 
+                         style="max-width: 500px;">
+                {% endif %}
+                
+                <div class="text-left">
+                    <p><strong>Description :</strong> {{ piece.description }}</p>
+                    <p><strong>Catégorie :</strong> {{ piece.category.name }}</p>
+                    <p><strong>Créée le :</strong> {{ piece.createdAt|date('d/m/Y H:i') }}</p>
+                </div>
+                
+                <a href="{{ path('list-pieces') }}" class="btn btn-primary mt-4">Retour à la liste</a>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}
