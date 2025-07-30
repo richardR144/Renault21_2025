@@ -6,6 +6,7 @@
 
 {% block main %}
 <main class="container mt-4">
+    <h1 class="text-center mb-5">Mes pièces</h1>
     {% if not app.user %}
         {# Utilisateur NON connecté = Accès refusé #}
         <div class="row justify-content-center">
@@ -35,8 +36,6 @@
         </div>
     {% else %}
         {# Utilisateur connecté = Contenu normal #}
-        <h1 class="text-center mb-5">Mes pièces</h1>
-        
         {% if pieces|length > 0 %}
             <div class="row">
                 {% for piece in pieces %}

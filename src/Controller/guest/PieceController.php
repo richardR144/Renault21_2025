@@ -19,61 +19,63 @@ use App\Form\InsertPieceType;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 
-class PieceController extends AbstractController {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
-    
+class PieceController extends AbstractController
+{  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
+
     #[Route('/guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $params, SluggerInterface $slugger): Response       
+    public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $params, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        
+
         // Vérifie si l'utilisateur est connecté
-         $user = $this->getUser();
-    
+        $user = $this->getUser();
+
         $categories = $categoryRepository->findAll();
         $params = $this->container->get('parameter_bag');
         $piece = new Piece();
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
 
-   if ($form->isSubmitted() && $form->isValid()) {
-        $piece->setUser($user);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $piece->setUser($user);
 
-        $exchange = $form->get('exchange')->getData();
-        $price = $form->get('price')->getData();
+            $exchange = $form->get('exchange')->getData();
+            $price = $form->get('price')->getData();
 
-    if ($exchange === 'vente' && (is_null($price) || $price === '')) { //Récupère la valeur sélectionnée pour le type d'annonce ("vente" ou "échange") depuis le formulaire
-        $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
-        return $this->render('guest/pieces/insertPiece.html.twig', [
-            'insertPieceForm' => $form->createView(),
-        ]);
-    }
-        $imageFile = $form->get('image')->getData();
+            if ($exchange === 'vente' && (is_null($price) || $price === '')) { //Récupère la valeur sélectionnée pour le type d'annonce ("vente" ou "échange") depuis le formulaire
+                $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+                return $this->render('guest/pieces/insertPiece.html.twig', [
+                    'insertPieceForm' => $form->createView(),
+                ]);
+            }
+            $imageFile = $form->get('image')->getData();
 
-        if ($imageFile) {
-            $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFileName = $slugger->slug($originalFileName);
-            $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
-            
-            $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
-            $piece->setImage($newFileName);
-        }
+            if ($imageFile) {
+                $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFileName = $slugger->slug($originalFileName);
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+                $piece->setImage($newFileName);
+            }
 
             $entityManager->persist($piece);
             $entityManager->flush();
 
             $this->addFlash('success', 'pièce créée avec succès !');
             return $this->redirectToRoute('list-pieces');
-    }
-            return $this->render('guest/pieces/insertPiece.html.twig', [
-               'insertPieceForm' => $form->createView(),
-            ]);
         }
-    
+        return $this->render('guest/pieces/insertPiece.html.twig', [
+            'insertPieceForm' => $form->createView(),
+        ]);
+    }
 
 
-    #[Route('/Guest/pieces/list-pieces', name:'list-pieces', methods: ['GET'])]
-    public function listPieces(PieceRepository $pieceRepository): Response {
-        
+
+    #[Route('/Guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
+    public function listPieces(PieceRepository $pieceRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $pieces = $pieceRepository->findAll();
 
         return $this->render('Guest/pieces/list-pieces.html.twig', [
@@ -83,8 +85,9 @@ class PieceController extends AbstractController {  //AbstractController permet 
 
 
     #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
-        
+    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
@@ -100,76 +103,76 @@ class PieceController extends AbstractController {  //AbstractController permet 
             $exchange = $form->get('exchange')->getData();
             $price = $form->get('price')->getData();
 
-        // Vérification : si "vente" et pas de prix, on bloque
-        if ($exchange === 'vente' && (is_null($price) || $price === '')) {
-            $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+            // Vérification : si "vente" et pas de prix, on bloque
+            if ($exchange === 'vente' && (is_null($price) || $price === '')) {
+                $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
                 return $this->render('guest/pieces/insertPiece.html.twig', [
                     'insertPieceForm' => $form->createView(),
+                ]);
+            }
+            // ... gestion image ...
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFileName = $slugger->slug($originalFileName);
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+                $piece->setImage($newFileName);
+            }
+
+            $entityManager->persist($piece);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'pièce créée avec succès !');
+            return $this->redirectToRoute('list-pieces');
+        }
+
+        return $this->render('guest/pieces/update-piece.html.twig', [
+            'insertPieceForm' => $form->createView(),
         ]);
     }
-    // ... gestion image ...
-        $imageFile = $form->get('image')->getData();
-    if ($imageFile) {
-        $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFileName = $slugger->slug($originalFileName);
-        $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
-        $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
-        $piece->setImage($newFileName);
-    }
-
-    $entityManager->persist($piece);
-    $entityManager->flush();
-
-    $this->addFlash('success', 'pièce créée avec succès !');
-    return $this->redirectToRoute('list-pieces');
-}
-
-            return $this->render('guest/pieces/update-piece.html.twig', [
-               'insertPieceForm' => $form->createView(),
-            ]);
-        }
-    
 
 
-    #[Route('/Guest/pieces/delete-piece/{id}', name:'delete-piece', methods: ['GET', 'POST'])]
-    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response {
+
+    #[Route('/Guest/pieces/delete-piece/{id}', name: 'delete-piece', methods: ['GET', 'POST'])]
+    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response
+    {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
         $piece = $pieceRepository->find($id);
         // Si le produit n'existe pas, redirige vers la page 404 ou affiche un message d'erreur de Symfony
-        if(!$piece) {
+        if (!$piece) {
             throw $this->createNotFoundException('Pièce non supprimée, elle n\'existe pas');
-                
         }
 
         if ($request->isMethod('POST')) {
-        try {
-            // Supprime le produit de la base de données
-            $entityManager->remove($piece);
-            $entityManager->flush();
+            try {
+                // Supprime le produit de la base de données
+                $entityManager->remove($piece);
+                $entityManager->flush();
 
-            // Ajoute un message flash de succès
-            $this->addFlash('success', 'Piece supprimée !');
+                // Ajoute un message flash de succès
+                $this->addFlash('success', 'Piece supprimée !');
+            } catch (\Exception $exception) {
+                // En cas d'erreur, ajoute un message flash d'erreur
+                $this->addFlash('error', 'Impossible de supprimer le piece');
+            }
 
-        } catch (\Exception $exception) {
-            // En cas d'erreur, ajoute un message flash d'erreur
-            $this->addFlash('error', 'Impossible de supprimer le piece');
+            return $this->redirectToRoute('list-pieces');
         }
-
-        return $this->redirectToRoute('list-pieces');
-    }
         // Sinon, on affiche la page de confirmation
         return $this->render('guest/pieces/delete-piece.html.twig', [
-        'piece' => $piece
+            'piece' => $piece
         ]);
     }
 
-    #[Route('/Guest/pieces/details-piece/{id}', name:'details-piece', methods: ['GET'])]
-    public function detailsPiece(PieceRepository $pieceRepository, int $id): Response {
+    #[Route('/Guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
+    public function detailsPiece(PieceRepository $pieceRepository, int $id): Response
+    {
 
         $piece = $pieceRepository->find($id);
 
-        if(!$piece) {
+        if (!$piece) {
             throw $this->createNotFoundException('Pièce non trouvée');
         }
 
@@ -178,28 +181,34 @@ class PieceController extends AbstractController {  //AbstractController permet 
         ]);
     }
 
-    /* Serach-result pour rechercher une pièce précise et récupérer le champs tapé dans la recherche
-    #[Route('/Guest/pieces/search-results', name:'search-results', methods: ['GET'])]
-    public function resultsSearchPieces(Request $request, PieceRepository $pieceRepository): Response{
-    $query = $request->query->get('q', ''); // je récupère le texte tapé dans le champ de recherche q dans l'url
-    // Si le champ de recherche est vide, on initialise $pieces à un tableau vide
-    $pieces = [];
+    #[Route('/Guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
+    public function showUserPieces(PieceRepository $pieceRepository): Response
+    {
+        // Sécurisation obligatoire
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
-    if ($query) {  // Si le champ de recherche n'est pas vide, j'effectue la recherche
-        $pieces = $pieceRepository->createQueryBuilder('p') //j'utilise le QueryBuilder pour construire ma requête
-            ->where('p.name LIKE :q OR p.description LIKE :q') // je remplace le texte tapé par un LIKE pour chercher dans la base de données
-            ->setParameter('q', '%' . $query . '%') // je cherche dans le nom et la description de la pièce
-            ->orderBy('p.createdAt', 'DESC') // je trie les résultats par date de création décroissante
-            ->getQuery()                     // je récupère la requête
-            ->getResult();                   // je récupère les résultats de la requête
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Récupérer SEULEMENT les pièces de cet utilisateur
+        $pieces = $pieceRepository->findBy(['user' => $user]);
+
+        return $this->render('guest/show-user-piece.html.twig', [
+            'pieces' => $pieces
+        ]);
     }
 
-    if (empty($pieces)) {
-        $this->addFlash('info', 'Aucune pièce trouvée pour votre recherche.');
+    #[Route('/Guest/pieces/search-piece', name: 'search-piece', methods: ['GET'])]
+    public function searchPiece(Request $request, PieceRepository $pieceRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $searchTerm = $request->query->get('q');
+        $pieces = $pieceRepository->findBySearchTerm($searchTerm);
+
+        return $this->render('guest/pieces/search-piece.html.twig', [
+            'pieces' => $pieces,
+            'searchTerm' => $searchTerm
+        ]);
     }
-    return $this->render('guest/pieces/search-results.html.twig', [
-        'pieces' => $pieces  //j'affiche la page des résultats, en passant la liste des trouvées au twig    
-    ]);
-    }*/
-   
 }
