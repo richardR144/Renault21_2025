@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,57 +17,117 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminUserController extends AbstractController
 {
-    #[Route(path: '/admin/create-user', name: 'admin-create-user', methods: ['GET', 'POST'])]
-    public function createUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+
+    private function validateUserData(Request $request): array
     {
+        $pseudo = trim($request->request->get('pseudo', ''));
+        $email = trim($request->request->get('email', ''));
+        $password = $request->request->get('password', '');
+        $role = $request->request->get('role', 'ROLE_USER');
+        $errors = [];
 
-        if ($request->isMethod('POST')) { 
-            $pseudo = $request->request->get('pseudo');      // je vérifie que les données sont envoyés en POST
-            $email = $request->request->get('email');       // je récupère l'email et le mot de passe envoyée par le formulaire
-            $password = $request->request->get('password');
-            $role = $request->request->get('role', 'ROLE_USER'); 
-    
-            $user = new User();
+        //VALIDATION PSEUDO
+        if (empty($pseudo)) {
+            $errors[] = 'Le pseudo est obligatoire';
+        } elseif (strlen($pseudo) < 3) {
+            $errors[] = 'Le pseudo doit contenir au moins 3 caractères';
+        } elseif (strlen($pseudo) > 50) {
+            $errors[] = 'Le pseudo ne peut pas dépasser 50 caractères';
+        } elseif (!preg_match('/^[a-zA-Z0-9_-]+$/', $pseudo)) {
+            $errors[] = 'Le pseudo ne peut contenir que des lettres, chiffres, tirets et underscores';
+        }
 
-            $passwordHashed = $userPasswordHasher->hashPassword($user, $password);
+        //VALIDATION EMAIL
+        if (empty($email)) {
+            $errors[] = 'L\'email est obligatoire';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Format d\'email invalide';
+        } elseif (strlen($email) > 180) {
+            $errors[] = 'L\'email ne peut pas dépasser 180 caractères';
+        }
+
+        //VALIDATION MOT DE PASSE
+        if (empty($password)) {
+            $errors[] = 'Le mot de passe est obligatoire';
+        } elseif (strlen($password) < 8) {
+            $errors[] = 'Le mot de passe doit contenir au moins 8 caractères';
+        } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/', $password)) {
+            $errors[] = 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre';
+        }
+
+        //VALIDATION RÔLE (SÉCURITÉ CRITIQUE)
+        $allowedRoles = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
+        if (!in_array($role, $allowedRoles)) {
+            $errors[] = 'Rôle non autorisé';
+        }
+
+        //PROTECTION XSS
+        $pseudo = htmlspecialchars($pseudo, ENT_QUOTES, 'UTF-8');
+
+        if (!empty($errors)) {
+            throw new \InvalidArgumentException(implode(', ', $errors));
+        }
+
+        return [
+            'pseudo' => $pseudo,
+            'email' => $email,
+            'password' => $password,
+            'role' => $role
+        ];
+    }
 
 
-            
-            $user->createUser($pseudo, $email, $passwordHashed, $role); // Utilise une méthode personnalisée pour initialiser l'utilisateur
-            // Utilise une méthode personnalisée pour initialiser l'admin
-
+    #[Route(path: '/admin/create-user', name: 'admin-create-user', methods: ['GET', 'POST'])]
+    public function createUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    {
+        if ($request->isMethod('POST')) {
             try {
+                //VALIDATION COMPLÈTE
+                $validatedData = $this->validateUserData($request);
+
+                //VÉRIFIER EMAIL UNIQUE
+                if ($userRepository->findOneBy(['email' => $validatedData['email']])) {
+                    throw new \InvalidArgumentException('Cet email est déjà utilisé');
+                }
+
+                //VÉRIFIER PSEUDO UNIQUE
+                if ($userRepository->findOneBy(['pseudo' => $validatedData['pseudo']])) {
+                    throw new \InvalidArgumentException('Ce pseudo est déjà utilisé');
+                }
+
+                $user = new User();
+                $passwordHashed = $userPasswordHasher->hashPassword($user, $validatedData['password']);
+
+                //SETTERS SÉCURISÉS
+                $user->setPseudo($validatedData['pseudo']);
+                $user->setEmail($validatedData['email']);
+                $user->setPassword($passwordHashed);
+                $user->setRoles([$validatedData['role']]);
+
+
                 $entityManager->persist($user);
                 $entityManager->flush();
-                
-                $this->addFlash('success', 'Utilisateur créé');
+
+                $this->addFlash('success', 'Utilisateur créé avec succès !');
                 return $this->redirectToRoute('admin-list-users');
-
-            } catch (Exception $exception) {
-
-                $this->addFlash('error', 'Impossible de créer l\'admin');
-
-                // si l'erreur vient de la clé d'unicité, je créé un message flash ciblé
-                if ($exception->getCode() === '1062') {
-                    $this->addFlash('error', 'Email déjà pris.');
-                }
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la création de l\'utilisateur');
             }
-            //Affiche le formulaire de création
-            return $this->render('admin/user/create-user.html.twig');
         }
-        // Affiche le formulaire de création si la méthode n'est pas POST
-            return $this->render('admin/user/create-user.html.twig');
+
+        return $this->render('admin/user/create-user.html.twig');
     }
+
     
-
-    #[Route(path: '/admin/list-users', name: 'admin-list-users', methods: ['GET'])]
-    public function listAdmins(UserRepository $userRepository): Response
+    #[Route('/admin/list-users', name: 'admin-list-users')]
+    public function listUsers(UserRepository $userRepository): Response
     {
-
         $users = $userRepository->findAll();
 
         return $this->render('admin/user/list-users.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -77,16 +138,25 @@ class AdminUserController extends AbstractController
             $user = $userRepository->find($id);
 
             if (!$user) {
-                throw new Exception('Utilisateur non trouvé');
+                throw new \Exception('Utilisateur non trouvé');
             }
 
-            // Vérification CSRF
-        if ($this->isCsrfTokenValid('delete_user_' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-            $this->addFlash('success', 'Utilisateur supprimé !');
+            //PROTECTION : Empêcher l'auto-suppression
+            if ($user === $this->getUser()) {
+                $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte');
+                return $this->redirectToRoute('admin-list-users');
             }
-        } catch (Exception $exception) {
+
+            //VÉRIFICATION CSRF
+            if ($this->isCsrfTokenValid('delete_user_' . $user->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($user);
+                $entityManager->flush();
+                $this->addFlash('success', 'Utilisateur supprimé avec succès !');
+            } else {
+                //GESTION ERREUR CSRF
+                $this->addFlash('error', 'Token de sécurité invalide. Suppression annulée.');
+            }
+        } catch (\Exception $exception) {
             $this->addFlash('error', 'Impossible de supprimer l\'utilisateur');
         }
 
@@ -94,36 +164,102 @@ class AdminUserController extends AbstractController
     }
 
     #[Route(path: '/admin/confirm-delete-user/{id}', name: 'admin-confirm-delete-user', methods: ['GET'])]
-public function confirmDeleteUser(int $id, UserRepository $userRepository): Response
-{
-    $user = $userRepository->find($id);
+    public function confirmDeleteUser(int $id, UserRepository $userRepository): Response
+    {
+        $user = $userRepository->find($id);
 
-    if (!$user) {
-        $this->addFlash('error', 'Utilisateur non trouvé');
-        return $this->redirectToRoute('admin-list-users');
+        if (!$user) {
+            $this->addFlash('error', 'Utilisateur non trouvé');
+            return $this->redirectToRoute('admin-list-users');
+        }
+
+        return $this->render('admin/user/delete-user.html.twig', [
+            'user' => $user
+        ]);
     }
 
-    return $this->render('admin/user/delete-user.html.twig', [
-        'user' => $user
-    ]);
-}
 
-
-//Pour éditer l'utilisateur dans le dashboard admin
+    //Pour éditer l'utilisateur dans le dashboard admin
 
     #[Route(path: '/admin/edit-user/{id}', name: 'admin-edit-user', methods: ['GET', 'POST'])]
-    public function editUser(int $id, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
-{
-    $user = $userRepository->find($id);
+    public function editUser(int $id, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $user = $userRepository->find($id);
 
-    if (!$user) {
-        $this->addFlash('error', 'Utilisateur non trouvé');
-        return $this->redirectToRoute('admin-list-users');
+        if (!$user) {
+            $this->addFlash('error', 'Utilisateur non trouvé');
+            return $this->redirectToRoute('admin-list-users');
+        }
+
+        //PROTECTION : Empêcher l'admin de se supprimer ses propres droits
+        if ($user === $this->getUser() && $request->isMethod('POST')) {
+            $newRole = $request->request->get('role');
+            if ($newRole !== 'ROLE_ADMIN') {
+                $this->addFlash('error', 'Vous ne pouvez pas retirer vos propres droits administrateur');
+                return $this->render('admin/user/edit-user.html.twig', ['user' => $user]);
+            }
+        }
+
+        if ($request->isMethod('POST')) {
+            try {
+                $pseudo = trim($request->request->get('pseudo', ''));
+                $email = trim($request->request->get('email', ''));
+                $newPassword = $request->request->get('password');
+                $role = $request->request->get('role', 'ROLE_USER');
+
+                //VALIDATION PSEUDO
+                if (empty($pseudo) || strlen($pseudo) < 3 || strlen($pseudo) > 50) {
+                    throw new \InvalidArgumentException('Le pseudo doit contenir entre 3 et 50 caractères');
+                }
+
+                //VALIDATION EMAIL
+                if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new \InvalidArgumentException('Email invalide');
+                }
+
+                //VÉRIFIER UNICITÉ (sauf pour l'utilisateur actuel)
+                $existingEmail = $userRepository->findOneBy(['email' => $email]);
+                if ($existingEmail && $existingEmail !== $user) {
+                    throw new \InvalidArgumentException('Cet email est déjà utilisé');
+                }
+
+                $existingPseudo = $userRepository->findOneBy(['pseudo' => $pseudo]);
+                if ($existingPseudo && $existingPseudo !== $user) {
+                    throw new \InvalidArgumentException('Ce pseudo est déjà utilisé');
+                }
+
+                //VALIDATION RÔLE
+                $allowedRoles = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
+                if (!in_array($role, $allowedRoles)) {
+                    throw new \InvalidArgumentException('Rôle non autorisé');
+                }
+
+                //MISE À JOUR
+                $user->setPseudo(htmlspecialchars($pseudo, ENT_QUOTES, 'UTF-8'));
+                $user->setEmail($email);
+                $user->setRoles([$role]);
+
+                //MOT DE PASSE OPTIONNEL
+                if (!empty($newPassword)) {
+                    if (strlen($newPassword) < 8) {
+                        throw new \InvalidArgumentException('Le nouveau mot de passe doit contenir au moins 8 caractères');
+                    }
+                    $passwordHashed = $userPasswordHasher->hashPassword($user, $newPassword);
+                    $user->setPassword($passwordHashed);
+                }
+
+                $entityManager->flush();
+                $this->addFlash('success', 'Utilisateur modifié avec succès !');
+                return $this->redirectToRoute('admin-list-users');
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la modification de l\'utilisateur');
+            }
+        }
+
+        return $this->render('admin/user/edit-user.html.twig', [
+            'user' => $user
+        ]);
     }
-
-    return $this->render('admin/user/edit-user.html.twig', [
-        'user' => $user
-    ]);
-}
-
 }

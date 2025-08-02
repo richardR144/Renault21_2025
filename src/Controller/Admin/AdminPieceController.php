@@ -23,92 +23,92 @@ class AdminPieceController extends AbstractController
     {
         $category = $categoryRepository->findAll();
 
-        if ($request->isMethod('POST')) {
-            $name= $request->request->get('name');
-            $description = $request->request->get('description');
-            $exchange = $request->request->get('exchange');
-            $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
-            $price = $request->request->get('price');
-            $userId = $request->request->get(key: 'userId');
-            $categoryId = $request->request->get('categoryId');
-            $image = $request->files->get('image'); 
+if ($request->isMethod('POST')) {
+    try {
+        $name= $request->request->get('name');
+        $description = $request->request->get('description');
+        $exchange = $request->request->get('exchange');
+        $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
+        $price = $request->request->get('price');
+        $userId = $request->request->get(key: 'userId');
+        $categoryId = $request->request->get('categoryId');
+        $image = $request->files->get('image'); 
 
-            if (!$categoryId) {
+        if (!$categoryId) {
             $this->addFlash('error', 'Veuillez sélectionner une catégorie.');
             return $this->redirectToRoute('admin-create-piece');
         }
-            
-            $category = $categoryRepository->find($categoryId);
+        
+        $category = $categoryRepository->find($categoryId);
 
-            if (!$category) {
-                $this->addFlash('error', 'Catégorie introuvable.');
-                return $this->redirectToRoute('admin-create-piece');
-            }
+        if (!$category) {
+            $this->addFlash('error', 'Catégorie introuvable.');
+            return $this->redirectToRoute('admin-create-piece');
+        }
 
-            $piece = new Piece();
+        $piece = new Piece();
 
-            $piece->setName($name);
-            $piece->setDescription($description);
-            $piece->setExchange($exchange);
-            $piece->setPrice($price);
-            $piece->setCategory($category);
+        $piece->setName($name);
+        $piece->setDescription($description);
+        $piece->setExchange($exchange);
+        $piece->setPrice($price);
+        $piece->setCategory($category);
+        
+        if ($image) {
             $piece->setImage($image);
-
-
-            try {
-                $piece = new Piece($name, $description, $price, $category, $image); //envoyer une catégory complète
-
-                $entityManager->persist($piece);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'pièce créé');
-
-                return $this->redirectToRoute('admin-list-pieces');
-
-            } catch (Exception $exception) {
-                $this->addFlash('error', $exception->getMessage());
-            }
         }
 
+        $entityManager->persist($piece);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pièce créée avec succès !');
+        return $this->redirectToRoute('admin-list-pieces');
+
+    } catch (Exception $exception) {
+        $this->addFlash('error', $exception->getMessage());
+    }
+}
         return $this->render('admin/piece/create-piece.html.twig', [
-            'category' => $category,
+            'categories' => $category
         ]);
     }
 
-    
-    #[Route('/admin/list-piece', name: 'admin-list-pieces', methods: ['GET', 'POST'])]
-    public function listPieces(PieceRepository $pieceRepository): Response {
-        $piece = $pieceRepository->findAll();
 
-        return $this->render('admin/piece/list-pieces.html.twig', [
-            'pieces' => $piece
-        ]);
-    }
+#[Route('/admin/list-pieces', name: 'admin-list-pieces', methods: ['GET'])]
+public function listPieces(PieceRepository $pieceRepository): Response {
+    $pieces = $pieceRepository->findAll();
 
-    #[Route('/admin/delete-piece/{id}', name:'admin-delete-piece', methods: ['GET'])] //Exo 15
-    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager): Response {
+    return $this->render('admin/piece/list-pieces.html.twig', [
+        'pieces' => $pieces
+    ]);
+}
 
-        $piece = $pieceRepository->find($id);
-        // Si le produit n'existe pas, redirige vers la page 404 admin
-        if(!$piece) {
-            return $this->redirectToRoute('admin_404');
-        }
-
-        try {
-            // Supprime le produit de la base de données
-            $entityManager->remove($piece);
-            $entityManager->flush();
-
-            // Ajoute un message flash de succès
-            $this->addFlash('success', 'Piece supprimée !');
-
-        } catch(Exception $exception) {
-            // En cas d'erreur, ajoute un message flash d'erreur
-            $this->addFlash('error', 'Impossible de supprimer le piece');
-        }
-
+    #[Route('/admin/delete-piece/{id}', name:'admin-delete-piece', methods: ['POST'])] 
+    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response
+{
+    //CSRF Protection
+    if (!$this->isCsrfTokenValid('delete_piece_' . $id, $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token de sécurité invalide');
         return $this->redirectToRoute('admin-list-pieces');
     }
+
+    $piece = $pieceRepository->find($id);
+    
+    if (!$piece) {
+        $this->addFlash('error', 'Pièce introuvable');
+        return $this->redirectToRoute('admin-list-pieces');
+    }
+
+    try {
+        $entityManager->remove($piece);
+        $entityManager->flush();
+        $this->addFlash('success', 'Pièce supprimée avec succès !');
+    } catch (Exception $exception) {
+        $this->addFlash('error', 'Impossible de supprimer la pièce');
+    }
+
+    return $this->redirectToRoute('admin-list-pieces');
+}
     
 
     #[Route('/admin/update-piece/{id}', name: 'admin-update-piece', methods: ['GET', 'POST'])]

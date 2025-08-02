@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use App\Entity\Piece;
 use App\Entity\Message;
 use App\Entity\Annonce;
@@ -16,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\Table(name: 'user')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -43,9 +45,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
-   
-    #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user', cascade: ['remove'], orphanRemoval: true)]
-    private Collection $pieces;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastLoginAt = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isActive = true;
 
     /**
      * @var Collection<int, Message>
@@ -59,12 +70,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
     private Collection $isRead;
 
+    /**
+     * @var Collection<int, Piece>
+     */
+    #[ORM\OneToMany(targetEntity: Piece::class, mappedBy: 'user')]
+    private Collection $pieces;
+
     public function __construct()
     {
         $this->joinColumn = new ArrayCollection();
         $this->isRead = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
         $this->pieces = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->isActive = true;
     }
 
     public function createUser(string $pseudo, string $email, string $passwordHashed, string $role = 'ROLE_USER'): void
@@ -75,7 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = is_array($role) ? $role : [$role];
     }
 
-    
+
 
     public function getId(): ?int
     {
@@ -145,8 +164,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->pieces;
     }
-    
-    
+
+
     /**
      * @see UserInterface
      */
@@ -228,7 +247,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
+
 
     public function getGoogleId(): ?string
     {
@@ -240,5 +259,99 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->googleId = $googleId;
 
         return $this;
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeInterface
+    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeInterface $lastLoginAt): static
+    {
+        $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function getMemberSince(): string
+    {
+        if (!$this->createdAt) {
+            return 'Date inconnue';
+        }
+
+        return 'Membre depuis ' . $this->createdAt->format('F Y');
+    }
+
+    public function getLastActivity(): string
+    {
+        if (!$this->lastLoginAt) {
+            return 'Jamais connecté';
+        }
+
+        $now = new \DateTime();
+        $diff = $now->diff($this->lastLoginAt);
+
+        if ($diff->days === 0 && $diff->h === 0 && $diff->i < 5) {
+            return 'En ligne';
+        } elseif ($diff->days === 0 && $diff->h === 0) {
+            return 'Il y a ' . $diff->i . ' minute' . ($diff->i > 1 ? 's' : '');
+        } elseif ($diff->days === 0) {
+            return 'Il y a ' . $diff->h . ' heure' . ($diff->h > 1 ? 's' : '');
+        } elseif ($diff->days === 1) {
+            return 'Hier';
+        } else {
+            return 'Il y a ' . $diff->days . ' jour' . ($diff->days > 1 ? 's' : '');
+        }
+    }
+
+    public function isOnline(): bool
+    {
+        if (!$this->lastLoginAt) {
+            return false;
+        }
+
+        $now = new \DateTime();
+        $diff = $now->diff($this->lastLoginAt);
+
+        return ($diff->days === 0 && $diff->h === 0 && $diff->i < 5);
     }
 }
