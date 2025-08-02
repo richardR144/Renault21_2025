@@ -51,7 +51,7 @@ class AdminCategoryController extends AbstractController
         }
     }
 
-    private function validateCategoryData(Request $request): array
+    private function validateCategoryData(Request $request, CategoryRepository $repository, ?Category $currentCategory = null): array
     {
         $name = trim($request->request->get('name', ''));
         $description = trim($request->request->get('description', ''));
@@ -75,6 +75,14 @@ class AdminCategoryController extends AbstractController
             $errors[] = 'La description ne peut pas dépasser 500 caractères';
         }
 
+        //Vérification unicité nom
+        if ($repository) {
+            $existingCategory = $repository->findOneBy(['name' => $name]);
+            if ($existingCategory && (!$currentCategory || $existingCategory->getId() !== $currentCategory->getId())) {
+                $errors[] = 'Une catégorie avec ce nom existe déjà';
+            }
+        }
+
         //PROTECTION XSS
         $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
         $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
@@ -87,12 +95,12 @@ class AdminCategoryController extends AbstractController
     }
 
     #[Route('/admin/categories/create-category', name: 'admin-create-category', methods: ['GET', 'POST'])]
-    public function createCategory(Request $request, EntityManagerInterface $entityManager): Response
+    public function createCategory(Request $request, EntityManagerInterface $entityManager, CategoryRepository $repository): Response
     {
         if ($request->isMethod('POST')) {
             try {
                 //VALIDATION DONNÉES
-                $validatedData = $this->validateCategoryData($request);
+                $validatedData = $this->validateCategoryData($request, $repository);
 
                 $category = new Category();
                 $category->setName($validatedData['name']);
@@ -134,13 +142,14 @@ class AdminCategoryController extends AbstractController
     {
         $category = $categoryRepository->find($id);
         if (!$category) {
-            throw $this->createNotFoundException('Catégorie non trouvée');
-        }
+            $this->addFlash('error', 'Catégorie introuvable');
+            return $this->redirectToRoute('admin-list-categories');
+}
 
         if ($request->isMethod('POST')) {
             try {
                 //VALIDATION DONNÉES
-                $validatedData = $this->validateCategoryData($request);
+                $validatedData = $this->validateCategoryData($request, $categoryRepository, $category);
                 $category->setName($validatedData['name']);
                 $category->setDescription($validatedData['description']);
 
