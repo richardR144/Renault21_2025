@@ -35,43 +35,44 @@ class GoogleAuthenticator extends OAuth2Authenticator
     }
 
     public function authenticate(Request $request): Passport
-{
-    $client = $this->clientRegistry->getClient('google');
-    $accessToken = $this->fetchAccessToken($client);
+    {
+        $client = $this->clientRegistry->getClient('google');
+        $accessToken = $this->fetchAccessToken($client);
 
-    return new SelfValidatingPassport(
-        new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
-            $googleUser = $client->fetchUserFromToken($accessToken);
-            
-            // ✅ Utilise toArray() pour tout
-            $googleData = $googleUser->toArray();
-            $email = $googleData['email'];
+        return new SelfValidatingPassport(
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
+                $googleUser = $client->fetchUserFromToken($accessToken);
 
-            // Chercher l'utilisateur existant
-            $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+                //Utilise toArray() pour tout
+                $googleData = $googleUser->toArray();
+                $email = $googleData['email'];
 
-            if ($existingUser) {
-                return $existingUser;
-            }
+                // Chercher l'utilisateur existant
+                $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-            // Créer un nouvel utilisateur
-            $user = new User();
-            $user->setEmail($googleData['email']);
-            $user->setPseudo($googleData['name']);            
-            $user->setRoles(['ROLE_USER']);
-            $user->setGoogleId($googleData['sub']); // 'sub' est l'ID Google
-            
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+                if ($existingUser) {
+                    return $existingUser;
+                }
 
-            return $user;
+                // Créer un nouvel utilisateur
+                $user = new User();
+                $user->setEmail($googleData['email']);
+                $user->setPseudo($googleData['name']);
+                $user->setRoles(['ROLE_USER']);
+                $user->setGoogleId($googleData['sub']); // 'sub' est l'ID Google
+                $user->setPassword('');
+
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+
+                return $user;
             })
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse($this->router->generate('home'));
+        return new RedirectResponse($this->router->generate('accueil'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

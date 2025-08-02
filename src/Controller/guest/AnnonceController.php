@@ -1,93 +1,117 @@
 <?php
 
 namespace App\Controller\Guest;
+
 use App\Entity\Annonce;
+use App\Form\AnnonceTypeForm;  
 use App\Repository\AnnonceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
-
-
-
 
 class AnnonceController extends AbstractController
 {
-    #[Route('/Guest/annonces', name: 'annonces')]
-    public function annonceController(AnnonceRepository $annonceRepository): Response
+    #[Route('/Guest/annonces', name: 'guest-annonces', methods: ['GET'])]
+    public function listAnnonces(AnnonceRepository $annonceRepository): Response
     {
-        $annonces = $annonceRepository->findAll();
-        return $this->render('Guest/annonces/index.html.twig', [
+        $annonces = $annonceRepository->findBy([], ['createdAt' => 'DESC']);
+        
+        return $this->render('Guest/annonces/list-annonces.html.twig', [
             'annonces' => $annonces,
         ]);
     }
 
-    #[Route('/Guest/annonces/create', name: 'annonce-create', methods: ['GET', 'POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/Guest/annonces/create', name: 'guest-annonce-create', methods: ['GET', 'POST'])]
+    public function createAnnonce(Request $request, EntityManagerInterface $entityManager): Response
     {
         $annonce = new Annonce();
-        $form = $this->createForm(Annonce::class, $annonce);
+        $form = $this->createForm(AnnonceTypeForm::class, $annonce);  
 
-        $form->handleRequest($request); 
+        $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            $annonce->setCreatedAt(new \DateTimeImmutable());
+            $annonce->setSender($this->getUser());
+            
             $entityManager->persist($annonce);
             $entityManager->flush();
 
-            return $this->redirectToRoute('Guest/annonces');
+            $this->addFlash('success', 'Annonce créée avec succès !');
+            return $this->redirectToRoute('guest-annonces');
         }
 
-        return $this->render('Guest/annonces/annonce-create.html.twig', [
+        return $this->render('Guest/annonces/create-annonce.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/Guest/annonces/{piece}', name: 'annonce-show', methods: ['GET'])]
-    public function show(string $piece, AnnonceRepository $annonceRepository): Response
+    #[Route('/Guest/annonces/{id}', name: 'guest-annonce-show', methods: ['GET'])]
+    public function showAnnonce(int $id, AnnonceRepository $annonceRepository): Response
     {
-        $annonce = $annonceRepository->find($piece);
+        $annonce = $annonceRepository->find($id);
+        
         if (!$annonce) {
-            throw $this->createNotFoundException('Annonce non trouvée');
+            $this->addFlash('error', 'Annonce introuvable');
+            return $this->redirectToRoute('guest-annonces');
         }
-        return $this->render('Guest/annonces/annonce-show.html.twig', [
+        
+        return $this->render('Guest/annonces/show-annonce.html.twig', [
             'annonce' => $annonce,
         ]);
     }
 
-    #[Route('/Guest/annonces/{piece}/update', name: 'annonce-update', methods: ['GET', 'POST'])]
-    public function update(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
+    #[Route('/Guest/annonces/{id}/update', name: 'guest-annonce-update', methods: ['GET', 'POST'])]
+    public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Annonce::class, $annonce);
+        $annonce = $annonceRepository->find($id);
+        
+        if (!$annonce) {
+            $this->addFlash('error', 'Annonce introuvable');
+            return $this->redirectToRoute('guest-annonces');
+        }
 
+        $form = $this->createForm(AnnonceTypeForm::class, $annonce);  // ✅ CORRIGÉ !
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('Guest/annonces');
+            
+            $this->addFlash('success', 'Annonce modifiée avec succès !');
+            return $this->redirectToRoute('guest-annonces');
         }
 
-        return $this->render('Guest/annonces/annonce-update.html.twig', [
+        return $this->render('Guest/annonces/update-annonce.html.twig', [
             'form' => $form->createView(),
             'annonce' => $annonce,
         ]);
     }
 
-
-    #[Route('/Guest/annonces/{piece}/delete-confirm', name: 'annonce-delete-confirm', methods: ['GET'])]
-    public function deleteConfirm(Annonce $annonce): Response
-{
-        return $this->render('Guest/annonces/annonce-delete-confirm.html.twig', [
-            'annonce' => $annonce,
-    ]);
-}
-
-    
-    #[Route('/Guest/annonces/list', name: 'annonce-list', methods: ['GET'])]
-    public function listAnnonces(AnnonceRepository $annonceRepository): Response
+    #[Route('/Guest/annonces/{id}/delete', name: 'guest-annonce-delete', methods: ['POST'])]
+    public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
     {
-        $annonces = $annonceRepository->findAll();
-        return $this->render('Guest/annonces/annonce-list.html.twig', [
-            'annonces' => $annonces,
-        ]);
+        if (!$this->isCsrfTokenValid('delete_annonce_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide');
+            return $this->redirectToRoute('guest-annonces');
+        }
+
+        $annonce = $annonceRepository->find($id);
+        
+        if (!$annonce) {
+            $this->addFlash('error', 'Annonce introuvable');
+            return $this->redirectToRoute('guest-annonces');
+        }
+
+        try {
+            $entityManager->remove($annonce);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Annonce supprimée avec succès !');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Impossible de supprimer l\'annonce');
+        }
+
+        return $this->redirectToRoute('guest-annonces');
     }
 }

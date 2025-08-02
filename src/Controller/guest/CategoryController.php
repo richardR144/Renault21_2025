@@ -5,10 +5,7 @@ use App\Repository\PieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Category;
-use App\Form\CategoryType;
+
 
 class CategoryController extends AbstractController {
 
@@ -30,13 +27,15 @@ class CategoryController extends AbstractController {
     $this->denyAccessUnlessGranted('ROLE_USER');
     $category = $categoryRepository->find($id);
     if (!$category) {
-        throw $this->createNotFoundException('Catégorie non trouvée');
-    }
+    $this->addFlash('error', 'Catégorie introuvable');
+    return $this->redirectToRoute('list-categories');
+}
 
     // Récupère les pièces associées à la catégorie
-    $pieces = $pieceRepository->findBy([
-        'category' => $category,
-    ]);
+    $pieces = $pieceRepository->findBy(
+    ['category' => $category],
+    ['name' => 'ASC']  // Tri alphabétique
+);
 
     return $this->render('guest/category/details-category.html.twig', [
         'category' => $category,
