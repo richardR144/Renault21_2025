@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller\Admin;
 
 use App\Entity\Annonce;
@@ -13,97 +14,180 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
-#[IsGranted('ROLE_MODERATOR')]   
+
 class AdminAnnonceController extends AbstractController
 {
-    #[Route('/admin/annonces', name: 'list-annonces', methods: ['GET'])]
+    #[Route('/admin/annonces', name: 'admin-list-annonces', methods: ['GET'])]  
     public function listAnnonce(AnnonceRepository $annonceRepository): Response
-    {
-        $annonces = $annonceRepository->findAll();
+{
+    $annonces = $annonceRepository->findBy([], ['createdAt' => 'DESC']);   
 
-        return $this->render('admin/annonces/list-annonces.html.twig', [
-            'annonces' => $annonces
-        ]);
-    }
+    return $this->render('admin/annonces/list-annonces.html.twig', [
+        'annonces' => $annonces
+    ]);
+}
 
-    #[Route('/admin/annonces/create', name: 'create-annonce', methods: ['GET', 'POST'])]
+    #[Route('/admin/annonces/create', name: 'admin-create-annonce', methods: ['GET', 'POST'])]  // ✅ Cohérent
     public function createAnnonce(Request $request, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
     {
         if ($request->isMethod('POST')) {
-            $title = $request->request->get('title');           
-            $description = $request->request->get('description');
-            $email = $request->request->get('email');
-            $imageFile = $request->files->get('image');
-            $createdAt = new \DateTimeImmutable();
-            $sender = $this->getUser();
-            $pieceId = $request->request->get('piece_id');
-            $piece = $pieceRepository->find($pieceId);
-             
-            $annonce = new Annonce();
-            
-            $annonce->setDescription($description);
-            $annonce->setEmail($email = $request->request->get('email'));
-            $annonce->setCreatedAt(new \DateTimeImmutable());
-            $annonce->setSender($this->getUser());
-            $annonce->setPiece($request->request->get('piece'));
-            $annonce->setPiece($piece);
-            
-            /*if (!$imageFile || !$imageFile->isValid()) {
-                $this->addFlash('error', 'Image invalide');
-                return $this->redirectToRoute('admin-annonces-create');
-            } ai-je besoin du côté admin? */
-
-            //je fais ici le traitement de l'image
-            
-            if ($imageFile) {
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                $imageFile->move($this->getParameter('annonces_images_directory'), $newFilename);
-                $annonce->setImage($newFilename);
-            }
-
             try {
+                //Validation données
+                $validatedData = $this->validateAnnonceData($request);
+
+                //Récupération piece
+                $pieceId = $request->request->get('piece_id');
+                $piece = $pieceRepository->find($pieceId);
+
+                if (!$piece) {
+                    $this->addFlash('error', 'Pièce introuvable');
+                    return $this->redirectToRoute('admin-create-annonce');
+                }
+
+                $annonce = new Annonce();
+                $annonce->setTitle($validatedData['title']);           //Utiliser title
+                $annonce->setDescription($validatedData['description']);
+                $annonce->setEmail($validatedData['email']);           //Pas d'assignment
+                $annonce->setCreatedAt(new \DateTimeImmutable());
+                $annonce->setSender($this->getUser());
+                $annonce->setPiece($piece);                            //setPiece() une seule fois avec objet
+
+                //Upload sécurisé
+                $imageFileName = $this->handleImageUpload($request);
+                if ($imageFileName) {
+                    $annonce->setImage($imageFileName);
+                }
+
                 $entityManager->persist($annonce);
                 $entityManager->flush();
-                $this->addFlash('success', 'Annonce créée');
-                return $this->redirectToRoute('admin-annonces-list');
-            } catch (Exception $exception) {
-                $this->addFlash('error', 'Impossible de créer l\'annonce');
+
+                $this->addFlash('success', 'Annonce créée avec succès !');
+                return $this->redirectToRoute('admin-list-annonces');
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la création de l\'annonce');
             }
         }
-        return $this->render('admin/annonces/create-annonce.html.twig');
+
+        $pieces = $pieceRepository->findAll();  // Récupérer toutes les pièces pour le formulaire
+
+        return $this->render('admin/annonces/create-annonce.html.twig', [
+            'pieces' => $pieces
+        ]);
     }
 
-    #[Route('/admin/annonces/delete/{id}', name: 'delete-annonce', methods: ['POST'])]
-    public function deleteAnnonce(int $id, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
-    {
-        try {
-            $annonce = $annonceRepository->find($id);
+    #[Route('/admin/annonces/delete/{id}', name: 'admin-delete-annonce', methods: ['POST'])]  // ✅ Cohérent
+public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
+{
+    // CSRF Protection
+    if (!$this->isCsrfTokenValid('delete_annonce_' . $id, $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token de sécurité invalide');
+        return $this->redirectToRoute('admin-list-annonces');
+    }
 
-            if (!$annonce) {
-                throw new Exception('Annonce non trouvée');
+    $annonce = $annonceRepository->find($id);
+
+    if (!$annonce) {
+        $this->addFlash('error', 'Annonce introuvable');
+        return $this->redirectToRoute('admin-list-annonces');
+    }
+
+    try {
+        //Supprimer image physique  
+        if ($annonce->getImage()) {
+            $imagePath = $this->getParameter('annonces_images_directory') . '/' . $annonce->getImage();
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
             }
-
-            $entityManager->remove($annonce);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Annonce supprimée !');
-        } catch (Exception $exception) {
-            $this->addFlash('error', 'Impossible de supprimer l\'annonce');
         }
+        
+        $entityManager->remove($annonce);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('list-annonces');
+        $this->addFlash('success', 'Annonce supprimée avec succès !');
+    } catch (\Exception $exception) {
+        $this->addFlash('error', 'Impossible de supprimer l\'annonce');
     }
 
-    #[Route('/admin/annonces/{id}', name: 'show-annonces', methods: ['GET'])]
+    return $this->redirectToRoute('admin-list-annonces');  // ✅ Cohérent
+}
+
+    #[Route('/admin/annonces/{id}', name: 'admin-show-annonce', methods: ['GET'])]  // ✅ Cohérent
     public function showAnnonce(int $id, AnnonceRepository $annonceRepository): Response
     {
         $annonce = $annonceRepository->find($id);
+
         if (!$annonce) {
-            throw $this->createNotFoundException('Annonce non trouvée');
+            $this->addFlash('error', 'Annonce introuvable');
+            return $this->redirectToRoute('admin-list-annonces');
         }
+
         return $this->render('admin/annonces/show-annonce.html.twig', [
             'annonce' => $annonce,
         ]);
     }
 
+    //Methods privées 
+    private function validateAnnonceData(Request $request): array
+    {
+        $title = trim($request->request->get('title', ''));
+        $description = trim($request->request->get('description', ''));
+        $email = trim($request->request->get('email', ''));
+
+        if (strlen($title) < 5 || strlen($title) > 255) {
+            throw new \InvalidArgumentException('Le titre doit contenir entre 5 et 255 caractères');
+        }
+
+        if (strlen($description) < 10 || strlen($description) > 1000) {
+            throw new \InvalidArgumentException('La description doit contenir entre 10 et 1000 caractères');
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('Email invalide');
+        }
+
+        return [
+            'title' => htmlspecialchars($title),
+            'description' => htmlspecialchars($description),
+            'email' => $email
+        ];
+    }
+
+    private function handleImageUpload(Request $request): ?string
+    {
+        $imageFile = $request->files->get('image');
+
+        if (!$imageFile) {
+            return null;
+        }
+
+        //Validation MIME
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimes)) {
+            throw new \InvalidArgumentException('Format d\'image non autorisé');
+        }
+
+        //Validation taille (5MB max)
+        if ($imageFile->getSize() > 5 * 1024 * 1024) {
+            throw new \InvalidArgumentException('Image trop volumineuse (max 5MB)');
+        }
+
+        //Extension sécurisée
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = $imageFile->guessExtension();
+        if (!in_array($extension, $allowedExtensions)) {
+            throw new \InvalidArgumentException('Extension non autorisée');
+        }
+
+        //Nom sécurisé
+        $filename = uniqid() . '_' . date('Y-m-d') . '.' . $extension;
+
+        try {
+            $imageFile->move($this->getParameter('annonces_images_directory'), $filename);
+            return $filename;
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Erreur lors de l\'upload');
+        }
+    }
 }
