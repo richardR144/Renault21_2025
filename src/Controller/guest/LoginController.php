@@ -24,7 +24,7 @@ class LoginController extends AbstractController
         if ($request->isMethod('POST')) {
             if (!$rateLimiterServiceRequest->checkLoginAttempts($request)) {
                 $this->addFlash('error', 'Trop de tentatives de connexion. Réessayez dans 15 minutes.');
-                return $this->render('guest/user-connexion.html.twig', [
+                return $this->render('Guest/user-connexion.html.twig', [
                     'last_username' => '',
                     'error' => null,
                 ]);

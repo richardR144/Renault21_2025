@@ -72,19 +72,19 @@ class PieceController extends AbstractController
 
 
 
-    #[Route('/Guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
+    #[Route('/guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
     public function listPieces(PieceRepository $pieceRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $pieces = $pieceRepository->findAll();
 
-        return $this->render('Guest/pieces/list-pieces.html.twig', [
+        return $this->render('guest/pieces/list-pieces.html.twig', [
             'pieces' => $pieces
         ]);
     }
 
 
-    #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
+    #[Route('/guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
     public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
@@ -106,12 +106,13 @@ class PieceController extends AbstractController
             // Vérification : si "vente" et pas de prix, on bloque
             if ($exchange === 'vente' && (is_null($price) || $price === '')) {
                 $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
-                return $this->render('guest/pieces/insertPiece.html.twig', [
+                return $this->render('guest/pieces/update-piece.html.twig', [
                     'insertPieceForm' => $form->createView(),
                 ]);
             }
             // ... gestion image ...
-            $imageFile = $form->get('image')->getData();
+                $imageFile = $form->get('image')->getData();
+
             if ($imageFile) {
                 $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalFileName);
@@ -120,10 +121,9 @@ class PieceController extends AbstractController
                 $piece->setImage($newFileName);
             }
 
-            $entityManager->persist($piece);
             $entityManager->flush();
 
-            $this->addFlash('success', 'pièce créée avec succès !');
+            $this->addFlash('success', 'pièce modifiée avec succès !');
             return $this->redirectToRoute('list-pieces');
         }
 
@@ -134,7 +134,7 @@ class PieceController extends AbstractController
 
 
 
-    #[Route('/Guest/pieces/delete-piece/{id}', name: 'delete-piece', methods: ['GET', 'POST'])]
+    #[Route('/guest/pieces/delete-piece/{id}', name: 'delete-piece', methods: ['GET', 'POST'])]
     public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
 
@@ -166,7 +166,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/Guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
+    #[Route('/guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
     public function detailsPiece(PieceRepository $pieceRepository, int $id): Response
     {
 
@@ -181,7 +181,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/Guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
+    #[Route('/guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
     public function showUserPieces(PieceRepository $pieceRepository): Response
     {
         // Sécurisation obligatoire
@@ -198,7 +198,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/Guest/pieces/search-piece', name: 'search-piece', methods: ['GET'])]
+    #[Route('/guest/pieces/search-piece', name: 'search-piece', methods: ['GET'])]
     public function searchPiece(Request $request, PieceRepository $pieceRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
