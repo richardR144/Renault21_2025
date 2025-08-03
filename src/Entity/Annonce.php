@@ -26,8 +26,8 @@ class Annonce
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $created_at = null;
+    #[ORM\Column(name: 'createdAt', type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne]
     private ?User $sender = null;
@@ -35,6 +35,11 @@ class Annonce
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Piece $piece = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -90,12 +95,12 @@ class Annonce
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
         return $this;
     }
 

@@ -32,7 +32,6 @@ class AnnonceController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $annonce->setCreatedAt(new \DateTimeImmutable());
             $annonce->setSender($this->getUser());
             
             $entityManager->persist($annonce);
