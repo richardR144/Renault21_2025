@@ -1,43 +1,49 @@
-{% extends 'base.html.twig' %}
+{% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}Modifier l'annonce | Renault 21 TD{% endblock %}
-
+{% block metatitle %}Modifier l'annonce | Renault 21 TD
+{% endblock %}
 
 
 {% block main %}
-    <div class="btn-back">
-        <a href="{{ path('guest/annonces') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des annonces</a>  
-    </div>
-    <h1>Modifier l'annonce</h1>
-    <form action="{{ path('annonce_update', {id: annonce.id}) }}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">Titre de l'annonce</label>
-            <input type="text" id="title" name="title" class="form-control" required value="{{ annonce.title }}">
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-control" rows="5" required>{{ annonce.description }}</textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Prix (en €)</label>
-            <input type="number" id="price" name="price" class="form-control" step="0.01" required value="{{ annonce.price }}">
-        </div>
-        <div class="form-group">
-            <label for="contact">Contact (email)</label>
-            <input type="text" id="contact" name="contact" class="form-control" required value="{{ annonce.contact }}">
-        </div>
-        <div class="form-group">
-            <label for="image">Image de l'annonce</label>
-            <input type="file" id="image" name="image" class="form-control-file">
-            {% if annonce.image %}
-                <p>Image actuelle :</p>
-                <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image actuelle" style="max-width:200px;">
-            {% endif %}
-        </div>
-
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-    </form>
-{% endblock main %}
-
+	<div class="container mt-4">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card shadow">
+					<div class="card-header bg-warning text-white">
+						<h4 class="mb-0">✏️ Modifier l'annonce</h4>
+					</div>
+					<div class="card-body">
+						<form action="{{ path('guest-annonce-update', {id: annonce.id}) }}" method="post" enctype="multipart/form-data">
+							<div class="mb-3">
+								<label for="title" class="form-label">Titre de l'annonce</label>
+								<input type="text" id="title" name="title" class="form-control" required value="{{ annonce.title }}">
+							</div>
+							<div class="mb-3">
+								<label for="description" class="form-label">Description</label>
+								<textarea id="description" name="description" class="form-control" rows="5" required>{{ annonce.description }}</textarea>
+							</div>
+							<div class="mb-3">
+								<label for="price" class="form-label">Prix (en €)</label>
+								<input type="number" id="price" name="price" class="form-control" step="0.01" required value="{{ annonce.price }}">
+							</div>
+							<div class="mb-3">
+								<label for="image" class="form-label">Image de l'annonce</label>
+								<input type="file" id="image" name="image" class="form-control">
+								{% if annonce.image %}
+									<p class="mt-2">Image actuelle :</p>
+									<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image actuelle" style="max-width:200px;">
+								{% endif %}
+							</div>
+							<button type="submit" class="btn btn-outline-warning">
+								✏️ Mettre à jour
+							</button>
+							<a href="{{ path('guest-annonces') }}" class="btn btn-outline-primary ms-2">
+								Retour
+							</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

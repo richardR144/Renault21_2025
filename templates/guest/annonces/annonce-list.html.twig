@@ -1,38 +1,148 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}Liste des annonces | Renault 21 TD{% endblock %}
-
-
+{% block metatitle %}Liste des annonces | Renault 21 TD
+{% endblock %}
 
 {% block main %}
-    <div class="btn-back">
-        <a href="{{ path('guest-annonces') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des annonces</a>
-        </div>
-    <h1>Liste des annonces</h1>
-    <div class="annonces-list">
-        {% for annonce in annonces %}
-            <div class="annonce-card">
-                <h2>{{ annonce.title }}</h2>
-                <p><strong>Prix :</strong> {{ annonce.price }} €</p>
-                <p><strong>Description :</strong> {{ annonce.description|length > 100 ? annonce.description|slice(0, 100) ~ '...' : annonce.description }}</p>
-                {% if annonce.image %}
-                    <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" style="max-width:200px;">
-                {% endif %}
-                <a href="{{ path('guest-annonce-show', {id: annonce.id}) }}" class="btn btn-primary">Voir l'annonce</a>
-                <a href="{{ path('guest-annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer</a>
-            </div>
-        {% else %} 
-            <p>Aucune annonce trouvée.</p>
-        {% endfor %}
-    </div>
-        {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
+	<div class="container mt-4">
+		<div class="btn-back">
+			<a href="{{ path('guest-annonces') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des annonces</a>
+		</div>
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
+		<h1>Liste des annonces</h1>
 
-{% endblock main %}
+		{% if annonces is empty %}
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<div class="card">
+						<div class="card-header bg-info text-white">
+							<h5 class="mb-0">Aucune annonce</h5>
+						</div>
+						<div class="card-body text-center">
+							<h6 class="mb-3">Aucune annonce trouvée</h6>
+							<p class="text-muted mb-4">Il n'y a actuellement aucune annonce disponible.</p>
+							<a href="{{ path('guest-annonce-create') }}" class="btn btn-success">
+								Publier une annonce
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<div class="row">
+				{% for annonce in annonces %}
+					<div class="col-md-6 col-lg-4 mb-4">
+						<div class="card h-100">
+							<div class="card-header bg-primary text-white">
+								<h6 class="mb-0">
+									{{ annonce.title|slice(0, 35) }}{{ annonce.title|length > 35 ? '...' : '' }}
+								</h6>
+							</div>
 
+							{% if annonce.image %}
+								<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
+							{% else %}
+								<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+									<i class="fas fa-image fa-3x text-muted"></i>
+								</div>
+							{% endif %}
 
+							<div class="card-body">
+								<div class="mb-2">
+									<strong>Description :</strong>
+									<p class="text-muted small mb-2">
+										{{ annonce.description|slice(0, 100) }}
+										{% if annonce.description|length > 100 %}...
+										{% endif %}
+									</p>
+								</div>
+
+								<div class="mb-2">
+									{% if annonce.type == 'sale' and annonce.price %}
+										<strong>Prix :</strong>
+										<span class="h5 text-success fw-bold">{{ annonce.price }}
+											€</span>
+									{% elseif annonce.type == 'exchange' and annonce.exchangeDescription %}
+										<strong>Type :</strong>
+										<span class="badge bg-info">Échange</span>
+										<small class="d-block text-muted mt-1">{{ annonce.exchangeDescription|slice(0, 50) }}...</small>
+									{% endif %}
+								</div>
+
+								<div class="mb-2">
+									<strong>Pièce :</strong>
+									<span class="text-primary">{{ annonce.piece.name }}</span>
+								</div>
+
+								{% if annonce.sender %}
+									<div class="mb-2">
+										<strong>Vendeur :</strong>
+										<span class="text-info">{{ annonce.sender.pseudo }}</span>
+									</div>
+								{% endif %}
+
+								<div class="mb-3">
+									<small class="text-muted">
+										📅
+										{{ annonce.createdAt|date('d/m/Y à H:i') }}
+										{% if annonce.updatedAt %}
+											<br>✏️ Modifiée
+											{{ annonce.updatedAt|date('d/m/Y') }}
+										{% endif %}
+									</small>
+								</div>
+
+								<div class="d-flex justify-content-center align-items-center gap-2">
+									<a href="{{ path('guest-annonce-show', {id: annonce.id}) }}" class="btn btn-outline-primary btn-sm" style="flex: 1; max-width: 108px;">
+										Voir l'annonce
+									</a>
+
+									{% if app.user and annonce.sender and app.user.id == annonce.sender.id %}
+										<a href="{{ path('guest-annonce-update', {id: annonce.id}) }}" class="btn btn-outline-warning btn-sm" style="width: 80px;">
+											Modifier
+										</a>
+
+										<form method="post" action="{{ path('guest-annonce-delete', {id: annonce.id}) }}" style="display: inline; width: 120px;">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete_annonce_' ~ annonce.id) }}">
+											<button type="submit" class="btn btn-outline-danger btn-sm w-90" onclick="return confirm('Supprimer ?')">
+												🗑️ Supprimer
+											</button>
+										</form>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<!-- Total des annonces -->
+			<div class="text-center mt-4">
+				<div class="card">
+					<div class="card-body">
+						<h6 class="mb-0">
+							Total :
+							{{ annonces|length }}
+							annonce{{ annonces|length > 1 ? 's' : '' }}
+						</h6>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		<!-- Flash Messages -->
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+
+		{% for message in app.flashes('error') %}
+			<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

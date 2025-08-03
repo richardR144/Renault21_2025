@@ -1,43 +1,158 @@
-{% extends 'base.html.twig' %}
+{% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}Annonces de Pièces | Renault 21 TD | Montrer l'annonce{% endblock metatitle %}
-
-
+{% block metatitle %}
+	{{ annonce.title }}
+	| Renault 21 TD
+{% endblock %}
 
 {% block main %}
+	<div class="container mt-4">
+		<div class="btn-back mb-3">
+			<a href="{{ path('guest-annonces') }}" class="btn btn-primary">
+				&#8592; Retour aux annonces
+			</a>
+		</div>
 
-    <div class="annonce-detail">
-        <h1>{{ annonce.title }}</h1>
-        <p><strong>Description :</strong> {{ annonce.description }}</p>
-        <p><strong>Prix :</strong> {{ annonce.price }} €</p>
-        <p><strong>Contact :</strong> {{ annonce.contact }}</p>
-        {% if annonce.image %}
-            <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" class="img-fluid" style="max-width:400px;">
-        {% endif %}
-    </div> 
-    <div class="actions">
-        <a href="{{ path('guest/annonces/update', {id: annonce.id}) }}" class="btn btn-primary">Modifier l'annonce</a>
-        <a href="{{ path('guest/annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer l'annonce</a>
-        <a href="{{ path('guest/annonces') }}" class="btn btn-secondary">Retour à la liste des annonces</a>
-    </div>
-    {% if error %}
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
-    {% endif %}
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header bg-primary text-white">
+						<h4 class="mb-0">{{ annonce.title }}</h4>
+					</div>
 
-    {% if success %}
-        <div class="alert alert-success">
-            {{ success }}
-        </div>
-    {% endif %}
+					{% if annonce.image %}
+						<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de {{ annonce.title }}" class="card-img-top" style="height: 400px; object-fit: cover;">
+					{% else %}
+						<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+							<i class="fas fa-image fa-5x text-muted"></i>
+						</div>
+					{% endif %}
 
-    {% if not annonce %}
-        <div class="alert alert-warning">
-            Aucune annonce trouvée.
-        </div>
-    {% endif %}      
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6">
+								<h6>
+									<strong>Description :</strong>
+								</h6>
+								<p class="text-muted">{{ annonce.description }}</p>
+							</div>
 
+							<div class="col-md-6">
+								<h6>
+									<strong>Détails :</strong>
+								</h6>
 
-{% endblock main %}
+								{% if annonce.type == 'sale' and annonce.price %}
+									<p>
+										<strong>Prix :</strong>
+										<span class="h4 text-success">{{ annonce.price }}
+											€</span>
+									</p>
+								{% elseif annonce.type == 'exchange' %}
+									<p>
+										<strong>Type :</strong>
+										<span class="badge bg-info fs-6">Échange</span>
+									</p>
+									{% if annonce.exchangeDescription %}
+										<p>
+											<strong>Échange contre :</strong><br>
+											<span class="text-muted">{{ annonce.exchangeDescription }}</span>
+										</p>
+									{% endif %}
+								{% endif %}
 
+								<p>
+									<strong>Pièce :</strong>
+									<span class="text-primary">{{ annonce.piece.name }}</span>
+								</p>
+
+								{% if annonce.sender %}
+									<p>
+										<strong>Vendeur :</strong>
+										<span class="text-info">{{ annonce.sender.pseudo }}</span>
+									</p>
+								{% endif %}
+
+								<p>
+									<strong>Publié le :</strong><br>
+									<small class="text-muted">
+										📅
+										{{ annonce.createdAt|date('d/m/Y à H:i') }}
+									</small>
+								</p>
+
+								{% if annonce.updatedAt %}
+									<p>
+										<strong>Modifié le :</strong><br>
+										<small class="text-muted">
+											✏️
+											{{ annonce.updatedAt|date('d/m/Y à H:i') }}
+										</small>
+									</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					{% if app.user and annonce.sender and app.user.id == annonce.sender.id %}
+						<div class="card-footer">
+							<div class="d-flex gap-2">
+								<a href="{{ path('guest-annonce-update', {id: annonce.id}) }}" class="btn btn-warning">
+									✏️ Modifier cette annonce
+								</a>
+
+								<form method="post" action="{{ path('guest-annonce-delete', {id: annonce.id}) }}" style="display: inline;">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_annonce_' ~ annonce.id) }}">
+									<button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ annonce.title }} ?')">
+										🗑️ Supprimer cette annonce
+									</button>
+								</form>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header bg-info text-white">
+						<h6 class="mb-0">💬 Contacter le vendeur</h6>
+					</div>
+					<div class="card-body text-center">
+						{% if app.user %}
+							{% if annonce.sender and app.user.id != annonce.sender.id %}
+								<p>Intéressé par cette annonce ?</p>
+								<a href="{{ path('contact-seller', {id: annonce.id}) }}" class="btn btn-success">
+									📞 Contacter
+									{{ annonce.sender.pseudo }}
+								</a>
+							{% else %}
+								<p class="text-muted">Vous êtes le propriétaire de cette annonce.</p>
+							{% endif %}
+						{% else %}
+							<p>Connectez-vous pour contacter le vendeur</p>
+							<a href="{{ path('app_login') }}" class="btn btn-primary">
+								🔐 Se connecter
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Flash Messages -->
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+
+		{% for message in app.flashes('error') %}
+			<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
