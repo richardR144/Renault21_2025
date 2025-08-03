@@ -21,7 +21,7 @@
                 <div class="text-left">
                     <p><strong>Description :</strong> {{ piece.description }}</p>
                     <p><strong>Catégorie :</strong> {{ piece.category.name }}</p>
-                    <p><strong>Créée le :</strong> {{ piece.createdAt|date('d/m/Y H:i') }}</p>
+                    <p><strong>Créée le :</strong> {{ piece.createdAt|date('d/m/Y') }}</p>
                 </div>
                 
                 <a href="{{ path('list-pieces') }}" class="btn btn-primary mt-4">Retour à la liste</a>

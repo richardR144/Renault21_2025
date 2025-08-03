@@ -69,7 +69,7 @@
         padding: 0px 5px 5px 5px;
         margin: 0px 100px -10px 100px;
         border-radius: 10px;
-        max-width: 255px;    
+        max-width: 255px;
     }
 
     .navbar-search .form-inline {
@@ -809,6 +809,395 @@
         margin-left: 20%;
     }
 
+    /*------------------ADMIN ANNONCES - ADAPTATIONS-----------------*/
+
+    /* Container principal admin avec min-height cohérent */
+    .admin-annonces-container {
+        min-height: 75vh;
+        background-color: #EEF0F2;
+        padding: 20px 0;
+    }
+
+    /* Bouton retour adapté à ton style */
+    .btn-back .btn {
+        background-color: rgb(45, 97, 252);
+        color: white;
+        border: 2px solid white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(30, 80, 220, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-back .btn:hover {
+        background-color: rgb(30, 80, 220);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(30, 80, 220, 0.5);
+        color: white;
+    }
+
+    /* Titre principal centré */
+    .admin-annonces-container h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin: 20px 0;
+        color: #1C1C1C;
+        font-weight: lighter;
+    }
+
+    /* Bouton "Créer une nouvelle annonce" centré et adapté */
+    .admin-create-btn {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .admin-create-btn .btn {
+        background-color: rgb(45, 97, 252);
+        color: white;
+        border: 2px solid white;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(30, 80, 220, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .admin-create-btn .btn:hover {
+        background-color: rgb(30, 80, 220);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(30, 80, 220, 0.5);
+    }
+
+    /*------------------CARDS ANNONCES MODERNES-----------------*/
+
+    .admin-annonces-container .card {
+        transition: all 0.3s ease;
+        border: 2px solid #DADDD8;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(30, 80, 220, 0.1);
+    }
+
+    .admin-annonces-container .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(30, 80, 220, 0.2);
+        border-color: rgb(45, 97, 252);
+    }
+
+    .admin-annonces-container .card-img-top {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .admin-annonces-container .card-footer {
+        border-radius: 0 0 10px 10px;
+        border-top: 1px solid #DADDD8;
+    }
+
+    /*------------------FORMULAIRES ADMIN ANNONCES-----------------*/
+
+    .admin-form-card .card {
+        border: 2px solid #4753fd;
+        box-shadow: 0 4px 8px rgba(30, 80, 220, 0.5);
+        border-radius: 12px;
+    }
+
+    .admin-form-card .card-header {
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+    }
+
+    .admin-form-card .form-label {
+        color: #1C1C1C;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .admin-form-card .form-control,
+    .admin-form-card .form-select {
+        border: 2px solid #DADDD8;
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .admin-form-card .form-control:focus,
+    .admin-form-card .form-select:focus {
+        border-color: rgb(45, 97, 252);
+        box-shadow: 0 0 0 0.2rem rgba(45, 97, 252, 0.25);
+    }
+
+    .admin-form-card .btn-success {
+        background-color: rgb(45, 97, 252);
+        border-color: rgb(45, 97, 252);
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(30, 80, 220, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .admin-form-card .btn-success:hover {
+        background-color: rgb(30, 80, 220);
+        border-color: rgb(30, 80, 220);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(30, 80, 220, 0.5);
+    }
+
+    /*------------------BOUTONS ACTIONS CARDS-----------------*/
+
+    .admin-annonces-container .btn-group .btn {
+        flex: 1;
+        border-radius: 6px;
+        margin: 0 2px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .admin-annonces-container .btn-outline-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(45, 97, 252, 0.3);
+    }
+
+    .admin-annonces-container .btn-outline-warning:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+    }
+
+    .admin-annonces-container .btn-outline-danger:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    /*------------------SIDEBAR ADMIN ANNONCES-----------------*/
+
+    .admin-sidebar .card {
+        border: 2px solid #DADDD8;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(30, 80, 220, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .admin-sidebar .card-header {
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+    }
+
+    .admin-sidebar .btn {
+        border-radius: 8px;
+        font-weight: bold;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .admin-sidebar .btn-outline-primary {
+        border-color: rgb(45, 97, 252);
+        color: rgb(45, 97, 252);
+    }
+
+    .admin-sidebar .btn-outline-primary:hover {
+        background-color: rgb(45, 97, 252);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(45, 97, 252, 0.3);
+    }
+
+    .admin-sidebar .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .admin-sidebar .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+    }
+
+    .admin-sidebar .btn-outline-danger {
+        border-color: #e74c3c;
+        color: #e74c3c;
+    }
+
+    .admin-sidebar .btn-outline-danger:hover {
+        background-color: #e74c3c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    .admin-form-card .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #1c1c1c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .admin-form-card .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(255, 193, 7, 0.5);
+    }
+
+    .admin-form-card .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .admin-form-card .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+    }
+
+    /*------------------SIDEBAR ADMIN ANNONCES-----------------*/
+
+    /* Sidebar informations */
+    .admin-sidebar .card {
+        border: 2px solid #DADDD8;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(30, 80, 220, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .admin-sidebar .card-header {
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+    }
+
+    .admin-sidebar .btn {
+        border-radius: 8px;
+        font-weight: bold;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .admin-sidebar .btn-outline-primary {
+        border-color: rgb(45, 97, 252);
+        color: rgb(45, 97, 252);
+    }
+
+    .admin-sidebar .btn-outline-primary:hover {
+        background-color: rgb(45, 97, 252);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(45, 97, 252, 0.3);
+    }
+
+    .admin-sidebar .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .admin-sidebar .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+    }
+
+    .admin-sidebar .btn-outline-danger {
+        border-color: #e74c3c;
+        color: #e74c3c;
+    }
+
+    .admin-sidebar .btn-outline-danger:hover {
+        background-color: #e74c3c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    /*------------------BOUTON ANNULER -----------------*/
+
+    .btn-cancel {
+        background-color: #e74c3c !important;
+        border-color: #e74c3c !important;
+        color: white !important;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c0392b !important;
+        border-color: #c0392b !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(231, 76, 60, 0.5);
+    }
+
+    .btn-cancel:focus,
+    .btn-cancel:active {
+        background-color: #c0392b !important;
+        border-color: #c0392b !important;
+        color: white !important;
+        box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    }
+
+    /*------------------BOUTONS CARDS COMPACTS-----------------*/
+
+    .admin-annonces-container .card-footer .btn-sm {
+        padding: 4px 12px !important;
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
+        border-radius: 4px !important;
+        height: 30px !important;
+    }
+
+    .admin-annonces-container .card-footer {
+        padding: 10px 15px !important;
+    }
+
+    .admin-annonces-container .card-footer .d-grid {
+        gap: 4px !important;
+    }
+
+    .admin-annonces-container .card-footer .d-flex {
+        gap: 4px !important;
+    }
+
+    /*------------------FLASH MESSAGES ADMIN-----------------*/
+
+    /* Flash messages adaptés */
+    .alert {
+        border-radius: 10px;
+        border: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #e74c3c;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-left: 4px solid rgb(45, 97, 252);
+    }
+
     /*-----------------Admin list-categories (dashboard-admin)------------ */
     .dashboard-h1 {
         text-align: center;
@@ -1075,6 +1464,58 @@
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(30, 80, 220, 0.10);
     }
+
+    /*------------------CORRECTIONS CARDS COMPACTS V2-----------------*/
+
+    .admin-annonces-container .card {
+        transition: all 0.3s ease;
+        border: 2px solid #DADDD8;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(30, 80, 220, 0.1);
+    }
+
+    .admin-annonces-container .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(30, 80, 220, 0.15);
+        border-color: rgb(45, 97, 252);
+    }
+
+    /* Boutons encore plus compacts */
+    .admin-annonces-container .card-footer .btn-sm {
+        padding: 3px 8px !important;
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+        border-radius: 4px !important;
+        height: 28px !important;
+        min-width: 75px !important;
+        white-space: nowrap !important;
+    }
+
+    /* Boutons spécifiques avec largeurs adaptées */
+    .admin-annonces-container .card-footer .btn-outline-primary {
+        min-width: 60px !important;
+        color: #1C1C1C !important;
+        border-color: #1C1C1C !important;
+
+    }
+
+    .admin-annonces-container .card-footer .btn-outline-warning {
+        color: #1C1C1C !important;
+        min-width: 80px !important;
+        /* Texte noir */
+        border-color: #ffc107 !important;
+        font-weight: 600 !important;
+    }
+
+    
+
+    .admin-annonces-container .card-footer .btn-outline-warning:hover {
+    color: #ffffff !important; /* Texte blanc au hover */
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
 
 
     /* ----------- Responsive pour la table et les boutons ----------- 

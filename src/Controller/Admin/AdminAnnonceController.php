@@ -128,6 +128,96 @@ public function deleteAnnonce(int $id, Request $request, AnnonceRepository $anno
         ]);
     }
 
+    #[Route('/admin/annonces/{id}/update', name: 'admin-update-annonce', methods: ['GET', 'POST'])]
+public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
+{
+    $annonce = $annonceRepository->find($id);
+    
+    if (!$annonce) {
+        $this->addFlash('error', 'Annonce introuvable');
+        return $this->redirectToRoute('admin-list-annonces');
+    }
+
+    if ($request->isMethod('POST')) {
+        try {
+            // Validation et mise à jour des données
+            $title = trim($request->request->get('title'));
+            $description = trim($request->request->get('description'));
+            $email = trim($request->request->get('email'));
+            $pieceId = $request->request->get('piece_id');
+            $price = $request->request->get('price');
+            $type = $request->request->get('type', 'sale');
+            $exchangeDescription = trim($request->request->get('exchange_description'));
+
+            // Validation
+            if (empty($title) || strlen($title) < 5 || strlen($title) > 255) {
+                throw new \Exception('Le titre doit contenir entre 5 et 255 caractères');
+            }
+
+            if (empty($description) || strlen($description) < 10 || strlen($description) > 1000) {
+                throw new \Exception('La description doit contenir entre 10 et 1000 caractères');
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new \Exception('Email invalide');
+            }
+
+            // Trouver la pièce
+            $piece = $pieceRepository->find($pieceId);
+            if (!$piece) {
+                throw new \Exception('Pièce invalide');
+            }
+
+            // Mise à jour
+            $annonce->setTitle(htmlspecialchars($title));
+            $annonce->setDescription(htmlspecialchars($description));
+            $annonce->setEmail(htmlspecialchars($email));
+            $annonce->setPiece($piece);
+            $annonce->setType($type);
+            
+            if ($type === 'sale' && !empty($price)) {
+                $annonce->setPrice((float)$price);
+                $annonce->setExchangeDescription(null);
+            } elseif ($type === 'exchange') {
+                $annonce->setPrice(null);
+                $annonce->setExchangeDescription(htmlspecialchars($exchangeDescription));
+            }
+
+            // Gestion upload image
+            $imageFile = $request->files->get('image');
+            if ($imageFile) {
+                // Supprimer ancienne image
+                if ($annonce->getImage()) {
+                    $oldImagePath = $this->getParameter('annonces_images_directory') . '/' . $annonce->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                // Upload nouvelle image
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+                $imageFile->move($this->getParameter('annonces_images_directory'), $newFilename);
+                $annonce->setImage($newFilename);
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Annonce modifiée avec succès !');
+            
+            return $this->redirectToRoute('admin-show-annonce', ['id' => $annonce->getId()]);
+
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur : ' . $e->getMessage());
+        }
+    }
+
+    $pieces = $pieceRepository->findAll();
+    
+    return $this->render('admin/annonces/update-annonce.html.twig', [
+        'annonce' => $annonce,
+        'pieces' => $pieces
+    ]);
+}
+
     //Methods privées 
     private function validateAnnonceData(Request $request): array
     {

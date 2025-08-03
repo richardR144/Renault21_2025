@@ -1,0 +1,130 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block metatitle %}Modifier
+	{{ annonce.title }}
+	| Admin Renault 21 TD
+{% endblock %}
+
+{% block main %}
+	<div class="container admin-annonces-container">
+		<div class="btn-back">
+			<a href="{{ path('admin-show-annonce', {id: annonce.id}) }}" class="btn mb-3">&#8592; Retour aux détails</a>
+		</div>
+
+		<h1>Modifier l'annonce</h1>
+
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="admin-form-card">
+					<div class="card">
+						<div class="card-header bg-warning text-dark">
+							<h5 class="mb-0">Modification de "{{ annonce.title }}"</h5>
+						</div>
+						<div class="card-body">
+							<form method="post" enctype="multipart/form-data">
+
+								<div class="mb-3">
+									<label for="title" class="form-label">Titre de l'annonce</label>
+									<input type="text" class="form-control" id="title" name="title" value="{{ annonce.title }}" placeholder="Titre de votre annonce..." required minlength="5" maxlength="255">
+								</div>
+
+								<div class="mb-3">
+									<label for="description" class="form-label">Description</label>
+									<textarea class="form-control" id="description" name="description" rows="5" placeholder="Description détaillée..." required minlength="10" maxlength="1000">{{ annonce.description }}</textarea>
+								</div>
+
+								<div class="mb-3">
+									<label for="email" class="form-label">Email de contact</label>
+									<input type="email" class="form-control" id="email" name="email" value="{{ annonce.email }}" placeholder="votre.email@exemple.com" required>
+								</div>
+
+								<div class="mb-3">
+									<label for="piece_id" class="form-label">Pièce associée</label>
+									<select class="form-select" id="piece_id" name="piece_id" required>
+										<option value="">Choisir une pièce...</option>
+										{% for piece in pieces %}
+											<option value="{{ piece.id }}" {{ annonce.piece and annonce.piece.id == piece.id ? 'selected' : '' }}>
+												{{ piece.name }}
+												-
+												{{ piece.category.name }}
+											</option>
+										{% endfor %}
+									</select>
+								</div>
+
+								<div class="mb-3">
+									<label for="type" class="form-label">Type d'annonce</label>
+									<select class="form-select" id="type" name="type" required onchange="togglePriceExchange()">
+										<option value="sale" {{ annonce.type == 'sale' ? 'selected' : '' }}>Vente</option>
+										<option value="exchange" {{ annonce.type == 'exchange' ? 'selected' : '' }}>Échange</option>
+									</select>
+								</div>
+
+								<div class="mb-3" id="price-field" style="{{ annonce.type == 'exchange' ? 'display:none' : '' }}">
+									<label for="price" class="form-label">Prix (€)</label>
+									<input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ annonce.price }}">
+								</div>
+
+								<div class="mb-3" id="exchange-field" style="{{ annonce.type == 'sale' ? 'display:none' : '' }}">
+									<label for="exchange_description" class="form-label">Description de l'échange</label>
+									<textarea class="form-control" id="exchange_description" name="exchange_description" rows="3" placeholder="Contre quoi souhaitez-vous échanger cette pièce ?">{{ annonce.exchangeDescription }}</textarea>
+								</div>
+
+								<div class="mb-3">
+									<label for="image" class="form-label">Image</label>
+									{% if annonce.image %}
+										<div class="mb-2">
+											<small class="text-muted">Image actuelle :</small><br>
+											<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image actuelle" class="img-thumbnail" style="max-width: 150px;">
+										</div>
+									{% endif %}
+									<input type="file" class="form-control" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
+									<div class="form-text">
+										Formats acceptés : JPG, PNG, GIF, WEBP (max 5MB)
+										{% if annonce.image %}<br><strong>Laisser vide pour conserver l'image actuelle</strong>
+										{% endif %}
+									</div>
+								</div>
+
+								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+									<a href="{{ path('admin-show-annonce', {id: annonce.id}) }}" class="btn btn-cancel me-md-2">Annuler</a>
+									<button type="submit" class="btn btn-success">Modifier l'annonce</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+
+		{% for message in app.flashes('error') %}
+			<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+	</div>
+
+	<script>
+		function togglePriceExchange() {
+const type = document.getElementById('type').value;
+const priceField = document.getElementById('price-field');
+const exchangeField = document.getElementById('exchange-field');
+
+if (type === 'sale') {
+priceField.style.display = 'block';
+exchangeField.style.display = 'none';
+} else {
+priceField.style.display = 'none';
+exchangeField.style.display = 'block';
+}
+}
+	</script>
+{% endblock %}

@@ -18,7 +18,7 @@ class AnnonceController extends AbstractController
     {
         $annonces = $annonceRepository->findBy([], ['createdAt' => 'DESC']);
         
-        return $this->render('Guest/annonces/list-annonces.html.twig', [
+        return $this->render('guest/annonces/annonce-list.html.twig', [
             'annonces' => $annonces,
         ]);
     }
@@ -41,7 +41,7 @@ class AnnonceController extends AbstractController
             return $this->redirectToRoute('guest-annonces');
         }
 
-        return $this->render('Guest/annonces/create-annonce.html.twig', [
+        return $this->render('guest/annonces/annonce-create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -56,7 +56,7 @@ class AnnonceController extends AbstractController
             return $this->redirectToRoute('guest-annonces');
         }
         
-        return $this->render('Guest/annonces/show-annonce.html.twig', [
+        return $this->render('guest/annonces/annonce-show.html.twig', [
             'annonce' => $annonce,
         ]);
     }
@@ -81,7 +81,7 @@ class AnnonceController extends AbstractController
             return $this->redirectToRoute('guest-annonces');
         }
 
-        return $this->render('Guest/annonces/update-annonce.html.twig', [
+        return $this->render('guest/annonces/annonce-update.html.twig', [
             'form' => $form->createView(),
             'annonce' => $annonce,
         ]);

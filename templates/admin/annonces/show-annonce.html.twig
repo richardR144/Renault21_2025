@@ -1,0 +1,115 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block metatitle %}
+	{{ annonce.title }}
+	| Admin Renault 21 TD
+{% endblock %}
+
+{% block main %}
+	<div class="container admin-annonces-container">
+		<div class="btn-back">
+			<a href="{{ path('admin-list-annonces') }}" class="btn btn-secondary mb-3">&#8592; Retour à la liste</a>
+		</div>
+
+		<h1>Détails de l'annonce</h1>
+
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0">📋
+							{{ annonce.title }}</h5>
+					</div>
+					<div class="card-body">
+						{% if annonce.image %}
+							<div class="mb-4 text-center">
+								<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;">
+							</div>
+						{% endif %}
+
+						<div class="mb-3">
+							<h6 class="fw-bold text-primary">Description :</h6>
+							<p class="text-justify">{{ annonce.description|nl2br }}</p>
+						</div>
+
+						{% if annonce.price %}
+							<div class="mb-3">
+								<h6 class="fw-bold text-primary">Prix :</h6>
+								<span class="h4 text-success fw-bold">{{ annonce.price }}
+									€</span>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header bg-info text-white">
+						<h6 class="mb-0">ℹ️ Informations</h6>
+					</div>
+					<div class="card-body">
+						<div class="mb-3">
+							<strong>ID :</strong>
+							<span class="badge bg-secondary">#{{ annonce.id }}</span>
+						</div>
+
+						<div class="mb-3">
+							<strong>Auteur :</strong><br>
+							<span class="fw-bold">{{ annonce.sender.pseudo }}</span><br>
+							<small class="text-muted">{{ annonce.sender.email }}</small>
+						</div>
+
+						<div class="mb-3">
+							<strong>Date de création :</strong><br>
+							<span class="text-primary">{{ annonce.createdAt|date('d/m/Y à H:i') }}</span>
+						</div>
+
+						{% if annonce.updatedAt %}
+							<div class="mb-3">
+								<strong>Modifiée le :</strong><br>
+								<span class="text-success">{{ annonce.updatedAt|date('d/m/Y') }}</span>
+							</div>
+						{% endif %}
+
+					</div>
+				</div>
+
+				<div class="card mt-3">
+					<div class="card-header bg-secondary text-white">
+						<h6 class="mb-0">⚙️ Actions</h6>
+					</div>
+					<div class="card-body py-2">
+						<div class="d-grid gap-1">
+							<a href="{{ path('admin-update-annonce', {id: annonce.id}) }}" class="btn btn-outline-warning btn-sm">
+								✏️ Modifier
+							</a>
+
+							<a href="{{ path('admin-delete-annonce', {id: annonce.id}) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer cette annonce ?')">
+								🗑️ Supprimer
+							</a>
+
+							<a href="{{ path('admin-list-annonces') }}" class="btn btn-outline-success btn-sm">
+								📋 Liste des annonces
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	{% endfor %}
+
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	{% endfor %}
+</div>{% endblock %}

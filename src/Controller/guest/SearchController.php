@@ -18,10 +18,10 @@ class SearchController extends AbstractController
         
         if (!empty($query)) {
             // Recherche dans les pièces
-            $pieces = $pieceRepository->searchByKeyword($query);
+            $pieces = $pieceRepository->findBySearchTerm($query);
         }
         
-        return $this->render('search/results.html.twig', [
+        return $this->render('guest/pieces/search-results.html.twig', [
             'query' => $query,
             'pieces' => $pieces,
             'total_results' => count($pieces)

@@ -1,0 +1,146 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block metatitle %}Gestion des annonces | Admin Renault 21 TD
+{% endblock %}
+
+{% block main %}
+	<div class="container admin-annonces-container">
+		<div class="btn-back">
+			<a href="{{ path('admin-dashboard') }}" class="btn mb-3">&#8592; Retour au tableau de bord</a>
+		</div>
+
+		<h1>Gestion des annonces</h1>
+
+		<div class="admin-create-btn">
+			<a href="{{ path('admin-create-annonce') }}" class="btn">
+				Créer une nouvelle annonce
+			</a>
+		</div>
+
+		{% if annonces is empty %}
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<div class="admin-form-card">
+						<div class="card">
+							<div class="card-header bg-info text-white">
+								<h5 class="mb-0">Aucune annonce</h5>
+							</div>
+							<div class="card-body text-center">
+								<h6 class="mb-3">Aucune annonce trouvée</h6>
+								<p class="text-muted mb-4">Il n'y a actuellement aucune annonce dans la base de données.</p>
+								<a href="{{ path('admin-create-annonce') }}" class="btn btn-success">
+									Créer la première annonce
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<div class="row">
+				{% for annonce in annonces %}
+					<div class="col-md-6 col-lg-4 mb-4">
+						<div class="admin-form-card">
+							<div class="card h-100">
+								<div class="card-header bg-primary text-white">
+									<h6 class="mb-0">
+										#{{ annonce.id }}
+										-
+										{{ annonce.title|slice(0, 30) }}{{ annonce.title|length > 30 ? '...' : '' }}
+									</h6>
+								</div>
+
+								{% if annonce.image %}
+									<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
+								{% else %}
+									<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+										<span class="text-muted">Aucune image</span>
+									</div>
+								{% endif %}
+
+								<div class="card-body">
+									<div class="mb-2">
+										<strong>Description :</strong>
+										<p class="text-muted small mb-2">
+											{{ annonce.description|slice(0, 80) }}
+											{% if annonce.description|length > 80 %}...
+											{% endif %}
+										</p>
+									</div>
+
+									<div class="mb-2">
+										{% if annonce.type == 'sale' and annonce.price %}
+											<strong>Prix :</strong>
+											<span class="h6 text-success fw-bold">{{ annonce.price }}
+												€</span>
+										{% elseif annonce.type == 'exchange' and annonce.exchangeDescription %}
+											<strong>Type :</strong>
+											<span class="text-info">Échange</span>
+										{% endif %}
+									</div>
+
+									<div class="mb-2">
+										<strong>Pièce :</strong>
+										<span class="text-primary">{{ annonce.piece.name }}</span>
+									</div>
+
+
+									<div class="mb-3">
+										<small class="text-muted">
+											📅
+											{{ annonce.createdAt|date('d/m/Y') }}
+											{% if annonce.updatedAt %}
+												<br>✏️ Modifiée
+												{{ annonce.updatedAt|date('d/m/Y') }}
+											{% endif %}
+										</small>
+									</div>
+
+									<div class="d-flex justify-content-center align-items-center gap-2">
+										<a href="{{ path('admin-show-annonce', {id: annonce.id}) }}" class="btn btn-outline-primary btn-sm" style="flex: 1; max-width: 120px;">
+											Voir l'annonce
+										</a>
+										<a href="{{ path('admin-update-annonce', {id: annonce.id}) }}" class="btn btn-outline-warning btn-sm" style="flex: 1; max-width: 70px;">
+											Modifier
+										</a>
+										<a href="{{ path('admin-delete-annonce', {id: annonce.id}) }}" class="btn btn-outline-danger btn-sm" style="flex: 1; max-width: 90px;" onclick="return confirm('Supprimer {{ annonce.title|slice(0, 20) }}... ?')">
+											Supprimer
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		<div class="text-center mt-4">
+			<div class="admin-form-card">
+				<div class="card">
+					<div class="card-body">
+						<h6 class="mb-0">
+							Total :
+							{{ annonces|length }}
+							annonce{{ annonces|length > 1 ? 's' : '' }}
+						</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	{% endfor %}
+
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	{% endfor %}
+</div>{% endblock %}

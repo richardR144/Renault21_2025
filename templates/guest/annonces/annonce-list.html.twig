@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'guest/base.html.twig' %}
 
 {% block metatitle %}Liste des annonces | Renault 21 TD{% endblock %}
 
@@ -6,7 +6,7 @@
 
 {% block main %}
     <div class="btn-back">
-        <a href="{{ path('guest/annonces') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des annonces</a>
+        <a href="{{ path('guest-annonces') }}" class="btn btn-primary mb-3">&#8592; Retour à la liste des annonces</a>
         </div>
     <h1>Liste des annonces</h1>
     <div class="annonces-list">
@@ -18,13 +18,20 @@
                 {% if annonce.image %}
                     <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" style="max-width:200px;">
                 {% endif %}
-                <a href="{{ path('guest/annonce-show', {id: annonce.id}) }}" class="btn btn-primary">Voir l'annonce</a>
-                <a href="{{ path('guest/annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer</a>
+                <a href="{{ path('guest-annonce-show', {id: annonce.id}) }}" class="btn btn-primary">Voir l'annonce</a>
+                <a href="{{ path('guest-annonces/delete-confirm', {id: annonce.id}) }}" class="btn btn-danger">Supprimer</a>
             </div>
-        {% else %}
+        {% else %} 
             <p>Aucune annonce trouvée.</p>
         {% endfor %}
     </div>
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
 
 {% endblock main %}
 

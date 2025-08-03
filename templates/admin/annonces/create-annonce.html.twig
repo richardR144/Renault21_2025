@@ -1,0 +1,85 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block metatitle %}Créer une annonce | Admin Renault 21 TD{% endblock %}
+
+{% block main %}
+<div class="container admin-annonces-container">
+    <div class="btn-back">
+        <a href="{{ path('admin-list-annonces') }}" class="btn mb-3">&#8592; Retour à la liste</a>
+    </div>
+    
+    <h1>Créer une nouvelle annonce</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="admin-form-card">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">➕ Nouvelle annonce</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Titre de l'annonce</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Titre de votre annonce..." required minlength="5" maxlength="255">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" placeholder="Description détaillée..." required minlength="10" maxlength="1000"></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email de contact</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="votre.email@exemple.com" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="piece_id" class="form-label">Pièce associée</label>
+                                <select class="form-select" id="piece_id" name="piece_id" required>
+                                    <option value="">Choisir une pièce...</option>
+                                    {% for piece in pieces %}
+                                        <option value="{{ piece.id }}">
+                                            {{ piece.name }} - {{ piece.category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" 
+                                       class="form-control" 
+                                       id="image" 
+                                       name="image" 
+                                       accept="image/jpeg,image/png,image/gif,image/webp">
+                                <div class="form-text">Formats acceptés : JPG, PNG, GIF, WEBP (max 5MB)</div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ path('admin-list-annonces') }}" class="btn btn-danger me-md-2">Annuler</a>
+                                <button type="submit" class="btn btn-success">Créer l'annonce</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

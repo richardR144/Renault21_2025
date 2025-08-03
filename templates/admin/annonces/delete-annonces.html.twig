@@ -1,0 +1,74 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block metatitle %}Supprimer l'annonce | Admin Renault 21 TD{% endblock %}
+
+{% block main %}
+<div class="container mt-4">
+    <div class="btn-back">
+        <a href="{{ path('admin-list-annonces') }}" class="btn btn-secondary mb-3">&#8592; Retour à la liste</a>
+    </div>
+    
+    <h1>Supprimer l'annonce</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Confirmation de suppression</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Attention !</strong> Cette action est irréversible.
+                    </div>
+                    
+                    <h6>Détails de l'annonce à supprimer :</h6>
+                    <div class="mb-3">
+                        <strong>Titre :</strong> {{ annonce.title }}<br>
+                        <strong>Prix :</strong> {{ annonce.price }} €<br>
+                        <strong>Auteur :</strong> {{ annonce.sender.pseudo }}<br>
+                        <strong>Date de création :</strong> {{ annonce.createdAt|date('d/m/Y à H:i') }}
+                    </div>
+                    
+                    {% if annonce.image %}
+                        <div class="mb-3">
+                            <strong>Image :</strong><br>
+                            <img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image de l'annonce" class="img-thumbnail" style="max-width: 200px;">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <strong>Description :</strong><br>
+                        <p class="text-muted">{{ annonce.description|slice(0, 200) }}{% if annonce.description|length > 200 %}...{% endif %}</p>
+                    </div>
+                    
+                    <form method="post" action="{{ path('admin-delete-annonce', {id: annonce.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_annonce_' ~ annonce.id) }}">
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ path('admin-list-annonces') }}" class="btn btn-outline-secondary me-md-2">Annuler</a>
+                            <a href="{{ path('admin-show-annonce', {id: annonce.id}) }}" class="btn btn-outline-primary me-md-2">Voir l'annonce</a>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous vraiment sûr de vouloir supprimer cette annonce ?')">
+                                🗑️ Supprimer définitivement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

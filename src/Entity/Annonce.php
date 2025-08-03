@@ -29,12 +29,24 @@ class Annonce
     #[ORM\Column(name: 'createdAt', type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(name: 'updatedAt', type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     #[ORM\ManyToOne]
     private ?User $sender = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Piece $piece = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?string $price = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: false)]
+    private string $type = 'sale'; // 'sale' ou 'exchange'
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $exchangeDescription = null;
 
     public function __construct()
     {
@@ -125,6 +137,50 @@ class Annonce
     {
         $this->piece = $piece;
 
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): static
+    {
+        $this->price = $price;
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getExchangeDescription(): ?string
+    {
+        return $this->exchangeDescription;
+    }
+
+    public function setExchangeDescription(?string $exchangeDescription): static
+    {
+        $this->exchangeDescription = $exchangeDescription;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }

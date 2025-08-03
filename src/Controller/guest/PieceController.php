@@ -22,7 +22,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class PieceController extends AbstractController
 {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
 
-    #[Route('/guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
+    #[Route('/Guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
     public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $params, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -72,7 +72,7 @@ class PieceController extends AbstractController
 
 
 
-    #[Route('/guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
+    #[Route('/Guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
     public function listPieces(PieceRepository $pieceRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -84,7 +84,7 @@ class PieceController extends AbstractController
     }
 
 
-    #[Route('/guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
+    #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
     public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
@@ -134,7 +134,7 @@ class PieceController extends AbstractController
 
 
 
-    #[Route('/guest/pieces/delete-piece/{id}', name: 'delete-piece', methods: ['GET', 'POST'])]
+    #[Route('/Guest/pieces/delete-piece/{id}', name: 'delete-piece', methods: ['GET', 'POST'])]
     public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
 
@@ -166,7 +166,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
+    #[Route('/Guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
     public function detailsPiece(PieceRepository $pieceRepository, int $id): Response
     {
 
@@ -181,7 +181,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
+    #[Route('/Guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
     public function showUserPieces(PieceRepository $pieceRepository): Response
     {
         // Sécurisation obligatoire
@@ -198,7 +198,7 @@ class PieceController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/pieces/search-piece', name: 'search-piece', methods: ['GET'])]
+    #[Route('/Guest/pieces/search-piece', name: 'search-piece', methods: ['GET'])]
     public function searchPiece(Request $request, PieceRepository $pieceRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

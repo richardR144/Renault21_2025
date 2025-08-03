@@ -61,14 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
-    private Collection $joinColumn;
 
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
+    private Collection $sentMessages;
+    
     /**
-     * @var Collection<int, Message>
+     * @var Collection<int, Piece>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
-    private Collection $isRead;
+    private Collection $receivedMessages;
 
     /**
      * @var Collection<int, Piece>
@@ -78,10 +79,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->joinColumn = new ArrayCollection();
-        $this->isRead = new ArrayCollection();
-        $this->roles = ['ROLE_USER'];
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
         $this->pieces = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
         $this->createdAt = new \DateTime();
         $this->isActive = true;
     }
@@ -165,6 +166,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->pieces;
     }
 
+    public function addPiece(Piece $piece): static
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+            $piece->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removePiece(Piece $piece): static
+    {
+        if ($this->pieces->removeElement($piece)) {
+            if ($piece->getUser() === $this) {
+                $piece->setUser(null);
+            }
+        }
+        return $this;
+    }
+
 
     /**
      * @see UserInterface
@@ -191,63 +211,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Message>
      */
-    public function getJoinColumn(): Collection
+
+    public function getSentMessages(): Collection
     {
-        return $this->joinColumn;
+        return $this->sentMessages;
     }
 
-    public function addJoinColumn(Message $joinColumn): static
+    public function addSentMessage(Message $message): static
     {
-        if (!$this->joinColumn->contains($joinColumn)) {
-            $this->joinColumn->add($joinColumn);
-            $joinColumn->setSender($this);
+        if (!$this->sentMessages->contains($message)) {
+            $this->sentMessages->add($message);
+            $message->setSender($this);
         }
-
         return $this;
     }
 
-    public function removeJoinColumn(Message $joinColumn): static
+    public function removeSentMessage(Message $message): static
     {
-        if ($this->joinColumn->removeElement($joinColumn)) {
-            // set the owning side to null (unless already changed)
-            if ($joinColumn->getSender() === $this) {
-                $joinColumn->setSender(null);
+        if ($this->sentMessages->removeElement($message)) {
+            if ($message->getSender() === $this) {
+                $message->setSender(null);
             }
         }
-
         return $this;
     }
 
     /**
      * @return Collection<int, Message>
      */
-    public function getIsRead(): Collection
+    public function getReceivedMessages(): Collection
     {
-        return $this->isRead;
+        return $this->receivedMessages;
     }
 
-    public function addIsRead(Message $isRead): static
+    public function addReceivedMessage(Message $message): static
     {
-        if (!$this->isRead->contains($isRead)) {
-            $this->isRead->add($isRead);
-            $isRead->setReceiver($this);
+        if (!$this->receivedMessages->contains($message)) {
+            $this->receivedMessages->add($message);
+            $message->setReceiver($this);
         }
-
         return $this;
     }
 
-    public function removeIsRead(Message $isRead): static
+    public function removeReceivedMessage(Message $message): static
     {
-        if ($this->isRead->removeElement($isRead)) {
-            // set the owning side to null (unless already changed)
-            if ($isRead->getReceiver() === $this) {
-                $isRead->setReceiver(null);
+        if ($this->receivedMessages->removeElement($message)) {
+            if ($message->getReceiver() === $this) {
+                $message->setReceiver(null);
             }
         }
-
         return $this;
     }
-
 
     public function getGoogleId(): ?string
     {

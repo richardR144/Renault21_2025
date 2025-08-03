@@ -21,10 +21,10 @@ class Message
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'joinColumn')]
+    #[ORM\ManyToOne(inversedBy: 'sentMessages')]
     private ?User $sender = null;
 
-    #[ORM\ManyToOne(inversedBy: 'joinColumn')]
+    #[ORM\ManyToOne(inversedBy: 'receivedMessages')]
     private ?User $receiver = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]

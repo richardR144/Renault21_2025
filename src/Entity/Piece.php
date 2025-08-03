@@ -30,7 +30,7 @@ class Piece
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $Price = null;
 
-    #[ORM\ManyToOne(inversedBy: 'category')]
+    #[ORM\ManyToOne(inversedBy: 'pieces')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'pieces')]
@@ -39,14 +39,14 @@ class Piece
     /**
      * @var Collection<int, Annonce>
      */
-    #[ORM\OneToMany(targetEntity: Annonce::class, mappedBy: 'piece')]
-    private Collection $annonces;
+    //#[ORM\OneToMany(targetEntity: Annonce::class, mappedBy: 'piece')]
+    //private Collection $annonces;
 
 
-    #[ORM\Column (nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $update_at = null;
 
-    #[ORM\Column (nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $created_at = null;
 
 
@@ -63,7 +63,6 @@ class Piece
     public function setName(string $Name): static
     {
         $this->Name = $Name;
-
         return $this;
     }
 
@@ -140,9 +139,9 @@ class Piece
     }
 
     /**
-     * @return Collection<int, Message>
+     * @return Collection<int, Annonce>
      */
-    public function getAnnonces(): Collection
+    /*public function getAnnonces(): Collection
     {
         return $this->annonces;
     }
@@ -159,26 +158,25 @@ class Piece
     public function removeAnnonce(Annonce $annonce): static
     {
         if ($this->annonces->removeElement($annonce)) {
-            
+
             if ($annonce->getSender() === $this) {
                 $annonce->setSender(null);
             }
         }
 
         return $this;
-    }
+    }*/
 
-    public function getUpdateAt(): ?\DateTime
+    /*public function getUpdateAt(): ?\DateTime
     {
         return $this->update_at;
     }
 
-    public function setUpdateAt(?\DateTime $updateAt): static
+    public function setUpdateAt(?\DateTime $update_at): static
     {
-        $this->update_at = $updateAt;
-
+        $this->update_at = $update_at;
         return $this;
-    }
+    }*/
 
     public function getCreatedAt(): ?\DateTime
     {
@@ -188,8 +186,6 @@ class Piece
     public function setCreatedAt(?\DateTime $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
-
 }
