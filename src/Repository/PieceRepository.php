@@ -16,21 +16,34 @@ class PieceRepository extends ServiceEntityRepository
         parent::__construct($registry, Piece::class);
     }
 
-    public function searchByKeyword(string $keyword): array
+    /*public function searchByKeyword(string $keyword): array
     {
         return $this->createQueryBuilder('p')
-        ->where('LOWER(p.name) LIKE :kw')
+        ->where('LOWER(p.name) LIKE :kw') //ne tolère pas les fautes de frappe
         ->setParameter('kw', '%' . strtolower($keyword) . '%')
         ->getQuery()
-        ->getResult();;
-    }
+        ->getResult();
+    }*/
 
     public function findBySearchTerm(string $searchTerm): array
     {
-         return $this->createQueryBuilder('p')
-        ->where('LOWER(p.name) LIKE :term')
-        ->setParameter('term', '%' . strtolower($searchTerm) . '%')
-        ->getQuery()
-        ->getResult();
+        return $this->createQueryBuilder('p')
+            ->where('LOWER(p.name) LIKE :term')
+            ->setParameter('term', '%' . strtolower($searchTerm) . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findFuzzyByName(string $term): array
+    {
+        $pieces = $this->findAll();
+        $results = [];
+        foreach ($pieces as $piece) {
+            // Tolérance : <= 2 caractères d'écart
+            if (levenshtein(strtolower($term), strtolower($piece->getName())) <= 2) {
+                $results[] = $piece;
+            }
+        }
+        return $results;
     }
 }

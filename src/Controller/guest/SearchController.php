@@ -20,7 +20,7 @@ class SearchController extends AbstractController
         return $this->redirectToRoute('list-pieces');
     }
     
-    $pieces = $pieceRepository->findBySearchTerm($query);
+    $pieces = $pieceRepository->findFuzzyByName($query);
     $categories = $categoryRepository->findBySearchTerm($query);
     
     return $this->render('search/results.html.twig', [

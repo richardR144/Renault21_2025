@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'guest/base.html.twig' %}
 
 {% block metatitle %}Annonces de Pièces Renault 21 TD | Création d'annonce{% endblock metatitle %}
 
 {% block main %}
 
-    <form action="{{ path('annonce-create') }}" method="post">
+    <form action="{{ path('guest-annonce-create') }}" method="post">
         <div class="form-group">
                 <label>Type d'annonce :</label><br>
                 <input type="checkbox" id="vente" name="type[]" value="vente">
