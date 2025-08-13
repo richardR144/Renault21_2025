@@ -18,11 +18,19 @@ class PieceRepository extends ServiceEntityRepository
 
     public function searchByKeyword(string $keyword): array
     {
-        return $this->findAll();
+        return $this->createQueryBuilder('p')
+        ->where('LOWER(p.name) LIKE :kw')
+        ->setParameter('kw', '%' . strtolower($keyword) . '%')
+        ->getQuery()
+        ->getResult();;
     }
 
     public function findBySearchTerm(string $searchTerm): array
     {
-        return $this->findAll();
+         return $this->createQueryBuilder('p')
+        ->where('LOWER(p.name) LIKE :term')
+        ->setParameter('term', '%' . strtolower($searchTerm) . '%')
+        ->getQuery()
+        ->getResult();
     }
 }
