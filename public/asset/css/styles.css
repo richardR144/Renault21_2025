@@ -380,7 +380,7 @@
         transform: translateX(23%);
     }
 
-    /*---------------icône google-------------------*/
+    /*---------------icône google et facebook-------------------*/
     .btn-group {
         margin: 0;
         gap: 25px;
@@ -388,7 +388,7 @@
         justify-content: center;
     }
 
-    .btn-google {
+    .btn-google, .btn-facebook {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -402,14 +402,14 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .btn-google:hover {
+    .btn-google, .btn-facebook:hover {
         background-color: #e55a2b;
         border-color: #DADDD8;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transform: translateY(-1px);
     }
 
-    .btn-google img {
+    .btn-google, .btn-facebook img {
         width: 20px;
         height: 20px;
         object-fit: contain;
