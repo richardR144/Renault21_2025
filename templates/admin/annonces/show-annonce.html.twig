@@ -8,7 +8,7 @@
 {% block main %}
 	<div class="container admin-annonces-container">
 		<div class="btn-back">
-			<a href="{{ path('admin-list-annonces') }}" class="btn btn-secondary mb-3">&#8592; Retour à la liste</a>
+			<a href="{{ path('admin-list-annonces') }}" class="btn btn-secondary mb-3">&#8592; Retour à la liste des annonces</a>
 		</div>
 
 		<h1>Détails de l'annonce</h1>
@@ -85,9 +85,12 @@
 								✏️ Modifier
 							</a>
 
-							<a href="{{ path('admin-delete-annonce', {id: annonce.id}) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer cette annonce ?')">
-								🗑️ Supprimer
-							</a>
+							<form method="post" action="{{ path('admin-delete-annonce', {id: annonce.id}) }}" style="display:inline;">
+    							<input type="hidden" name="_token" value="{{ csrf_token('delete_annonce_' ~ annonce.id) }}">
+    							<button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer cette annonce ?')">
+        							🗑️ Supprimer
+    							</button>
+							</form>
 
 							<a href="{{ path('admin-list-annonces') }}" class="btn btn-outline-success btn-sm">
 								📋 Liste des annonces

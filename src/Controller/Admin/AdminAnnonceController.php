@@ -77,7 +77,7 @@ class AdminAnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/annonces/delete/{id}', name: 'admin-delete-annonce', methods: ['POST'])]  // ✅ Cohérent
+    #[Route('/admin/annonces/delete/{id}', name: 'admin-delete-annonce', methods: ['POST'])]  
 public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
 {
     // CSRF Protection

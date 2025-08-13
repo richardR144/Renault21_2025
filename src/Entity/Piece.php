@@ -16,19 +16,19 @@ class Piece
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Image = null;
+    private ?string $image = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Description = null;
+    private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $Exchange = null;
+    private ?bool $exchange = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $Price = null;
+    private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'pieces')]
     private ?User $user = null;
@@ -57,59 +57,59 @@ class Piece
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): static
+    public function setName(string $name): static
     {
-        $this->Name = $Name;
+        $this->name = $name;
         return $this;
     }
 
     public function getImage(): ?string
     {
-        return $this->Image;
+        return $this->image;
     }
 
-    public function setImage(?string $Image): static
+    public function setImage(?string $image): static
     {
-        $this->Image = $Image;
+        $this->image = $image;
 
         return $this;
     }
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
-    public function setDescription(string $Description): static
+    public function setDescription(string $description): static
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }
 
     public function isExchange(): ?bool
     {
-        return $this->Exchange;
+        return $this->exchange;
     }
 
-    public function setExchange(bool $Exchange): static
+    public function setExchange(bool $exchange): static
     {
-        $this->Exchange = $Exchange;
+        $this->exchange = $exchange;
 
         return $this;
     }
 
     public function getPrice(): ?float
     {
-        return $this->Price;
+        return $this->price;
     }
 
-    public function setPrice(?float $Price): static
+    public function setPrice(?float $price): static
     {
-        $this->Price = $Price;
+        $this->price = $price;
 
         return $this;
     }

@@ -103,9 +103,12 @@
 										<a href="{{ path('admin-update-annonce', {id: annonce.id}) }}" class="btn btn-outline-warning btn-sm" style="flex: 1; max-width: 70px;">
 											Modifier
 										</a>
-										<a href="{{ path('admin-delete-annonce', {id: annonce.id}) }}" class="btn btn-outline-danger btn-sm" style="flex: 1; max-width: 90px;" onclick="return confirm('Supprimer {{ annonce.title|slice(0, 20) }}... ?')">
-											Supprimer
-										</a>
+										<form method="post" action="{{ path('admin-delete-annonce', {id: annonce.id}) }}" style="display:inline; flex: 1; max-width: 90px;">
+    										<input type="hidden" name="_token" value="{{ csrf_token('delete_annonce_' ~ annonce.id) }}">
+    										<button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Supprimer {{ annonce.title|slice(0, 20) }}... ?')">
+        										🗑️ Supprimer
+    										</button>
+										</form>
 									</div>
 								</div>
 							</div>
