@@ -154,7 +154,7 @@ public function updateAnnonce(int $id, Request $request, AnnonceRepository $anno
                 throw new \Exception('Le titre doit contenir entre 5 et 255 caractères');
             }
 
-            if (empty($description) || strlen($description) < 10 || strlen($description) > 1000) {
+            if (empty($description) || strlen($description) < 10 || strlen($description) > 10000) {
                 throw new \Exception('La description doit contenir entre 10 et 1000 caractères');
             }
 

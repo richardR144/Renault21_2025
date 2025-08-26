@@ -1,0 +1,9 @@
+{% extends 'guest/base.html.twig' %}
+
+{% block title %}Profil utilisateur{% endblock %}
+
+{% block main %}
+<h1>Profil utilisateur</h1>
+<p>ID : {{ user.id }}</p>
+<p>Email : {{ user.email }}</p>
+{% endblock main %}

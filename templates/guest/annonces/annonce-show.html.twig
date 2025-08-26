@@ -1,9 +1,6 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}
-	{{ annonce.title }}
-	| Renault 21 TD
-{% endblock %}
+{% block metatitle %} {{ annonce.title }} | Renault 21 TD {% endblock %}
 
 {% block main %}
 	<div class="container mt-4">
@@ -68,7 +65,6 @@
 
 								{% if annonce.sender %}
 									<p>
-										<strong>Vendeur :</strong>
 										<span class="text-info">{{ annonce.sender.pseudo }}</span>
 									</p>
 								{% endif %}
@@ -116,21 +112,20 @@
 			<div class="col-md-4">
 				<div class="card">
 					<div class="card-header bg-info text-white">
-						<h6 class="mb-0">💬 Contacter le vendeur</h6>
+						<h6 class="mb-0">💬 Contacter l'abonné'</h6>
 					</div>
 					<div class="card-body text-center">
 						{% if app.user %}
 							{% if annonce.sender and app.user.id != annonce.sender.id %}
 								<p>Intéressé par cette annonce ?</p>
-								<a href="{{ path('contact-seller', {id: annonce.id}) }}" class="btn btn-success">
-									📞 Contacter
+								<a href="{{ path('guest-user-show', {id: annonce.sender.id}) }}" class="btn btn-success">
 									{{ annonce.sender.pseudo }}
 								</a>
 							{% else %}
 								<p class="text-muted">Vous êtes le propriétaire de cette annonce.</p>
 							{% endif %}
 						{% else %}
-							<p>Connectez-vous pour contacter le vendeur</p>
+							<p>Connectez-vous pour contacter l'abonné'</p>
 							<a href="{{ path('app_login') }}" class="btn btn-primary">
 								🔐 Se connecter
 							</a>
