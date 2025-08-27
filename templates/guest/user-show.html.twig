@@ -1,9 +1,26 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block title %}Profil utilisateur{% endblock %}
+{% block metatitle %}Profil utilisateur{% endblock %}
 
 {% block main %}
-<h1>Profil utilisateur</h1>
-<p>ID : {{ user.id }}</p>
-<p>Email : {{ user.email }}</p>
-{% endblock main %}
+<div class="container mt-4" style="max-width: 500px;">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0 text-center">Profil de {{ user.pseudo }}</h4>
+        </div>
+        <div class="card-body text-center">
+            <p><strong>Email :</strong> {{ user.email }}</p>
+            <p>
+                Genre :
+                {% if genre == 'female' %}
+                    👧 Femme
+                {% elseif genre == 'male' %}
+                    👦 Homme
+                {% else %}
+                    Préfère ne pas dire
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
