@@ -1,14 +1,17 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block metatitle %}Annonces de Pièces Renault 21 TD | Création d'annonce{% endblock metatitle %}
+{% block metatitle %}Annonces de Pièces Renault 21 TD | Création d'annonce
+{% endblock metatitle %}
 
 {% block main %}
-<div class="container mt-4" style="max-width: 350px;">
-    <h2>Créer une annonce</h2>
-    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary mt-3">Créer l'annonce</button>
-    {{ form_end(form) }}
-</div>
+	<div class="btn-back">
+		<a href="{{ path('accueil') }}" class="btn btn-primary mb-2">&#8592; Retour à l'accueil</a>
+	</div>
+	<div class="container mt-4 text-center" style="max-width: 350px;">
+		<h2>Créer une annonce</h2>
+		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+		{{ form_widget(form) }}
+		<button class="btn btn-primary mt-3">Créer l'annonce</button>
+		{{ form_end(form) }}
+	</div>
 {% endblock main %}
-

@@ -66,20 +66,20 @@ class AnnonceTypeForm extends AbstractType
                     new NotBlank(['message' => 'L\'email est obligatoire'])
                 ]
             ])
-
-            ->add('type', ChoiceType::class, [
-                'label' => 'Type d\'annonce',
-                'choices' => [
-                    'Vente' => 'sale',
-                    'Échange' => 'exchange'
-                ],
-                'attr' => ['class' => 'form-select']
-            ])
             ->add('price', MoneyType::class, [
                 'label' => 'Prix (€)',
                 'required' => false,
                 'currency' => 'EUR',
                 'attr' => ['class' => 'form-control']
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type d\'annonce',
+                'choices' => [
+                    'Vente' => 'sale',
+                    'Échange' => 'exchange',
+                    'Achat' => 'purchase'
+                ],
+                'attr' => ['class' => 'form-select']
             ])
             ->add('piece', EntityType::class, [
                 'class' => Piece::class,
