@@ -3,41 +3,12 @@
 {% block metatitle %}Annonces de Pièces Renault 21 TD | Création d'annonce{% endblock metatitle %}
 
 {% block main %}
-
-    <form action="{{ path('guest-annonce-create') }}" method="post">
-        <div class="form-group">
-                <label>Type d'annonce :</label><br>
-                <input type="checkbox" id="vente" name="type[]" value="vente">
-                <label for="vente">Vente</label>
-                <input type="checkbox" id="echange" name="type[]" value="echange">
-                <label for="echange">Échange</label>
-            </div>
-        <div class="form-group">
-            <label for="title">Titre de l'annonce</label>
-            <input type="text" id="title" name="title" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Prix (en €)</label>
-            <input type="number" id="price" name="price" class="form-control" step="0.01" required>
-        </div>
-        <div class="form-group">
-            <label for="contact">Contact (email)</label>
-            <input type="text" id="contact" name="contact" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="image">Image de l'annonce (obligatoire)</label>
-            <input type="file" id="image" name="image" class="form-control-file">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Créer l'annonce</button>
-   
- </form>
-    
+<div class="container mt-4" style="max-width: 350px;">
+    <h2>Créer une annonce</h2>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary mt-3">Créer l'annonce</button>
+    {{ form_end(form) }}
+</div>
 {% endblock main %}
 

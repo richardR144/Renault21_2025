@@ -33,7 +33,19 @@ class AnnonceController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             $annonce->setSender($this->getUser());
-            
+            $annonce->setCreatedAt(new \DateTimeImmutable());
+
+            // Gestion de l'upload d'image
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+                $annonce->setImage($newFilename);
+            }
+
             $entityManager->persist($annonce);
             $entityManager->flush();
 
@@ -71,7 +83,7 @@ class AnnonceController extends AbstractController
             return $this->redirectToRoute('guest-annonces');
         }
 
-        $form = $this->createForm(AnnonceTypeForm::class, $annonce);  // ✅ CORRIGÉ !
+        $form = $this->createForm(AnnonceTypeForm::class, $annonce); 
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {

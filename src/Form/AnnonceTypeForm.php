@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -48,7 +50,7 @@ class AnnonceTypeForm extends AbstractType
                     new NotBlank(['message' => 'La description est obligatoire']),
                     new Length([
                         'min' => 10,
-                        'max' => 1000,
+                        'max' => 10000,
                         'minMessage' => 'La description doit contenir au moins {{ limit }} caractères',
                         'maxMessage' => 'La description ne peut pas dépasser {{ limit }} caractères'
                     ])
@@ -63,6 +65,21 @@ class AnnonceTypeForm extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'L\'email est obligatoire'])
                 ]
+            ])
+
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type d\'annonce',
+                'choices' => [
+                    'Vente' => 'sale',
+                    'Échange' => 'exchange'
+                ],
+                'attr' => ['class' => 'form-select']
+            ])
+            ->add('price', MoneyType::class, [
+                'label' => 'Prix (€)',
+                'required' => false,
+                'currency' => 'EUR',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('piece', EntityType::class, [
                 'class' => Piece::class,

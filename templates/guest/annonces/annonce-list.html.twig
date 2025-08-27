@@ -4,13 +4,16 @@
 {% endblock %}
 
 {% block main %}
-	<div class="container mt-4">
-		<div class="btn-back">
-			<a href="{{ path('accueil') }}" class="btn btn-primary mb-3">&#8592; Retour à l'accueil</a>
-		</div> 
-
-		<h1>Liste des annonces</h1>
-
+	<div class="container mt-2">
+    <div class="btn-back">
+        <a href="{{ path('accueil') }}" class="btn btn-primary mb-3">&#8592; Retour à l'accueil</a>
+    </div>
+		<h1 class="mb-4 text-center">Liste des annonces</h1>
+		<div class="text-center">
+        <a href="{{ path('guest-annonce-create') }}" class="btn btn-success mb-4">
+            Publier une annonce
+        </a>
+    </div>
 		{% if annonces is empty %}
 			<div class="row justify-content-center">
 				<div class="col-md-8">

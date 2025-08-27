@@ -40,7 +40,7 @@ class Annonce
     private ?Piece $piece = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private ?string $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(type: 'string', length: 20, nullable: false)]
     private string $type = 'sale'; // 'sale' ou 'exchange'
