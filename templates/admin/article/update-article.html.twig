@@ -1,40 +1,48 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block main %}
-    <h1 class="modif-article">Modifier un article</h1>
-    <div id="bg-modig-article">
-    <form method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">Titre :</label>
-            <input type="text" name="title" class="title" value="{{ article.title }}" required>
-        </div>
-        <div class="form-group">
-            <label for="content">Texte :</label>
-            <textarea name="content" class="content" required>{{ article.content }}</textarea>
-        </div>
-        <div class="form-group">
-            <label for="image">Image :</label>
-            <input type="file" name="image" class="image">
-            {% if article.image %}
-                <br>
-                <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="Image actuelle" width="120">
-                <p>Image actuelle</p>
-            {% endif %}
-        </div>
-        <button type="submit" class="btn btn-warning">Modifier l'article</button>
-        <a href="{{ path('admin-list-articles') }}" class="btn btn-danger">Annuler</a>
-    </form>
-    </div>
-   
-    {% for flash_message in app.flashes('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+	<h1 class="modif-article">Modifier un article</h1>
+	<div id="bg-modig-article">
+		<form method="post" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="title">Titre :</label>
+				<input type="text" name="title" class="title" value="{{ article.title }}" required>
+			</div>
+			<div class="form-group">
+				<label for="content">Texte :</label>
+				<textarea name="content" class="content" required>{{ article.content }}</textarea>
+			</div>
+			<div class="form-group">
+				<label for="image">Image :</label>
+				<input type="file" name="image" class="image">
+				{% if article.image %}
+					<br>
+					<img src="{{ asset('uploads/images/' ~ article.image) }}" alt="Image actuelle" width="120">
+					<p>Image actuelle</p>
+				{% endif %}
+			</div>
+			<button type="submit" class="btn btn-warning">Modifier l'article</button>
+			<a href="{{ path('admin-list-articles') }}" class="btn btn-danger">Annuler</a>
+		</form>
+	</div>
 
-    {% for flash_message in app.flashes('error') %}
-        <div class="alert alert-danger">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+	{% for flash_message in app.flashes('success') %}
+		<div class="alert alert-success">
+			{{ flash_message }}
+		</div>
+	{% endfor %}
+
+	{% for flash_message in app.flashes('error') %}
+		<div class="alert alert-danger">
+			{{ flash_message }}
+		</div>
+	{% endfor %}
+	<style>
+		textarea {
+			resize: both;
+			min-width: 100%;
+			border-radius: 5px;
+			border: 1px solid #1C1C1C;
+		}
+	</style>
 {% endblock %}

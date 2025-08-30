@@ -388,7 +388,8 @@
         justify-content: center;
     }
 
-    .btn-google, .btn-facebook {
+    .btn-google,
+    .btn-facebook {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -402,14 +403,16 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .btn-google, .btn-facebook:hover {
+    .btn-google,
+    .btn-facebook:hover {
         background-color: #e55a2b;
         border-color: #DADDD8;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transform: translateY(-1px);
     }
 
-    .btn-google, .btn-facebook img {
+    .btn-google,
+    .btn-facebook img {
         width: 20px;
         height: 20px;
         object-fit: contain;
@@ -1509,15 +1512,16 @@
         font-weight: 600 !important;
     }
 
-    
+
 
     .admin-annonces-container .card-footer .btn-outline-warning:hover {
-    color: #ffffff !important; /* Texte blanc au hover */
-    background-color: #ffc107 !important;
-    border-color: #ffc107 !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
-}
+        color: #ffffff !important;
+        /* Texte blanc au hover */
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+    }
 
 
     /* ----------- Responsive pour la table et les boutons ----------- 
@@ -1705,4 +1709,16 @@
             width: 150px;
             height: 45px;
         }
+    }
+
+    input[name="title"],
+    input.title {
+        width: 100%;
+        min-width: 300px;
+        max-width: 100%;
+        font-size: 1.3em;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #1C1C1C;
+        border-radius: 5px;
     }
