@@ -11,8 +11,8 @@
 
 		<h1>Gestion des annonces</h1>
 
-		<div class="admin-create-btn">
-			<a href="{{ path('admin-create-annonce') }}" class="btn">
+		<div class="admin-create-btn mb-3">
+			<a href="{{ path('admin-create-annonce') }}" class="btn btn-success">
 				Créer une nouvelle annonce
 			</a>
 		</div>
@@ -39,25 +39,21 @@
 		{% else %}
 			<div class="row">
 				{% for annonce in annonces %}
-					<div class="col-md-6 col-lg-4 mb-4">
+					<div class="col-12 col-md-6 col-lg-4 mb-4">
 						<div class="admin-form-card">
 							<div class="card h-100">
 								<div class="card-header bg-primary text-white">
 									<h6 class="mb-0">
-										#{{ annonce.id }}
-										-
-										{{ annonce.title|slice(0, 30) }}{{ annonce.title|length > 30 ? '...' : '' }}
+										#{{ annonce.id }} - {{ annonce.title | slice(0, 30) }}{{ annonce.title | length > 30 ? '...' : '' }}
 									</h6>
-								</div>
-
+							</div>
 								{% if annonce.image %}
-									<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
+									<img src="{{ asset('Uploads/images/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
 								{% else %}
 									<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
 										<span class="text-muted">Aucune image</span>
 									</div>
 								{% endif %}
-
 								<div class="card-body">
 									<div class="mb-2">
 										<strong>Description :</strong>
@@ -114,7 +110,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
 			{% endfor %}
 		</div>
 

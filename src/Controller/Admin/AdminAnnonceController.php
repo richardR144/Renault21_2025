@@ -78,7 +78,7 @@ class AdminAnnonceController extends AbstractController
     }
 
     #[Route('/admin/annonces/delete/{id}', name: 'admin-delete-annonce', methods: ['POST'])]  
-public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
+    public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
 {
     // CSRF Protection
     if (!$this->isCsrfTokenValid('delete_annonce_' . $id, $request->request->get('_token'))) {
@@ -129,7 +129,7 @@ public function deleteAnnonce(int $id, Request $request, AnnonceRepository $anno
     }
 
     #[Route('/admin/annonces/{id}/update', name: 'admin-update-annonce', methods: ['GET', 'POST'])]
-public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
+    public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
 {
     $annonce = $annonceRepository->find($id);
     

@@ -109,7 +109,7 @@ class AnnonceController extends AbstractController
                 );
                 $annonce->setImage($newFilename);
             }
-            $entityManager->flush();
+                $entityManager->flush();
 
             $this->addFlash('success', 'Annonce modifiée avec succès !');
             return $this->redirectToRoute('guest-annonces');

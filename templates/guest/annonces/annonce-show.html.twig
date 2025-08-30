@@ -1,6 +1,9 @@
 {% extends 'guest/base.html.twig' %}
 
-{% block metatitle %} {{ annonce.title }} | Renault 21 TD {% endblock %}
+{% block metatitle %}
+	{{ annonce.title }}
+	| Renault 21 TD
+{% endblock %}
 
 {% block main %}
 	<div class="container mt-4">
@@ -42,7 +45,9 @@
 								{% if annonce.type == 'sale' and annonce.price %}
 									<p>
 										<strong>Prix :</strong>
-										<span class="h4 text-success">{{ annonce.price }} € </span>
+										<span class="h4 text-success">{{ annonce.price }}
+											€
+										</span>
 									</p>
 								{% elseif annonce.type == 'exchange' %}
 									<p>
