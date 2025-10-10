@@ -92,5 +92,5 @@
 # idem pour article
 
 # Sécurité
-# Toutes les routes admin sont protégées par le rôle ROLE_ADMIN. Les utilisateurs non authentifiés ou sans le rôle admin sont redirigés vers la page de connexion.
+# Toutes les routes admin sont protégées par le rôle ROLE_ADMIN. Les utilisateurs non authentifiés ou sans le rôle admin sont redirigés vers la page de connexion. Idem pour moderator et user.
 
