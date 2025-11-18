@@ -412,20 +412,20 @@
         object-fit: contain;
     }
 
-    .btn-google,
+      .btn-google,
     .btn-facebook {
         display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;              /* ajuster si tu veux plus grand */
-        height: 48px;             /* ajuster si tu veux plus grand */
-        padding: 6px;
-        background-color: #007bff;
-        border: 2px solid #DADDD8;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: all 0.25s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    align-items: center;
+    justify-content: center;
+    width: 48px;              /* ajuster si tu veux plus grand */
+    height: 48px;             /* ajuster si tu veux plus grand */
+    padding: 6px;
+    background-color: #007bff;
+    border: 2px solid #DADDD8;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
 
@@ -434,7 +434,7 @@
         border-color: #DADDD8;
 }
     .btn-facebook:hover {
-        background-color: #e55a2b; 
+        background-color: #4267B2; /* bleu Facebook */
         border-color: #DADDD8;
 }
 
@@ -495,6 +495,37 @@
         justify-content: center;
         align-items: center;
     }
+
+    /* social buttons - placed at end to override other rules */
+.social-btns { display:flex; gap:12px; justify-content:center; align-items:center; }
+
+.social-btns .btn-google,
+.social-btns .btn-facebook {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    min-width:44px;
+    padding:6px;
+    box-sizing:border-box;
+    border:2px solid #DADDD8;
+    border-radius:8px;
+    background:#fff;
+    text-decoration:none;
+}
+
+/* hover colors */
+.social-btns .btn-google:hover { background:#e55a2b; }
+.social-btns .btn-facebook:hover { background:#4267B2; }
+
+/* contraintes icône */
+.social-btns img {
+    width:24px;
+    height:24px;
+    object-fit:contain;
+    display:block;
+}
 
 
     /*------------------formulaire inscription-------------------*/
