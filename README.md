@@ -140,6 +140,29 @@ FACEBOOK_CLIENT_SECRET=xxx
 - Styles responsives: [public/asset/css/responsive.css](public/asset/css/responsive.css)
 - Harmonisation formulaires mobile: pleine largeur/colonnes empilées
 
+## Harmonisation Connexion/Inscription (UI)
+- Wrapper commun: les champs sont enveloppés dans `.user-inscription-form` pour une largeur intérieure cohérente sur les deux pages.
+- Largeurs: `form` en 100% et `.user-inscription-form` en 60% afin d’éviter l’effet de "zoom arrière" sur la page de connexion.
+- Images: chevauchement harmonisé via largeur portée à ~150% sur connexion et inscription.
+- Spacing accueil: `.container2` utilise `justify-content: space-between` sur desktop, et une pile en colonne avec `gap` sur mobile.
+
+## Guide CSS (sans SCSS, sans npm)
+- Fichiers: modifier [public/asset/css/styles.css](public/asset/css/styles.css) pour le style principal et [public/asset/css/responsive.css](public/asset/css/responsive.css) pour les overrides mobiles.
+- Ordre de chargement: `responsive.css` doit être chargé après `styles.css`.
+- Breakpoints de référence: 576px, 768px, 992px (mobile → tablette → desktop).
+- Burger: styles et focus visibles, avec ARIA et support clavier.
+
+## Workflow Git rapide
+Exemple de message de commit:
+- "UI: harmoniser connexion/inscription (wrapper + largeur), agrandir légèrement les images, ajuster responsive et spacing (.container2)"
+
+Commandes courantes:
+```bash
+git add .
+git commit -m "UI: harmoniser connexion/inscription (wrapper + largeur), agrandir légèrement les images, ajuster responsive et spacing (.container2)"
+git push origin master
+```
+
 ## Workflow de développement
 1. Créer entités: `php bin/console make:entity`
 2. Migrations: `php bin/console make:migration` puis `php bin/console doctrine:migrations:migrate`
