@@ -377,7 +377,7 @@
         width: 110%;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(30, 80, 220, 0.75);
-        transform: translateX(23%);
+        transform: translateX(1%);
     }
 
     /*-------------- bouton parent----------------------*/
@@ -417,8 +417,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 48px;              /* ajuster si tu veux plus grand */
-        height: 48px;             /* ajuster si tu veux plus grand */
+        width: 38px;              /* ajuster si je veux plus grand */
+        height: 38px;             /* ajuster si je veux plus grand */
         padding: 6px;
         background-color: #007bff;
         border: 2px solid #DADDD8;
