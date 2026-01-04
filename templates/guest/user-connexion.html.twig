@@ -23,8 +23,9 @@
                 {{ flash_message }}
             </h2>
         {% endfor %}
-         <form method="post">
-            <div class="text-center mb-3">
+            <form method="post">
+                <div class="user-inscription-form">
+                <div class="text-center mb-3">
                         <p>Se connecter avec :</p>
                             <div class="btn-group" role="group" aria-label="Social Media Buttons">
                                 <a href="{{ path('connect-google-start') }}" class="btn-google">
@@ -62,6 +63,7 @@
                     </div>
                 </div>
             </div>
+            </div>
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4">Connexion</button>
@@ -76,7 +78,7 @@
     </section>
     </div>
     <div class="container2">
-        <h4>Le panthéon de la Renault 21 Turbo Diesel</h4>
+        <h4>Le panthéon de la Renault 21 Turbo et Turbo Diesel</h4>
         <div class="bouton">
             <label>
                 <a href="{{ path('list-articles') }}" class="btn btn-primary">Entrez !</a>
