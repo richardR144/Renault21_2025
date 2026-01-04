@@ -569,12 +569,34 @@
         min-width: 48px;
     }
 
+    /* Largeur pleine pour le bloc formulaire sur la page de connexion */
+    #mainConnexion .article {
+        width: 100%;
+        padding-left: 250px;
+        margin: 0;
+    }
+    #mainConnexion #renault img {
+        width: 145%;
+    }
+    /* Harmonisation avec inscription: largeur du formulaire */
+    #mainConnexion form {
+        width: 60%;
+    }
+    /* Page inscription: même largeur de formulaire que connexion */
+    #mainInscription form {
+        width: 100%;
+    }
+    /* Page inscription: agrandir l'image pour chevauchement harmonisé */
+    #mainInscription .renault img {
+        width: 145%;
+    }
+
   
 
     /*------------------Connexion------------------------*/
 
     #renault img {
-        width: 105%;
+        width: 155%;
         border-radius: 10px;
         transform: translate(23%);
     }
@@ -691,7 +713,30 @@
         border: 2px solid #4753fd;
         box-shadow: 0 4px 8px rgba(30, 80, 220, 0.5);
         background-color: #b3c7fa;
+        padding: 20px 0;
     }
+    /* Empty state */
+    .empty-state {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(30, 80, 220, 0.20);
+        padding: 2rem;
+        margin: 1.5rem auto;
+        max-width: 720px;
+        border: 2px solid transparent;
+    }
+
+    .empty-state h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1C1C1C;
+        margin-bottom: 0.4rem;
+    }
+
+    .empty-state p {
+        margin-bottom: 0.8rem;
+    }
+
 
     .list-pieces h2 {
         font-size: 24px;
@@ -731,9 +776,9 @@
         background: rgba(255, 255, 255, 0.95);
         border-radius: 12px;
         box-shadow: 0 2px 12px rgba(30, 80, 220, 0.20);
-        padding: 2rem;
-        margin: 2rem auto;
-        max-width: 600px;
+        padding: 1.5rem 2rem;
+        margin: 1.5rem auto;
+        max-width: 720px;
         text-align: left;
         transition: box-shadow 0.3s ease, border-color 0.3s ease;
         border: 2px solid transparent;
@@ -747,9 +792,59 @@
     .piece img {
         display: flex;
         margin: 0 auto 1rem auto;
-        max-width: 220px;
+        max-width: 260px;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(28, 28, 28, 0.06);
+    }
+    /* Header + badges prix/échange */
+    .piece-header h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1C1C1C;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 2px solid #DADDD8;
+        box-shadow: 0 2px 6px rgba(30, 80, 220, 0.1);
+    }
+
+    .price-badge {
+        background-color: #e8f0ff;
+        color: #1C1C1C;
+        border-color: #4753fd;
+    }
+
+    .exchange-badge {
+        background-color: #fff3cd;
+        color: #1C1C1C;
+        border-color: #ffc107;
+    }
+
+    .piece-desc {
+        margin: 0.5rem 0 0.75rem 0;
+        color: #1C1C1C;
+    }
+
+    .piece-meta p {
+        margin: 0.15rem 0;
+        color: #1C1C1C;
+        font-size: 0.95rem;
+    }
+
+    .piece-actions .btn-sm {
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+
+    /* Pagination */
+    .pagination-controls .page-indicator {
+        font-weight: 600;
+        color: #1C1C1C;
     }
 
     .piece-image {
@@ -757,6 +852,42 @@
         margin: 0 auto 1rem auto;
         max-width: 220px;
         border-radius: 8px;
+    }
+
+    /* Grille responsive pour la liste des pièces */
+    .pieces-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 12px;
+    }
+
+    @media (min-width: 992px) {
+        .pieces-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+        .pieces-grid .piece {
+            max-width: none;
+            margin: 0;
+        }
+        .pieces-grid .piece img,
+        .pieces-grid .piece-image {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .piece {
+            padding: 1rem;
+            margin: 1rem auto;
+        }
+        .pagination-controls {
+            flex-wrap: wrap;
+        }
+        .pagination-controls .btn {
+            min-width: 120px;
+        }
     }
 
     /*------------------Détails-category-----------------*/
@@ -787,6 +918,49 @@
     #main-pantheon {
         background-color: #b3c7fa;
         min-height: 70vh;
+    }
+
+    /* ===================== Responsive utilitaires globaux ===================== */
+    .container-responsive {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 12px;
+    }
+
+    @media (max-width: 992px) {
+        .container-responsive {
+            max-width: 960px;
+            padding: 0 12px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container-responsive {
+            max-width: 720px;
+            padding: 0 10px;
+        }
+        .navHeader, .navFooter {
+            flex-wrap: wrap;
+            padding: 10px;
+            height: auto;
+        }
+        .ulHeader {
+            width: 100%;
+        }
+        .logoHeader, .logoFooter {
+            width: 120%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .container-responsive {
+            max-width: 540px;
+            padding: 0 8px;
+        }
+        h1 { font-size: 1.6rem; }
+        h2 { font-size: 1.3rem; }
+        .btn { min-width: 140px; }
     }
 
     .pantheon {

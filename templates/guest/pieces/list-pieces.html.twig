@@ -10,28 +10,56 @@
         <div class="list-pieces">
             <h1 class="text-center mb-4">Liste des pièces</h1>
             {% if pieces is empty %}
-                <p>Aucune pièce trouvée.</p>
+                <div class="empty-state text-center">
+                    <h2>Aucune pièce trouvée</h2>
+                    <p>Essayez une autre recherche ou créez une annonce.</p>
+                    <a href="{{ path('create-piece') }}" class="btn btn-primary">Créer une annonce</a>
+                </div>
             {% else %}
 
+                <div class="pieces-grid">
                 {% for piece in pieces %}
                 <div class="piece">
-                    <h2>{{ piece.name }}</h2>
-                    <p>{{ piece.description }}</p>
-                    <p>Categorie : {{ piece.name }}</p>
-                    <p>Créé le : {{ piece.createdAt|date('Y-m-d') }}</p>
+                    <div class="piece-header d-flex justify-content-between align-items-center">
+                        <h2 class="m-0">{{ piece.name }}</h2>
+                        {% if piece.price %}
+                            <span class="badge price-badge">{{ piece.price }} €</span>
+                        {% elseif piece.isExchange %}
+                            <span class="badge exchange-badge">Échange</span>
+                        {% endif %}
+                    </div>
+
                     {% if piece.image %}
-                        <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="img-fluid"
+                        <img src="{{ asset('Uploads/pieces/' ~ piece.image) }}" alt="Image de la pièce" class="piece-image" />
                     {% endif %}
-                    <p>{{ piece.user.pseudo }}</p>
-                    <p>Email : {{ piece.user.email }}</p>
-                    {% if piece.price %}
-                        <p>Prix : {{ piece.price }} €</p>
-                    {% elseif piece.isExchange %}
-                        <p>Échange possible</p>
-                    {% endif %}  
+
+                    <p class="piece-desc">{{ piece.description }}</p>
+
+                    <div class="piece-meta">
+                        <p>Categorie : {{ piece.name }}</p>
+                        <p>Créé le : {{ piece.createdAt|date('Y-m-d') }}</p>
+                        <p>Par {{ piece.user.pseudo }} — {{ piece.user.email }}</p>
+                    </div>
+                    <div class="piece-actions d-flex gap-2 mt-2">
+                        <a href="{{ path('details-piece', {id: piece.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
+                        <a href="{{ path('update-piece', {id: piece.id}) }}" class="btn btn-outline-warning btn-sm">Modifier</a>
+                    </div>
                 </div>
                 {% endfor %}
+                </div>
             {% endif %}
+
+            <div class="pagination-controls d-flex justify-content-center align-items-center gap-3 mt-3">
+                {% if totalPages is defined and currentPage is defined %}
+                    {% if currentPage > 1 %}
+                        <a class="btn btn-outline-primary" href="{{ path('list-pieces', { page: currentPage - 1 }) }}">Précédent</a>
+                    {% endif %}
+                    <span class="page-indicator">Page {{ currentPage }} / {{ totalPages }}</span>
+                    {% if currentPage < totalPages %}
+                        <a class="btn btn-outline-primary" href="{{ path('list-pieces', { page: currentPage + 1 }) }}">Suivant</a>
+                    {% endif %}
+                {% endif %}
+            </div>
 
             {% for message in app.flashes('info') %}
                 <div class="alert alert-info">{{ message }}</div>

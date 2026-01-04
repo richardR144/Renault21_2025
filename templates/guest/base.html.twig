@@ -11,6 +11,7 @@
     <title>	{% block metatitle %}Accueil | guest Renault 21 TD{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
           {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
+    <link rel="stylesheet" href="{{ asset('asset/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/profil.css') }}">   
 </head>
 <body>
@@ -22,12 +23,12 @@
             <div class="navbar-search">
                 {{ include('partial/_search-form.html.twig') }}
             </div>
-            <div id="burger">
+            <div id="burger" role="button" tabindex="0" aria-label="Ouvrir le menu" aria-controls="guest-primary-nav" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-                <ul class="ulHeader">
+                <ul id="guest-primary-nav" class="ulHeader">
                     <li class="liHeader"><a href="{{ path('home') }}">Accueil</a></li>
                     <li class="liHeader"><a href="{{ path('inscription') }}">Inscription</a></li>
                     <li class="liHeader"><a href="{{ path('guest-annonces') }}">Annonces</a></li>
@@ -65,7 +66,7 @@
     </header>
     
 
-    <main>
+    <main class="container-responsive">
         
         {% block main %}
         {% endblock main %}
@@ -119,6 +120,26 @@
            toggleElement.style.backgroundColor = '#f8f9fa';
        }
    }
+   </script>
+
+   <script>
+   document.addEventListener('DOMContentLoaded', function () {
+       const burger = document.getElementById('burger');
+       const menu = document.getElementById('guest-primary-nav');
+       function toggleMenu() {
+           const isActive = menu.classList.toggle('active');
+           burger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+       }
+       if (burger && menu) {
+           burger.addEventListener('click', toggleMenu);
+           burger.addEventListener('keydown', function (e) {
+               if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                   e.preventDefault();
+                   toggleMenu();
+               }
+           });
+       }
+   });
    </script>
 {% endblock javascripts %}
 </body>

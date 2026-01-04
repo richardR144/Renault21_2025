@@ -73,13 +73,25 @@ class PieceController extends AbstractController
 
 
     #[Route('/Guest/pieces/list-pieces', name: 'list-pieces', methods: ['GET'])]
-    public function listPieces(PieceRepository $pieceRepository): Response
+    public function listPieces(PieceRepository $pieceRepository, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $pieces = $pieceRepository->findAll();
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 6;
+
+        $allPieces = $pieceRepository->findAll();
+        $total = count($allPieces);
+        $totalPages = max(1, (int) ceil($total / $limit));
+        if ($page > $totalPages) {
+            $page = $totalPages;
+        }
+        $offset = ($page - 1) * $limit;
+        $pieces = array_slice($allPieces, $offset, $limit);
 
         return $this->render('guest/pieces/list-pieces.html.twig', [
-            'pieces' => $pieces
+            'pieces' => $pieces,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
         ]);
     }
 

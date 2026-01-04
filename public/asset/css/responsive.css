@@ -1,0 +1,130 @@
+/* Responsive global overrides, non-invasifs */
+
+/* Base container fallback (si pas de wrapper dédié) */
+@media (min-width: 1200px) {
+  main { max-width: 1200px; margin: 0 auto; padding: 0 12px; }
+}
+@media (max-width: 992px) {
+  main { max-width: 960px; padding: 0 12px; }
+}
+@media (max-width: 768px) {
+  main { max-width: 720px; padding: 0 10px; }
+}
+@media (max-width: 576px) {
+  main { max-width: 540px; padding: 0 8px; }
+}
+
+/* Header & navigation */
+@media (max-width: 768px) {
+  .navHeader { flex-wrap: wrap; padding: 10px; height: auto; }
+  .logoHeader { width: auto; margin-top: 0; }
+  .ulHeader { width: 100%; display: none; flex-direction: column; background: #1C1C1C; padding: 12px 0; }
+  .ulHeader.active { display: flex; }
+  #burger { display: block; position: absolute; right: 20px; top: 20px; cursor: pointer; z-index: 100; }
+  /* Supporte le markup guest (#burger span) et admin (#burger li) */
+  #burger span,
+  #burger li { display: block; width: 25px; height: 3px; background: white; margin: 4px 0; border-radius: 2px; }
+}
+
+/* Footer */
+@media (max-width: 768px) {
+  .navFooter { flex-wrap: wrap; height: auto; padding: 20px; }
+  .logoFooter { width: auto; margin: 0; }
+  .ulFooter { width: 100%; flex-direction: row; align-items: center; padding: 12px 0; }
+}
+
+/* Listes de cartes (pièces, annonces, etc.) */
+/* Grille simple sans changer le HTML existant: utilise wrapper si présent */
+.pieces-grid { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 0 12px; }
+@media (min-width: 992px) {
+  .pieces-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .pieces-grid .piece { max-width: none; margin: 0; }
+  .pieces-grid .piece img, .pieces-grid .piece-image { max-width: 100%; }
+}
+
+/* Cartes "piece" en mobile */
+@media (max-width: 576px) {
+  .piece { padding: 1rem; margin: 1rem auto; }
+  .piece-header h2 { font-size: 1.2rem; }
+}
+
+/* Pagination en mobile */
+@media (max-width: 576px) {
+  .pagination-controls { flex-wrap: wrap; }
+  .pagination-controls .btn { min-width: 120px; }
+}
+
+/* Filtres compacts (si présents) */
+.pieces-filters { max-width: 900px; margin: 0 auto; }
+@media (max-width: 576px) {
+  .pieces-filters .btn { width: 100%; }
+}
+
+/* Typographies */
+@media (max-width: 576px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+}
+
+/* Full-bleed pour la page d'accueil (#mainAccueil) */
+#mainAccueil {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* Forms harmonisation sur mobile */
+@media (max-width: 768px) {
+  form .row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  form .row > [class*="col-"],
+  form .col,
+  form .col-auto,
+  form .col-md-6,
+  form .col-md-4,
+  form .col-md-3,
+  form .col-sm-6 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .form-control,
+  .form-select,
+  form textarea,
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="password"],
+  form input[type="number"],
+  form input[type="tel"],
+  form input[type="url"],
+  form input[type="search"] {
+    width: 100%;
+  }
+
+  form .form-group,
+  form .mb-3 {
+    margin-bottom: 12px;
+  }
+
+  form label {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  form .form-actions,
+  form .actions {
+    margin-top: 16px;
+  }
+
+  form .btn[type="submit"],
+  form button[type="submit"] {
+    width: 100%;
+  }
+}

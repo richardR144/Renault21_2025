@@ -2,7 +2,7 @@
 
 {% block main %}
     <div class="admin-dashboard">
-        <p>Bienvenue, {{ app.user.pseudo }} !</p>
+        <p>{{ app.user.pseudo }}</p>
         <h1>Bienvenue sur le tableau de bord admin</h1>
         <ul class="admin-menu">
             <li><a href="{{ path('admin-list-annonces') }}" class="btn btn-primary mb-2">Gestion des annonces</a></li>

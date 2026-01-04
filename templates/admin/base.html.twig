@@ -8,9 +8,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     <meta name="author" content="Richard R"/>
     <title>	{% block metatitle %}Accueil | admin Renault 21 TD{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
+        <link rel="stylesheet" href="{{ asset('asset/css/styles.css') }}"
           {% if hide_from_screenreaders is defined and hide_from_screenreaders %}aria-hidden="true"{% endif %}>
     <link rel="stylesheet" href="{{ asset('asset/css/profil.css') }}">   
+        <link rel="stylesheet" href="{{ asset('asset/css/responsive.css') }}">   
 </head>
 <body>
 {% block header %}
@@ -19,14 +20,14 @@
             <div class="logoHeader">
                 <img src="{{ asset('asset/images/logoRenault.png') }}" alt="logo-header">
             </div>
-            <div id="burger">
+            <div id="burger" role="button" tabindex="0" aria-label="Ouvrir le menu" aria-controls="admin-primary-nav" aria-expanded="false">
                 <ul>
                     <li></li>
                     <li></li>
                     <li></li>
                 </ul>
             </div>
-            <ul class="ulHeader">
+            <ul id="admin-primary-nav" class="ulHeader">
                 <li class="liHeader"><a href="{{ path('admin-dashboard') }}">Tableau de bord</a></li>
                 <li class="liHeader"><a href="{{ path('admin-list-annonces') }}">Gestion des annonces</a></li>
                 <li class="liHeader"><a href="{{ path('admin-list-users') }}">Gestion des utilisateurs</a></li>
@@ -54,9 +55,11 @@
 {% endblock header %}
 
         
-            {% block main %}
+            <main class="container-responsive">
+                {% block main %}
          
-            {% endblock main %}
+                {% endblock main %}
+            </main>
 
 {% block footer %}
     <footer>
@@ -77,5 +80,24 @@
         </nav>
     </footer>
 {% endblock footer %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const burger = document.getElementById('burger');
+    const menu = document.getElementById('admin-primary-nav');
+    function toggleMenu() {
+        const isActive = menu.classList.toggle('active');
+        burger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    }
+    if (burger && menu) {
+        burger.addEventListener('click', toggleMenu);
+        burger.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                toggleMenu();
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
