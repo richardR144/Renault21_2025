@@ -210,5 +210,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
 - PR avec description et captures si UI 
 
-
+## Harmonisation Connexion/Inscription: wrapper .user-inscription-form, largeur 60%, images ~150%, spacing .container2 (voir README.md).
+Guide CSS (sans SCSS): fichiers à modifier, ordre de chargement, breakpoints, burger.
+Workflow Git rapide: exemple de message de commit et commandes.
 
