@@ -14,7 +14,7 @@
         font-family: 'Roboto', Arial, sans-serif;
     }
 
-      
+
 
     .logoHeader,
     .logoFooter {
@@ -265,7 +265,7 @@
         display: flex;
         color: #1C1C1C;
         align-items: center;
-        margin-left: 150px;   
+        margin-left: 150px;
     }
 
     h4 {
@@ -387,17 +387,17 @@
         background-color: rgba(231, 231, 231, 0.3);
         border: none;
         cursor: pointer;
-       
+
     }
 
     /*---------------icône google et facebook-------------------*/
     .btn-group {
-    margin: 0;
-    gap: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        margin: 0;
+        gap: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
     .btn-google,
     .btn-facebook:hover {
@@ -417,26 +417,29 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 38px;              /* ajuster si je veux plus grand */
-        height: 38px;             /* ajuster si je veux plus grand */
+        width: 38px;
+        /* ajuster si je veux plus grand */
+        height: 38px;
+        /* ajuster si je veux plus grand */
         padding: 6px;
         background-color: #007bff;
         border: 2px solid #DADDD8;
         border-radius: 6px;
         text-decoration: none;
         transition: all 0.25s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
 
     .btn-google:hover {
         background-color: #e55a2b;
         border-color: #DADDD8;
-}
+    }
+
     .btn-facebook:hover {
-        background-color: #e55a2b; 
+        background-color: #e55a2b;
         border-color: #DADDD8;
-}
+    }
 
     /*-------------------img icônes ------------------------*/
     .btn-group img {
@@ -576,23 +579,27 @@
         padding-right: 80px;
         margin: 0;
     }
+
     #mainConnexion #renault img {
         width: 180%;
     }
+
     /* Harmonisation avec inscription: largeur du formulaire */
     #mainConnexion form {
         width: 100%;
     }
+
     /* Page inscription: même largeur de formulaire que connexion */
     #mainInscription form {
         width: 100%;
     }
+
     /* Page inscription: agrandir l'image pour chevauchement harmonisé */
     #mainInscription .renault img {
         width: 157%;
     }
 
-  
+
 
     /*------------------Connexion------------------------*/
 
@@ -618,7 +625,7 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    
+
 
     /*------------------formulaire inscription-------------------*/
 
@@ -718,6 +725,7 @@
         background-color: #b3c7fa;
         padding: 20px 0;
     }
+
     /* Empty state */
     .empty-state {
         background: rgba(255, 255, 255, 0.95);
@@ -799,6 +807,7 @@
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(28, 28, 28, 0.06);
     }
+
     /* Header + badges prix/échange */
     .piece-header h2 {
         font-size: 1.4rem;
@@ -870,10 +879,12 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 20px;
         }
+
         .pieces-grid .piece {
             max-width: none;
             margin: 0;
         }
+
         .pieces-grid .piece img,
         .pieces-grid .piece-image {
             max-width: 100%;
@@ -885,9 +896,11 @@
             padding: 1rem;
             margin: 1rem auto;
         }
+
         .pagination-controls {
             flex-wrap: wrap;
         }
+
         .pagination-controls .btn {
             min-width: 120px;
         }
@@ -915,8 +928,6 @@
         text-align: center;
     }
 
-
-
     /*-------------------Pantheon--------------------------*/
     #main-pantheon {
         background-color: #b3c7fa;
@@ -943,15 +954,20 @@
             max-width: 720px;
             padding: 0 10px;
         }
-        .navHeader, .navFooter {
+
+        .navHeader,
+        .navFooter {
             flex-wrap: wrap;
             padding: 10px;
             height: auto;
         }
+
         .ulHeader {
             width: 100%;
         }
-        .logoHeader, .logoFooter {
+
+        .logoHeader,
+        .logoFooter {
             width: 120%;
         }
     }
@@ -961,9 +977,18 @@
             max-width: 540px;
             padding: 0 8px;
         }
-        h1 { font-size: 1.6rem; }
-        h2 { font-size: 1.3rem; }
-        .btn { min-width: 140px; }
+
+        h1 {
+            font-size: 1.6rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+        }
+
+        .btn {
+            min-width: 140px;
+        }
     }
 
     .pantheon {
