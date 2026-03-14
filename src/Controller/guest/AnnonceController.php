@@ -27,6 +27,8 @@ class AnnonceController extends AbstractController
     #[Route('/Guest/annonces/create', name: 'guest-annonce-create', methods: ['GET', 'POST'])]
     public function createAnnonce(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $annonce = new Annonce();
         $form = $this->createForm(AnnonceTypeForm::class, $annonce);
 
@@ -77,6 +79,8 @@ class AnnonceController extends AbstractController
     #[Route('/Guest/annonces/{id}/update', name: 'guest-annonce-update', methods: ['GET', 'POST'])]
     public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $annonce = $annonceRepository->find($id);
 
         if (!$annonce) {
@@ -124,6 +128,8 @@ class AnnonceController extends AbstractController
     #[Route('/Guest/annonces/{id}/delete', name: 'guest-annonce-delete', methods: ['POST'])]
     public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         if (!$this->isCsrfTokenValid('delete_annonce_' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Token de sécurité invalide');
             return $this->redirectToRoute('guest-annonces');

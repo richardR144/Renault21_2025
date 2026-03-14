@@ -42,7 +42,9 @@
                     </div>
                     <div class="piece-actions d-flex gap-2 mt-2">
                         <a href="{{ path('details-piece', {id: piece.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
-                        <a href="{{ path('update-piece', {id: piece.id}) }}" class="btn btn-outline-warning btn-sm">Modifier</a>
+                        {% if app.user and piece.user and app.user.id == piece.user.id %}
+                            <a href="{{ path('update-piece', {id: piece.id}) }}" class="btn btn-outline-warning btn-sm">Modifier</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}

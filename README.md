@@ -226,6 +226,31 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Prise en charge du paramètre `receiver` dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
 - Pré-sélection du destinataire dans [templates/guest/messages/create-message.html.twig](templates/guest/messages/create-message.html.twig).
 
+### 4) Renforcement sécurité: modifications réservées au propriétaire
+- Objectif: empêcher qu’un utilisateur modifie/supprime les contenus d’un autre utilisateur depuis les routes guest.
+
+#### Pièces (guest)
+- Vérification de propriété ajoutée dans [src/Controller/Guest/PieceController.php](src/Controller/Guest/PieceController.php) pour:
+	- `update-piece/{id}`
+	- `delete-piece/{id}`
+- Si la pièce n’appartient pas à l’utilisateur connecté: action refusée + message flash d’erreur + redirection.
+- Correction importante: suppression du `setUser($user)` pendant la modification pour éviter une prise de propriété involontaire.
+- Côté interface, le bouton “Modifier” n’apparaît plus pour les pièces des autres utilisateurs dans [templates/guest/pieces/list-pieces.html.twig](templates/guest/pieces/list-pieces.html.twig).
+
+#### Annonces (guest)
+- Authentification désormais imposée (`ROLE_USER`) pour:
+	- création
+	- modification
+	- suppression
+- Contrôles “propriétaire uniquement” conservés sur update/delete dans [src/Controller/Guest/AnnonceController.php](src/Controller/Guest/AnnonceController.php).
+
+#### Messages (guest)
+- Déjà sécurisé: un utilisateur ne peut modifier que ses messages envoyés et ne peut supprimer/lire que ses messages autorisés dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
+
+#### Catégories
+- Côté guest, pas de routes de modification/suppression de catégorie (liste + détail uniquement) dans [src/Controller/Guest/CategoryController.php](src/Controller/Guest/CategoryController.php).
+- La gestion complète des catégories reste côté admin.
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)

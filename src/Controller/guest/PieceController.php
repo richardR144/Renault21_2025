@@ -104,14 +104,21 @@ class PieceController extends AbstractController
 
         $user = $this->getUser();
         $piece = $pieceRepository->find($id);
+        if (!$piece) {
+            throw $this->createNotFoundException('Pièce non trouvée');
+        }
+
+        if ($piece->getUser() !== $user) {
+            $this->addFlash('error', 'Vous ne pouvez modifier que vos propres pièces.');
+            return $this->redirectToRoute('show-user-piece');
+        }
+
         $categories = $categoryRepository->findAll();
 
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $piece->setUser($user);
-
             $exchange = $form->get('exchange')->getData();
             $price = $form->get('price')->getData();
 
@@ -155,6 +162,11 @@ class PieceController extends AbstractController
         // Si le produit n'existe pas, redirige vers la page 404 ou affiche un message d'erreur de Symfony
         if (!$piece) {
             throw $this->createNotFoundException('Pièce non supprimée, elle n\'existe pas');
+        }
+
+        if ($piece->getUser() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres pièces.');
+            return $this->redirectToRoute('show-user-piece');
         }
 
         if ($request->isMethod('POST')) {
