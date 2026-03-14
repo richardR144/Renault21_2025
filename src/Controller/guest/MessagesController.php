@@ -39,6 +39,11 @@ class MessagesController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('read_message_' . $message->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('list-messages');
+            }
+
             $isRead = $request->request->get('isRead', 0);
             $message->setIsRead($isRead ? true : false);
             $entityManager->flush();
