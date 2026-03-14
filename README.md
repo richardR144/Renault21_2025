@@ -205,6 +205,27 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Upload: vérifier droits sur `public/uploads/images` et `public/Uploads/annonces`
 - CSS non appliqué: forcer refresh (Ctrl+F5), vérifier ordre de chargement (`responsive.css` après `styles.css`)
 
+## Mises à jour (mars 2026)
+
+### 1) Correction route de connexion sur la page annonce
+- Erreur corrigée: `Unable to generate a URL for the named route "app_login"`.
+- Cause: la route existante dans le projet est `connexion` (et non `app_login`).
+- Correctif appliqué dans [templates/guest/annonces/annonce-show.html.twig](templates/guest/annonces/annonce-show.html.twig).
+
+### 2) Amélioration UX du tableau catégorie
+- Tableau de [templates/guest/category/details-category.html.twig](templates/guest/category/details-category.html.twig) rendu plus lisible.
+- Ajout de classes Bootstrap: `table table-bordered table-hover align-middle`.
+- Espacement cellules (`py-3 px-3`) pour aérer **Nom / Description / Prix**.
+- Lignes cliquables:
+	- utilisateur connecté → redirection vers `details-piece`
+	- utilisateur non connecté → redirection vers `connexion`
+
+### 3) Bouton “Contacter le vendeur” sur la page annonce
+- Sur [templates/guest/annonces/annonce-show.html.twig](templates/guest/annonces/annonce-show.html.twig), ajout d’un bouton direct “💬 Contacter le vendeur”.
+- Le bouton ouvre la création de message avec vendeur pré-sélectionné via `create-message?receiver={id}`.
+- Prise en charge du paramètre `receiver` dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
+- Pré-sélection du destinataire dans [templates/guest/messages/create-message.html.twig](templates/guest/messages/create-message.html.twig).
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)

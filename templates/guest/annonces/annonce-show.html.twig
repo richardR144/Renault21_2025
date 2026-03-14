@@ -122,15 +122,15 @@
 						{% if app.user %}
 							{% if annonce.sender and app.user.id != annonce.sender.id %}
 								<p>Intéressé par cette annonce ?</p>
-								<a href="{{ path('guest-user-show', {id: annonce.sender.id}) }}" class="btn btn-success">
-									{{ annonce.sender.pseudo }}
+								<a href="{{ path('create-message', {receiver: annonce.sender.id}) }}" class="btn btn-success">
+									💬 Contacter le vendeur
 								</a>
 							{% else %}
 								<p class="text-muted">Vous êtes le propriétaire de cette annonce.</p>
 							{% endif %}
 						{% else %}
 							<p>Connectez-vous pour contacter l'abonné'</p>
-							<a href="{{ path('app_login') }}" class="btn btn-primary">
+							<a href="{{ path('connexion') }}" class="btn btn-primary">
 								🔐 Se connecter
 							</a>
 						{% endif %}

@@ -11,32 +11,34 @@
         <p class="title-category">Bienvenue sur la page de la catégorie <strong>{{ category.name }}</strong>.</p>
         <section id="list-pieces">
             {% if pieces|length > 0 %}
-                <form method="post" action="{{ path('details-category', {'id': category.id}) }}" class="piece-select-form">
-                    <table>
+                    <table class="table table-bordered table-hover align-middle">
                         <thead>
                             <tr>
                                 {#<th>Sélectionner</th>#}
-                                <th>Nom</th>
-                                <div class="vertical-separate"></div>
-                                <th>Description</th>
-                                <div class="vertical-separate"></div>
-                                <th>Prix</th>
+                                <th class="py-3 px-3">Nom</th>
+                                <th class="py-3 px-3">Description</th>
+                                <th class="py-3 px-3">Prix</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for piece in pieces %}
-                                <tr>
+                                <tr
+                                    class="cursor-pointer"
+                                    style="cursor: pointer;"
+                                    onclick="window.location.href='{{ app.user ? path('details-piece', {id: piece.id}) : path('connexion') }}'"
+                                >
                                     {#<td><input type="checkbox" name="selected_pieces[]" value="{{ piece.id }}"></td>#}
-                                    <td>{{ piece.name }}</td>
-                                    <td>{{ piece.description }}</td>
-                                    <td>{{ piece.price }} €</td>
+                                    <td class="py-3 px-3">{{ piece.name }}</td>
+                                    <td class="py-3 px-3">{{ piece.description }}</td>
+                                    <td class="py-3 px-3">{{ piece.price }} €</td>
                                 </tr>
                             {% endfor %}
                             
                         </tbody>
                     </table>
-                    {#<button type="submit">Valider mon choix</button>#}
-                </form>
+                    {% if not app.user %}
+                        <p class="text-muted mt-2 mb-0">Cliquez sur une ligne pour aller vers la page de connexion/inscription.</p>
+                    {% endif %}
              {% endif %}
         </section>
     </main>

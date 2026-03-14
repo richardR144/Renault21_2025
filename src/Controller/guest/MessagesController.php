@@ -86,6 +86,7 @@ class MessagesController extends AbstractController
     public function createMessage(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $selectedReceiverId = $request->query->getInt('receiver', 0);
         if ($request->isMethod('POST')) {
             $content = $request->request->get('content');
             $sender = $this->getUser();
@@ -109,7 +110,8 @@ class MessagesController extends AbstractController
         }
 
         return $this->render('guest/messages/create-message.html.twig', [
-            'users' => $userRepository->findAll()
+            'users' => $userRepository->findAll(),
+            'selectedReceiverId' => $selectedReceiverId
         ]);
     }
 
