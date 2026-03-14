@@ -276,14 +276,9 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Sécurité renforcée: suppression en `POST` + token CSRF (`delete_message_{id}`).
 - Validation CSRF côté backend dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
 - Durcissement supplémentaire: route `delete-message` en `POST` uniquement (plus de suppression via `GET`).
-- Note: [templates/guest/messages/delete-message.html.twig](templates/guest/messages/delete-message.html.twig) est conservé en fichier legacy non utilisé pour l’instant.
 
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
 - PR avec description et captures si UI 
-
-## Harmonisation Connexion/Inscription: wrapper .user-inscription-form, largeur 60%, images ~150%, spacing .container2 (voir README.md).
-Guide CSS (sans SCSS): fichiers à modifier, ordre de chargement, breakpoints, burger.
-Workflow Git rapide: exemple de message de commit et commandes.
 
