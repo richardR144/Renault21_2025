@@ -53,6 +53,7 @@
                         </div>
                         
                         <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" class="mt-4">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
                             <button type="submit" class="btn btn-danger mr-2">
                                 <i class="fas fa-trash"></i> Confirmer la suppression
                             </button>

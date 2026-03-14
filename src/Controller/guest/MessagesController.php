@@ -69,6 +69,11 @@ class MessagesController extends AbstractController
 
         // Si GET = afficher confirmation, si POST = supprimer
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('delete_message_' . $message->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('list-messages');
+            }
+
             $entityManager->remove($message);
             $entityManager->flush();
 

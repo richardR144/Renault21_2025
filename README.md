@@ -270,6 +270,13 @@ php bin/console doctrine:migrations:migrate --no-interaction
 	- meilleure lisibilité des labels/champs
 	- alignement des options radio `Vente / Échange`
 
+### 6) Suppression directe des messages reçus depuis le profil
+- Ajout d’un bouton `Supprimer ce message` sur chaque carte de message reçu dans [templates/guest/profil.html.twig](templates/guest/profil.html.twig).
+- UX: suppression directe avec popup de confirmation en français (`Supprimer ce message ?`).
+- Sécurité renforcée: suppression en `POST` + token CSRF (`delete_message_{id}`).
+- Validation CSRF côté backend dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
+- Compatibilité conservée avec l’écran de confirmation existant [templates/guest/messages/delete-message.html.twig](templates/guest/messages/delete-message.html.twig) (token CSRF ajouté).
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
