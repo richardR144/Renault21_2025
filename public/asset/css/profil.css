@@ -121,6 +121,36 @@
     transition: background 0.2s;
 }
 
+.piece-form-card {
+    width: min(680px, 92%);
+}
+
+.piece-form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.piece-form-card .form-label {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.piece-form-card .form-control,
+.piece-form-card .form-select {
+    border-radius: 10px;
+}
+
+#insert_piece_form_exchange {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#insert_piece_form_exchange .form-check {
+    margin-bottom: 0;
+}
+
 
 
 

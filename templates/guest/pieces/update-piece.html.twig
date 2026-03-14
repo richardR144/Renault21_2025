@@ -5,23 +5,65 @@
 {% block metatitle %}Modifier la piece | Renault 21 TD{% endblock metatitle %}
 
 {% block main %}
-        
     <div class="profil-bg bg-update-piece">
         <div class="bg-image"></div>
-            <div class="profil-content">
-                <h2 id="formPiece">Modifier la pièce</h2>
-                    {{ form(insertPieceForm) }}
-            </div>
-        </div>
-            <div class="btn-back">
-                <a href="{{ path('list-pieces') }}" class="btn btn-primary">Retour à la liste des pièces</a>
-            </div>  
+
+        <div class="profil-content piece-form-card">
+            <h2 id="formPiece">Modifier la pièce</h2>
 
             {% for message in app.flashes('info') %}
                 <div class="alert alert-info">{{ message }}</div>
             {% endfor %}
-            
+
             {% for message in app.flashes('error') %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
+
+            {{ form_start(insertPieceForm) }}
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.category, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(insertPieceForm.category, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(insertPieceForm.category) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(insertPieceForm.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(insertPieceForm.name) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(insertPieceForm.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                    {{ form_errors(insertPieceForm.description) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.exchange, null, {'label_attr': {'class': 'form-label d-block'}}) }}
+                    {{ form_widget(insertPieceForm.exchange) }}
+                    {{ form_errors(insertPieceForm.exchange) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.price, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(insertPieceForm.price, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(insertPieceForm.price) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(insertPieceForm.image, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(insertPieceForm.image, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(insertPieceForm.image) }}
+                </div>
+
+                <div class="d-grid mt-3">
+                    {{ form_widget(insertPieceForm.valider, {'attr': {'class': 'btn btn-primary'}}) }}
+                </div>
+            {{ form_end(insertPieceForm, {'render_rest': false}) }}
+        </div>
+    </div>
+
+    <div class="btn-back">
+        <a href="{{ path('list-pieces') }}" class="btn btn-primary">Retour à la liste des pièces</a>
+    </div>
 {% endblock main %}

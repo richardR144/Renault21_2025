@@ -251,6 +251,25 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Côté guest, pas de routes de modification/suppression de catégorie (liste + détail uniquement) dans [src/Controller/Guest/CategoryController.php](src/Controller/Guest/CategoryController.php).
 - La gestion complète des catégories reste côté admin.
 
+### 5) Harmonisation des formulaires “pièces” (profil)
+- Objectif: rendre les formulaires **Créer une pièce** et **Modifier une pièce** visuellement cohérents avec le reste de l’application.
+- Les images de fond sont conservées (aucun changement sur le principe visuel `bg-insert-piece` / `bg-update-piece`).
+
+#### Templates mis à jour
+- [templates/guest/pieces/update-piece.html.twig](templates/guest/pieces/update-piece.html.twig)
+- [templates/guest/pieces/insertPiece.html.twig](templates/guest/pieces/insertPiece.html.twig)
+
+#### Améliorations appliquées
+- Formulaires réécrits avec une structure homogène: labels clairs, champs espacés, bouton principal en bas.
+- Utilisation des classes Bootstrap (`form-control`, `form-select`, `btn btn-primary`) pour un rendu plus propre.
+- Bouton retour harmonisé sur les deux pages.
+
+#### CSS ciblé
+- Ajout de styles dédiés dans [public/asset/css/profil.css](public/asset/css/profil.css):
+	- `.piece-form-card` pour une largeur/présentation cohérente
+	- meilleure lisibilité des labels/champs
+	- alignement des options radio `Vente / Échange`
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
