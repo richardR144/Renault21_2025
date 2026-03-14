@@ -275,7 +275,8 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - UX: suppression directe avec popup de confirmation en français (`Supprimer ce message ?`).
 - Sécurité renforcée: suppression en `POST` + token CSRF (`delete_message_{id}`).
 - Validation CSRF côté backend dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
-- Compatibilité conservée avec l’écran de confirmation existant [templates/guest/messages/delete-message.html.twig](templates/guest/messages/delete-message.html.twig) (token CSRF ajouté).
+- Durcissement supplémentaire: route `delete-message` en `POST` uniquement (plus de suppression via `GET`).
+- Note: [templates/guest/messages/delete-message.html.twig](templates/guest/messages/delete-message.html.twig) est conservé en fichier legacy non utilisé pour l’instant.
 
 ## Contribuer
 - Branches par fonctionnalité

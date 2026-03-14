@@ -150,11 +150,12 @@
                                     {% endif %}
                                     
                                     {% if message.sender == app.user or message.receiver == app.user %}
-                                        <a href="{{ path('delete-message', {'id': message.id}) }}" 
-                                           class="btn btn-outline-danger btn-sm"
-                                           onclick="return confirm('Supprimer ce message ?');">
-                                            <i class="fas fa-trash"></i> Supprimer
-                                        </a>
+                                        <form method="post" action="{{ path('delete-message', {'id': message.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer ce message ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ message.id) }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
                                     {% endif %}
                                 </div>
                             </div>

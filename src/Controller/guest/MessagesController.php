@@ -51,7 +51,7 @@ class MessagesController extends AbstractController
         ]);
     }
 
-    #[Route('/messages/delete/{id}', name: 'delete-message', methods: ['GET', 'POST'])]
+    #[Route('/messages/delete/{id}', name: 'delete-message', methods: ['POST'])]
     public function deleteMessage(int $id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
     {
         //SÉCURISATION AJOUTÉE
@@ -67,24 +67,16 @@ class MessagesController extends AbstractController
             throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer ce message');
         }
 
-        // Si GET = afficher confirmation, si POST = supprimer
-        if ($request->isMethod('POST')) {
-            if (!$this->isCsrfTokenValid('delete_message_' . $message->getId(), $request->request->get('_token'))) {
-                $this->addFlash('error', 'Token de sécurité invalide');
-                return $this->redirectToRoute('list-messages');
-            }
-
-            $entityManager->remove($message);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Message supprimé avec succès');
+        if (!$this->isCsrfTokenValid('delete_message_' . $message->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide');
             return $this->redirectToRoute('list-messages');
         }
 
-        // GET = page de confirmation
-        return $this->render('guest/messages/delete-message.html.twig', [
-            'message' => $message
-        ]);
+        $entityManager->remove($message);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Message supprimé avec succès');
+        return $this->redirectToRoute('list-messages');
     }
 
     #[Route('/messages/create', name: 'create-message', methods: ['GET', 'POST'])]
