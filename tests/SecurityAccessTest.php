@@ -126,6 +126,38 @@ class SecurityAccessTest extends WebTestCase
         self::assertNotNull($pieceInDb);
     }
 
+    public function testNonOwnerCannotDeletePiece(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $owner = $this->createTestUser();
+        $intruder = $this->createTestUser();
+        $category = $this->createTestCategory();
+
+        $piece = new Piece();
+        $piece->setName('Piece non proprietaire');
+        $piece->setDescription('Description non proprietaire');
+        $piece->setExchange(false);
+        $piece->setPrice(99.0);
+        $piece->setUser($owner);
+        $piece->setCategory($category);
+        $entityManager->persist($piece);
+        $entityManager->flush();
+
+        $client->loginUser($intruder, 'main');
+
+        $client->request('POST', '/Guest/pieces/delete-piece/' . $piece->getId(), [
+            '_token' => 'intruder-token',
+        ]);
+
+        self::assertResponseRedirects('/Guest/pieces/show-user-piece');
+
+        $entityManager->clear();
+        $pieceInDb = $entityManager->getRepository(Piece::class)->find($piece->getId());
+        self::assertNotNull($pieceInDb);
+    }
+
     private function createTestUser(): User
     {
         $entityManager = static::getContainer()->get('doctrine')->getManager();
