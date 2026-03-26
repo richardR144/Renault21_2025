@@ -9,6 +9,7 @@ use App\Entity\Message;
 use App\Entity\Piece;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 trait SecurityTestFactoryTrait
 {
@@ -24,6 +25,25 @@ trait SecurityTestFactoryTrait
         $user->setPseudo('security_test_user');
         $user->setRoles($roles);
         $user->setPassword('dummy');
+
+        $this->em()->persist($user);
+        $this->em()->flush();
+
+        return $user;
+    }
+
+    protected function passwordHasher(): UserPasswordHasherInterface
+    {
+        return static::getContainer()->get(UserPasswordHasherInterface::class);
+    }
+
+    protected function createTestUserWithPassword(string $plainPassword, array $roles = ['ROLE_USER']): User
+    {
+        $user = new User();
+        $user->setEmail('security-test-' . uniqid() . '@example.com');
+        $user->setPseudo('security_test_user_' . uniqid());
+        $user->setRoles($roles);
+        $user->setPassword($this->passwordHasher()->hashPassword($user, $plainPassword));
 
         $this->em()->persist($user);
         $this->em()->flush();

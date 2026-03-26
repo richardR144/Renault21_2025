@@ -29,6 +29,16 @@
 					{{ user.email }}</li>
 			</ul>
 
+			<div class="card p-3 mb-4" style="max-width: 420px;">
+				<h2 class="h5">Modifier mon mot de passe</h2>
+				{{ form_start(changePasswordForm) }}
+					<div class="mb-2">{{ form_row(changePasswordForm.currentPassword) }}</div>
+					<div class="mb-2">{{ form_row(changePasswordForm.newPassword.first) }}</div>
+					<div class="mb-2">{{ form_row(changePasswordForm.newPassword.second) }}</div>
+					<button type="submit" class="btn btn-primary">Mettre à jour le mot de passe</button>
+				{{ form_end(changePasswordForm) }}
+			</div>
+
 			<div class="routeCreate-piece">
 				<h2>Créer une nouvelle pièce</h2>
 				<a href="{{ path('create-piece') }}" class="btn-custom">Formulaire de création</a>

@@ -128,4 +128,61 @@ class GuestSecurityTest extends WebTestCase
         $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
         self::assertNotNull($pieceInDb);
     }
+
+    public function testUserCanChangePasswordWithValidCurrentPassword(): void
+    {
+        $client = static::createClient();
+        $user = $this->createTestUserWithPassword('OldPass123!');
+
+        $client->loginUser($user, 'main');
+        $crawler = $client->request('GET', '/Guest/profil');
+        $csrfToken = $crawler->filter('input[name="change_password_form[_token]"]')->attr('value');
+
+        $client->request('POST', '/Guest/profil', [
+            'change_password_form' => [
+                'currentPassword' => 'OldPass123!',
+                'newPassword' => [
+                    'first' => 'NewPass456!',
+                    'second' => 'NewPass456!',
+                ],
+                '_token' => $csrfToken,
+            ],
+        ]);
+
+        self::assertResponseRedirects('/Guest/profil');
+
+        $this->em()->clear();
+        $userInDb = $this->em()->getRepository(\App\Entity\User::class)->find($user->getId());
+        self::assertNotNull($userInDb);
+        self::assertTrue($this->passwordHasher()->isPasswordValid($userInDb, 'NewPass456!'));
+    }
+
+    public function testUserCannotChangePasswordWithInvalidCurrentPassword(): void
+    {
+        $client = static::createClient();
+        $user = $this->createTestUserWithPassword('OldPass123!');
+
+        $client->loginUser($user, 'main');
+        $crawler = $client->request('GET', '/Guest/profil');
+        $csrfToken = $crawler->filter('input[name="change_password_form[_token]"]')->attr('value');
+
+        $client->request('POST', '/Guest/profil', [
+            'change_password_form' => [
+                'currentPassword' => 'WrongPass999!',
+                'newPassword' => [
+                    'first' => 'NewPass456!',
+                    'second' => 'NewPass456!',
+                ],
+                '_token' => $csrfToken,
+            ],
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Le mot de passe actuel est incorrect', (string) $client->getResponse()->getContent());
+
+        $this->em()->clear();
+        $userInDb = $this->em()->getRepository(\App\Entity\User::class)->find($user->getId());
+        self::assertNotNull($userInDb);
+        self::assertTrue($this->passwordHasher()->isPasswordValid($userInDb, 'OldPass123!'));
+    }
 }
