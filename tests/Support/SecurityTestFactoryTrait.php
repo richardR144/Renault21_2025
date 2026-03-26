@@ -2,9 +2,11 @@
 
 namespace App\Tests\Support;
 
+use App\Entity\Annonce;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Message;
+use App\Entity\Piece;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -68,5 +70,39 @@ trait SecurityTestFactoryTrait
         $this->em()->flush();
 
         return $article;
+    }
+
+    protected function createTestPiece(User $owner): Piece
+    {
+        $piece = new Piece();
+        $piece->setName('Piece test ' . uniqid());
+        $piece->setDescription('Description piece test');
+        $piece->setExchange(false);
+        $piece->setPrice(120.0);
+        $piece->setUser($owner);
+        $piece->setCategory($this->createTestCategory());
+
+        $this->em()->persist($piece);
+        $this->em()->flush();
+
+        return $piece;
+    }
+
+    protected function createTestAnnonce(User $sender): Annonce
+    {
+        $annonce = new Annonce();
+        $annonce->setTitle('Annonce test ' . uniqid());
+        $annonce->setDescription('Description annonce test');
+        $annonce->setEmail('contact+' . uniqid() . '@example.com');
+        $annonce->setType('sale');
+        $annonce->setPrice(199.99);
+        $annonce->setSender($sender);
+        $annonce->setPiece($this->createTestPiece($sender));
+        $annonce->setCreatedAt(new \DateTimeImmutable());
+
+        $this->em()->persist($annonce);
+        $this->em()->flush();
+
+        return $annonce;
     }
 }
