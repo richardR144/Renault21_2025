@@ -241,6 +241,51 @@ class SecurityAccessTest extends WebTestCase
         self::assertSame($initialName, $pieceInDb?->getName());
     }
 
+    public function testNonAdminUserCannotAccessAdminDashboard(): void
+    {
+        $client = static::createClient();
+        $client->loginUser($this->createTestUser(['ROLE_USER']), 'main');
+
+        $client->request('GET', '/admin');
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testAdminCannotDeleteMessageWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+
+        $client->loginUser($admin, 'main');
+        $client->request('POST', '/admin/messages/delete/' . $message->getId(), [
+            '_token' => 'invalid-csrf',
+        ]);
+
+        self::assertResponseRedirects('/admin/messages/list-messages');
+
+        $entityManager->clear();
+        $messageInDb = $entityManager->getRepository(Message::class)->find($message->getId());
+        self::assertNotNull($messageInDb);
+    }
+
+    public function testNonAdminUserCannotDeleteAdminMessage(): void
+    {
+        $client = static::createClient();
+        $user = $this->createTestUser(['ROLE_USER']);
+
+        $client->loginUser($user, 'main');
+        $client->request('POST', '/admin/messages/delete/1', [
+            '_token' => 'whatever',
+        ]);
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
     public function testAnonymousUserCannotDeleteMessage(): void
     {
         $client = static::createClient();
