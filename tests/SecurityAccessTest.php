@@ -241,6 +241,54 @@ class SecurityAccessTest extends WebTestCase
         self::assertSame($initialName, $pieceInDb?->getName());
     }
 
+    public function testAnonymousUserCannotDeleteMessage(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/messages/delete/1', [
+            '_token' => 'invalid',
+        ]);
+
+        self::assertResponseRedirects('/connexion');
+    }
+
+    public function testUserCannotDeleteMessageIfNotParticipant(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $intruder = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+
+        $client->loginUser($intruder, 'main');
+        $client->request('POST', '/messages/delete/' . $message->getId(), [
+            '_token' => 'intruder-token',
+        ]);
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testSenderCannotDeleteMessageWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+
+        $client->loginUser($sender, 'main');
+        $client->request('POST', '/messages/delete/' . $message->getId(), [
+            '_token' => 'invalid-token',
+        ]);
+
+        self::assertResponseRedirects('/guest/messages/list-messages');
+
+        $entityManager->clear();
+        $messageInDb = $entityManager->getRepository(Message::class)->find($message->getId());
+        self::assertNotNull($messageInDb);
+    }
+
     private function createTestUser(array $roles = ['ROLE_USER']): User
     {
         $entityManager = static::getContainer()->get('doctrine')->getManager();
