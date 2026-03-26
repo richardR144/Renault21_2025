@@ -19,6 +19,7 @@ use App\Form\InsertPieceType;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Form\FormInterface;
 
 
 class PieceController extends AbstractController
@@ -38,13 +39,31 @@ class PieceController extends AbstractController
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted() && !$this->isCsrfTokenValid('piece_form', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide. Veuillez réessayer.');
+            return $this->render('guest/pieces/insertPiece.html.twig', [
+                'insertPieceForm' => $form->createView(),
+            ]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $piece->setUser($user);
 
-            $exchange = $form->get('exchange')->getData();
-            $price = $form->get('price')->getData();
+            $exchange = $form->get('exchange')->getData(); // 'vente' ou 'echange'
+            $priceInput = $form->get('price')->getData();
+            try {
+                $price = $this->normalizePrice($priceInput);
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->render('guest/pieces/insertPiece.html.twig', [
+                    'insertPieceForm' => $form->createView(),
+                ]);
+            }
 
-            if ($exchange === 'vente' && (is_null($price) || $price === '')) { //Récupère la valeur sélectionnée pour le type d'annonce ("vente" ou "échange") depuis le formulaire
+            $piece->setExchange($exchange === 'vente');
+            $piece->setPrice($price);
+
+            if ($exchange === 'vente' && is_null($price)) {
                 $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
                 return $this->render('guest/pieces/insertPiece.html.twig', [
                     'insertPieceForm' => $form->createView(),
@@ -53,13 +72,19 @@ class PieceController extends AbstractController
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
-                $extension = $this->validateImageUpload($imageFile);
-                $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFileName = $slugger->slug($originalFileName);
-                $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
-
-                $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
-                $piece->setImage($newFileName);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFileName = $slugger->slug($originalFileName);
+                    $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
+                    $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+                    $piece->setImage($newFileName);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->render('guest/pieces/insertPiece.html.twig', [
+                        'insertPieceForm' => $form->createView(),
+                    ]);
+                }
             }
 
             $entityManager->persist($piece);
@@ -68,6 +93,12 @@ class PieceController extends AbstractController
             $this->addFlash('success', 'pièce créée avec succès !');
             return $this->redirectToRoute('list-pieces');
         }
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs, veuillez vérifier les champs.');
+            $this->flashFormErrors($form);
+        }
+
         return $this->render('guest/pieces/insertPiece.html.twig', [
             'insertPieceForm' => $form->createView(),
         ]);
@@ -120,12 +151,30 @@ class PieceController extends AbstractController
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted() && !$this->isCsrfTokenValid('piece_form', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide. Veuillez réessayer.');
+            return $this->render('guest/pieces/update-piece.html.twig', [
+                'insertPieceForm' => $form->createView(),
+            ]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $exchange = $form->get('exchange')->getData();
-            $price = $form->get('price')->getData();
+            $exchange = $form->get('exchange')->getData(); // 'vente' ou 'echange'
+            $priceInput = $form->get('price')->getData();
+            try {
+                $price = $this->normalizePrice($priceInput);
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->render('guest/pieces/update-piece.html.twig', [
+                    'insertPieceForm' => $form->createView(),
+                ]);
+            }
+
+            $piece->setExchange($exchange === 'vente');
+            $piece->setPrice($price);
 
             // Vérification : si "vente" et pas de prix, on bloque
-            if ($exchange === 'vente' && (is_null($price) || $price === '')) {
+            if ($exchange === 'vente' && is_null($price)) {
                 $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
                 return $this->render('guest/pieces/update-piece.html.twig', [
                     'insertPieceForm' => $form->createView(),
@@ -135,18 +184,30 @@ class PieceController extends AbstractController
                 $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
-                $extension = $this->validateImageUpload($imageFile);
-                $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFileName = $slugger->slug($originalFileName);
-                $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
-                $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
-                $piece->setImage($newFileName);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFileName = $slugger->slug($originalFileName);
+                    $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
+                    $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+                    $piece->setImage($newFileName);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->render('guest/pieces/update-piece.html.twig', [
+                        'insertPieceForm' => $form->createView(),
+                    ]);
+                }
             }
 
             $entityManager->flush();
 
             $this->addFlash('success', 'pièce modifiée avec succès !');
             return $this->redirectToRoute('list-pieces');
+        }
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs, veuillez vérifier les champs.');
+            $this->flashFormErrors($form);
         }
 
         return $this->render('guest/pieces/update-piece.html.twig', [
@@ -262,5 +323,33 @@ class PieceController extends AbstractController
         }
 
         return $extension;
+    }
+
+    private function normalizePrice(mixed $priceInput): ?float
+    {
+        if ($priceInput === null) {
+            return null;
+        }
+
+        $priceString = trim((string) $priceInput);
+        if ($priceString === '') {
+            return null;
+        }
+
+        $normalized = str_replace([' ', ','], ['', '.'], $priceString);
+        if (!is_numeric($normalized)) {
+            throw new \InvalidArgumentException('Le prix doit être un nombre valide (ex: 1500 ou 1500,50).');
+        }
+
+        return (float) $normalized;
+    }
+
+    private function flashFormErrors(FormInterface $form): void
+    {
+        foreach ($form->getErrors(true) as $error) {
+            $origin = $error->getOrigin();
+            $fieldName = $origin ? $origin->getName() : 'form';
+            $this->addFlash('error', sprintf('%s: %s', $fieldName, $error->getMessage()));
+        }
     }
 }

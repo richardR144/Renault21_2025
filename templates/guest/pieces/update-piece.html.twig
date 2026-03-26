@@ -20,6 +20,7 @@
             {% endfor %}
 
             {{ form_start(insertPieceForm) }}
+                <input type="hidden" name="_token" value="{{ csrf_token('piece_form') }}">
                 <div class="mb-3">
                     {{ form_label(insertPieceForm.category, null, {'label_attr': {'class': 'form-label'}}) }}
                     {{ form_widget(insertPieceForm.category, {'attr': {'class': 'form-select'}}) }}
@@ -59,7 +60,7 @@
                 <div class="d-grid mt-3">
                     {{ form_widget(insertPieceForm.valider, {'attr': {'class': 'btn btn-primary'}}) }}
                 </div>
-            {{ form_end(insertPieceForm, {'render_rest': false}) }}
+            {{ form_end(insertPieceForm) }}
         </div>
     </div>
 

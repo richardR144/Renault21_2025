@@ -12,12 +12,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class InsertPieceForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $piece = $builder->getData();
+        $exchangeValue = ($piece instanceof Piece && $piece->isExchange() === true) ? 'vente' : 'echange';
+        $priceValue = ($piece instanceof Piece && null !== $piece->getPrice()) ? (string) $piece->getPrice() : '';
+
         $builder
             ->add('category', EntityType::class, [
                 'class' => Category::class,
@@ -33,15 +37,18 @@ class InsertPieceForm extends AbstractType
                 'choices'  => [
                     'Vente' => 'vente',
                     'Échange' => 'echange',
-        ],
+                ],
                 'expanded' => true,
                 'multiple' => false,
-
+                'mapped' => false,
+                'data' => $exchangeValue,
             ])
             
-            ->add('price', NumberType::class, [
+            ->add('price', TextType::class, [
                 'label' => 'Prix',
                 'required' => false,
+                'mapped' => false,
+                'data' => $priceValue,
             ])
 
             ->add('image', FileType::class, [
@@ -58,6 +65,7 @@ class InsertPieceForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Piece::class,
+            'csrf_protection' => false,
         ]);
     }
 }
