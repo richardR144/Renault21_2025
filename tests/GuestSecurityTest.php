@@ -234,4 +234,35 @@ class GuestSecurityTest extends WebTestCase
         self::assertNotNull($userInDb);
         self::assertTrue($this->passwordHasher()->isPasswordValid($userInDb, 'BrandNew789!'));
     }
+
+    public function testSearchPageIsReachableWithoutQuery(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/search');
+
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testSearchByQueryReturnsExpectedPieceName(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $category = $this->createTestCategory();
+
+        $piece = new Piece();
+        $piece->setName('Radiateur Test Recherche');
+        $piece->setDescription('Description de piece pour la recherche avancee');
+        $piece->setExchange(true);
+        $piece->setPrice(120.0);
+        $piece->setUser($owner);
+        $piece->setCategory($category);
+        $this->em()->persist($piece);
+        $this->em()->flush();
+
+        $client->request('GET', '/search?q=Radiateur');
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Radiateur Test Recherche', (string) $client->getResponse()->getContent());
+    }
 }

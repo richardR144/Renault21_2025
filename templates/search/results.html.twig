@@ -4,6 +4,45 @@
 
 {% block main %}
 <main class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="{{ path('search-results') }}" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label" for="search-q">Mot-cle</label>
+                    <input id="search-q" class="form-control" type="search" name="q" value="{{ query }}" placeholder="Nom ou description d'une piece">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="search-category">Categorie</label>
+                    <select id="search-category" class="form-select" name="category">
+                        <option value="0">Toutes</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {{ selectedCategory == category.id ? 'selected' : '' }}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="search-mode">Type</label>
+                    <select id="search-mode" class="form-select" name="mode">
+                        <option value="">Tous</option>
+                        <option value="vente" {{ selectedMode == 'vente' ? 'selected' : '' }}>Vente</option>
+                        <option value="echange" {{ selectedMode == 'echange' ? 'selected' : '' }}>Echange</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label" for="search-min-price">Min</label>
+                    <input id="search-min-price" class="form-control" type="number" min="0" step="0.01" name="min_price" value="{{ minPrice }}">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label" for="search-max-price">Max</label>
+                    <input id="search-max-price" class="form-control" type="number" min="0" step="0.01" name="max_price" value="{{ maxPrice }}">
+                </div>
+                <div class="col-md-1 d-grid">
+                    <button class="btn btn-primary" type="submit">OK</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <h2>Résultats de recherche pour "{{ query }}"</h2>
@@ -32,7 +71,9 @@
                                     
                                     <div class="mb-2">
                                         {% if piece.exchange %}
-                                            <span class="badge badge-info">Échange possible</span>
+                                            <span class="badge bg-success">Vente</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Echange</span>
                                         {% endif %}
                                     </div>
                                     
@@ -44,6 +85,24 @@
                         </div>
                     {% endfor %}
                 </div>
+
+                {% if totalPages > 1 %}
+                    <nav class="mt-4" aria-label="Pagination recherche">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item {{ page <= 1 ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('search-results', { q: query, category: selectedCategory, mode: selectedMode, min_price: minPrice, max_price: maxPrice, page: page - 1 }) }}">Precedent</a>
+                            </li>
+                            {% for i in 1..totalPages %}
+                                <li class="page-item {{ i == page ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ path('search-results', { q: query, category: selectedCategory, mode: selectedMode, min_price: minPrice, max_price: maxPrice, page: i }) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item {{ page >= totalPages ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('search-results', { q: query, category: selectedCategory, mode: selectedMode, min_price: minPrice, max_price: maxPrice, page: page + 1 }) }}">Suivant</a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
             {% else %}
                 <div class="alert alert-info">
                     <h4><i class="fas fa-search"></i> Aucune pièce trouvée</h4>
