@@ -19,7 +19,7 @@
             <td>{{ piece.price }}</td>
             <td>
                 {% if piece.image %}
-                    <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                    <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="{{ piece.name }}" style="width: 80px; height: 80px; object-fit: cover;">
                 {% endif %}
             </td>
             <td class="text-center">

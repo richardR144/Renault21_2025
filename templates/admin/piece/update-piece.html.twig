@@ -44,7 +44,7 @@
                     <td>
                         <input type="file" name="image" class="form-control">
                         {% if piece.image %}
-                            <img src="{{ asset('uploads/images/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 120px; max-height: 120px; margin-top: 10px;">
+                            <img src="{{ asset('uploads/pieces/' ~ piece.image) }}" alt="{{ piece.name }}" style="max-width: 120px; max-height: 120px; margin-top: 10px;">
                         {% endif %}
                     </td>
                 </tr>

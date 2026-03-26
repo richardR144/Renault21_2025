@@ -48,7 +48,7 @@
 									</h6>
 							</div>
 								{% if annonce.image %}
-									<img src="{{ asset('Uploads/images/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
+									<img src="{{ asset('uploads/annonces/' ~ annonce.image) }}" alt="Image annonce" class="card-img-top" style="height: 200px; object-fit: cover;">
 								{% else %}
 									<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
 										<span class="text-muted">Aucune image</span>
