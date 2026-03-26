@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Entity\Category;
+use App\Entity\Message;
 use App\Entity\Piece;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -158,6 +159,29 @@ class SecurityAccessTest extends WebTestCase
         self::assertNotNull($pieceInDb);
     }
 
+    public function testAnonymousUserCannotUpdateMessage(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/messages/update/1');
+
+        self::assertResponseRedirects('/connexion');
+    }
+
+    public function testNonSenderCannotUpdateMessage(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $intruder = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+
+        $client->loginUser($intruder, 'main');
+        $client->request('GET', '/messages/update/' . $message->getId());
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
     private function createTestUser(): User
     {
         $entityManager = static::getContainer()->get('doctrine')->getManager();
@@ -187,5 +211,22 @@ class SecurityAccessTest extends WebTestCase
         $entityManager->flush();
 
         return $category;
+    }
+
+    private function createTestMessage(User $sender, User $receiver): Message
+    {
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $message = new Message();
+        $message->setContent('Message de test');
+        $message->setSender($sender);
+        $message->setReceiver($receiver);
+        $message->setCreatedAt(new \DateTime());
+        $message->setIsRead(false);
+
+        $entityManager->persist($message);
+        $entityManager->flush();
+
+        return $message;
     }
 }
