@@ -15,13 +15,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class AnnonceController extends AbstractController
 {
     #[Route('/Guest/annonces', name: 'guest-annonces', methods: ['GET'])]
-    public function listAnnonces(AnnonceRepository $annonceRepository): Response
+    public function listAnnonces(Request $request, AnnonceRepository $annonceRepository): Response
     {
-        $annonces = $annonceRepository->findBy([], ['createdAt' => 'DESC']);
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 6;
+        $total = $annonceRepository->countTotal();
+        $totalPages = max(1, (int) ceil($total / $limit));
+
+        if ($page > $totalPages) {
+            $page = $totalPages;
+        }
+
+        $annonces = $annonceRepository->findPaginated($page, $limit);
 
 
         return $this->render('guest/annonces/annonce-list.html.twig', [
             'annonces' => $annonces,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'total' => $total,
         ]);
     }
 
@@ -63,6 +75,10 @@ class AnnonceController extends AbstractController
 
             $this->addFlash('success', 'Annonce créée avec succès !');
             return $this->redirectToRoute('guest-annonces');
+        }
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs, veuillez vérifier les champs.');
         }
 
         return $this->render('guest/annonces/annonce-create.html.twig', [
@@ -137,6 +153,10 @@ class AnnonceController extends AbstractController
             return $this->redirectToRoute('guest-annonces');
         }
 
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs, veuillez vérifier les champs.');
+        }
+
         return $this->render('guest/annonces/annonce-update.html.twig', [
             'form' => $form->createView(),
             'annonce' => $annonce,
@@ -161,7 +181,7 @@ class AnnonceController extends AbstractController
         }
 
         if ($annonce->getSender() !== $this->getUser()) {
-            $this->addFlash('error', 'Vous ne pouvez modifier que vos propres annonces.');
+            $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres annonces.');
             return $this->redirectToRoute('guest-annonces');
         }
 

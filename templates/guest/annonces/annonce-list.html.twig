@@ -125,12 +125,32 @@
 					<div class="card-body">
 						<h6 class="mb-0">
 							Total :
-							{{ annonces|length }}
-							annonce{{ annonces|length > 1 ? 's' : '' }}
+							{{ total }}
+							annonce{{ total > 1 ? 's' : '' }}
 						</h6>
 					</div>
 				</div>
 			</div>
+
+			{% if totalPages > 1 %}
+				<nav class="mt-4" aria-label="Pagination des annonces">
+					<ul class="pagination justify-content-center">
+						<li class="page-item {{ page <= 1 ? 'disabled' : '' }}">
+							<a class="page-link" href="{{ path('guest-annonces', {page: page - 1}) }}">Precedent</a>
+						</li>
+
+						{% for i in 1..totalPages %}
+							<li class="page-item {{ i == page ? 'active' : '' }}">
+								<a class="page-link" href="{{ path('guest-annonces', {page: i}) }}">{{ i }}</a>
+							</li>
+						{% endfor %}
+
+						<li class="page-item {{ page >= totalPages ? 'disabled' : '' }}">
+							<a class="page-link" href="{{ path('guest-annonces', {page: page + 1}) }}">Suivant</a>
+						</li>
+					</ul>
+				</nav>
+			{% endif %}
 		{% endif %}
 
 		<!-- Flash Messages -->
