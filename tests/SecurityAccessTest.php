@@ -37,4 +37,31 @@ class SecurityAccessTest extends WebTestCase
 
         self::assertResponseRedirects('/connexion');
     }
+
+    public function testAnonymousUserCannotPostGuestCreatePiece(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/Guest/pieces/create-piece', [
+            '_token' => 'token-invalide',
+            'insert_piece_form' => [
+                'name' => 'Aile avant',
+                'description' => 'Piece de test',
+                'exchange' => 'vente',
+                'price' => '150',
+            ],
+        ]);
+
+        self::assertResponseRedirects('/connexion');
+    }
+
+    public function testAnonymousUserCannotPostMessage(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/messages/create', [
+            'content' => 'message test',
+            'receiver_id' => 1,
+        ]);
+
+        self::assertResponseRedirects('/connexion');
+    }
 }
