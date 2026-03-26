@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Entity\Category;
+use App\Entity\Article;
 use App\Entity\Message;
 use App\Entity\Piece;
 use App\Entity\User;
@@ -182,14 +183,72 @@ class SecurityAccessTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
-    private function createTestUser(): User
+    public function testModeratorCannotUpdateArticleWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $article = $this->createTestArticle();
+        $initialTitle = $article->getTitle();
+
+        $client->loginUser($moderator, 'main');
+        $client->request('POST', '/moderator/article/' . $article->getId() . '/update', [
+            '_token' => 'invalid-csrf',
+            'title' => 'Titre modifie invalide',
+            'content' => 'Contenu modifie invalide',
+        ]);
+
+        self::assertResponseRedirects('/moderator/article/' . $article->getId() . '/update');
+
+        $entityManager->clear();
+        $articleInDb = $entityManager->getRepository(Article::class)->find($article->getId());
+        self::assertSame($initialTitle, $articleInDb?->getTitle());
+    }
+
+    public function testModeratorCannotUpdatePieceWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $owner = $this->createTestUser();
+        $category = $this->createTestCategory();
+
+        $piece = new Piece();
+        $piece->setName('Piece moderation test');
+        $piece->setDescription('Description moderation test');
+        $piece->setExchange(false);
+        $piece->setPrice(150.0);
+        $piece->setUser($owner);
+        $piece->setCategory($category);
+        $entityManager->persist($piece);
+        $entityManager->flush();
+        $initialName = $piece->getName();
+
+        $client->loginUser($moderator, 'main');
+        $client->request('POST', '/moderator/piece/' . $piece->getId() . '/update', [
+            '_token' => 'invalid-csrf',
+            'name' => 'Nom invalide',
+            'description' => 'Description invalide',
+            'price' => '999',
+        ]);
+
+        self::assertResponseRedirects('/moderator/piece/' . $piece->getId() . '/update');
+
+        $entityManager->clear();
+        $pieceInDb = $entityManager->getRepository(Piece::class)->find($piece->getId());
+        self::assertSame($initialName, $pieceInDb?->getName());
+    }
+
+    private function createTestUser(array $roles = ['ROLE_USER']): User
     {
         $entityManager = static::getContainer()->get('doctrine')->getManager();
 
         $user = new User();
         $user->setEmail('security-test-' . uniqid() . '@example.com');
         $user->setPseudo('security_test_user');
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles($roles);
         $user->setPassword('dummy');
 
         $entityManager->persist($user);
@@ -228,5 +287,20 @@ class SecurityAccessTest extends WebTestCase
         $entityManager->flush();
 
         return $message;
+    }
+
+    private function createTestArticle(): Article
+    {
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+
+        $article = new Article();
+        $article->setTitle('Article test ' . uniqid());
+        $article->setContent('Contenu article test');
+        $article->setImage(null);
+
+        $entityManager->persist($article);
+        $entityManager->flush();
+
+        return $article;
     }
 }
