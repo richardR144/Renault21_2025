@@ -185,4 +185,53 @@ class GuestSecurityTest extends WebTestCase
         self::assertNotNull($userInDb);
         self::assertTrue($this->passwordHasher()->isPasswordValid($userInDb, 'OldPass123!'));
     }
+
+    public function testForgotPasswordPageIsReachable(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/mot-de-passe-oublie');
+
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testInvalidResetTokenRedirectsToForgotPassword(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/reinitialiser-mot-de-passe/token-invalide');
+
+        self::assertResponseRedirects('/mot-de-passe-oublie');
+    }
+
+    public function testUserCanResetPasswordWithValidToken(): void
+    {
+        $client = static::createClient();
+        $user = $this->createTestUserWithPassword('OldPass123!');
+
+        $token = 'token-reset-valide';
+        $cache = static::getContainer()->get('cache.app');
+        $cacheItem = $cache->getItem('reset_password_' . $token);
+        $cacheItem->set($user->getId());
+        $cacheItem->expiresAfter(3600);
+        $cache->save($cacheItem);
+
+        $crawler = $client->request('GET', '/reinitialiser-mot-de-passe/' . $token);
+        $csrfToken = $crawler->filter('input[name="reset_password_form[_token]"]')->attr('value');
+
+        $client->request('POST', '/reinitialiser-mot-de-passe/' . $token, [
+            'reset_password_form' => [
+                'plainPassword' => [
+                    'first' => 'BrandNew789!',
+                    'second' => 'BrandNew789!',
+                ],
+                '_token' => $csrfToken,
+            ],
+        ]);
+
+        self::assertResponseRedirects('/connexion');
+
+        $this->em()->clear();
+        $userInDb = $this->em()->getRepository(\App\Entity\User::class)->find($user->getId());
+        self::assertNotNull($userInDb);
+        self::assertTrue($this->passwordHasher()->isPasswordValid($userInDb, 'BrandNew789!'));
+    }
 }

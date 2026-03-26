@@ -2,6 +2,7 @@
 
 namespace App\Controller\Guest;
 
+use App\Entity\User;
 use App\Form\ChangePasswordForm;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PieceRepository;
@@ -27,7 +28,7 @@ class ProfilController extends AbstractController
         
 
         $user = $this->getUser();
-        if (!$user) {
+        if (!$user instanceof User) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
