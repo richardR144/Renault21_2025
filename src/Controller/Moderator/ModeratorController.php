@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 
@@ -38,7 +39,8 @@ class ModeratorController extends AbstractController
 
             $imageFile = $request->files->get('image');
             if ($imageFile) {
-                $imageFileName = uniqid() . '.' . $imageFile->guessExtension();
+                $extension = $this->validateImageUpload($imageFile);
+                $imageFileName = uniqid() . '.' . $extension;
                 $imageFile->move($this->getParameter('article_images_directory'), $imageFileName);
                 $article->setImage($imageFileName);
             }
@@ -77,6 +79,14 @@ class ModeratorController extends AbstractController
         $piece->setDescription($request->request->get('description'));
         $piece->setPrice($request->request->get('price'));
 
+            $imageFile = $request->files->get('image');
+            if ($imageFile) {
+                $extension = $this->validateImageUpload($imageFile);
+                $imageFileName = uniqid() . '.' . $extension;
+                $imageFile->move($this->getParameter('pieces_images_directory'), $imageFileName);
+                $piece->setImage($imageFileName);
+            }
+
             $categoryId = $request->request->get('category-id');
             if ($categoryId) {
                 $category = $categoryRepository->find($categoryId);
@@ -94,5 +104,25 @@ class ModeratorController extends AbstractController
         return $this->render('moderator/update-piece.html.twig', [
             'piece' => $piece,
         ]);
+    }
+
+    private function validateImageUpload(UploadedFile $imageFile): string
+    {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimes, true)) {
+            throw new \InvalidArgumentException('Format d\'image non autorisé');
+        }
+
+        if ($imageFile->getSize() > 5 * 1024 * 1024) {
+            throw new \InvalidArgumentException('Image trop volumineuse (max 5MB)');
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = $imageFile->guessExtension();
+        if (!$extension || !in_array($extension, $allowedExtensions, true)) {
+            throw new \InvalidArgumentException('Extension non autorisée');
+        }
+
+        return $extension;
     }
 }

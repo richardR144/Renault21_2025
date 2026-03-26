@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Repository\UserRepository;
 use App\Form\InsertPieceType;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 
 class PieceController extends AbstractController
@@ -51,9 +53,10 @@ class PieceController extends AbstractController
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
+                $extension = $this->validateImageUpload($imageFile);
                 $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalFileName);
-                $newFileName = $safeFileName . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
 
                 $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
                 $piece->setImage($newFileName);
@@ -79,14 +82,13 @@ class PieceController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 6;
 
-        $allPieces = $pieceRepository->findAll();
-        $total = count($allPieces);
+        $total = $pieceRepository->countTotal();
         $totalPages = max(1, (int) ceil($total / $limit));
         if ($page > $totalPages) {
             $page = $totalPages;
         }
         $offset = ($page - 1) * $limit;
-        $pieces = array_slice($allPieces, $offset, $limit);
+        $pieces = $pieceRepository->findPaginated($offset, $limit);
 
         return $this->render('guest/pieces/list-pieces.html.twig', [
             'pieces' => $pieces,
@@ -133,9 +135,10 @@ class PieceController extends AbstractController
                 $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
+                $extension = $this->validateImageUpload($imageFile);
                 $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalFileName);
-                $newFileName = $safeFileName . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
                 $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
                 $piece->setImage($newFileName);
             }
@@ -170,6 +173,11 @@ class PieceController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('delete_piece_' . $piece->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('list-pieces');
+            }
+
             try {
                 // Supprime le produit de la base de données
                 $entityManager->remove($piece);
@@ -234,5 +242,25 @@ class PieceController extends AbstractController
             'pieces' => $pieces,
             'searchTerm' => $searchTerm
         ]);
+    }
+
+    private function validateImageUpload(UploadedFile $imageFile): string
+    {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimes, true)) {
+            throw new \InvalidArgumentException('Format d\'image non autorisé');
+        }
+
+        if ($imageFile->getSize() > 5 * 1024 * 1024) {
+            throw new \InvalidArgumentException('Image trop volumineuse (max 5MB)');
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = $imageFile->guessExtension();
+        if (!$extension || !in_array($extension, $allowedExtensions, true)) {
+            throw new \InvalidArgumentException('Extension non autorisée');
+        }
+
+        return $extension;
     }
 }

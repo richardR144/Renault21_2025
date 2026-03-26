@@ -61,6 +61,7 @@
 
         <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
             <form method="post" action="{{ path('create-message') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('create_message') }}">
                 <div class="form-group mb-3">
                     <label for="receiver_id"><strong>Destinataire</strong></label>
                     <select id="receiver_id" name="receiver_id" class="form-control" required>

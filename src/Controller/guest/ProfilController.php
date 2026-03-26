@@ -6,16 +6,12 @@ use App\Repository\PieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;   
-use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Repository\MessageRepository;
 
 class ProfilController extends AbstractController
 {
     #[Route('/Guest/profil', name: 'profil')]
-    public function profilUser(Request $request, UserRepository $userRepository, MessageRepository $messageRepository): Response
+    public function profilUser(MessageRepository $messageRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         
@@ -34,15 +30,10 @@ class ProfilController extends AbstractController
     }
 
     #[Route('/Guest/profil/piece', name: 'profil-piece')]
-    public function profilPiece(Request $request, UserRepository $userRepository, PieceRepository $pieceRepository): Response
+    public function profilPiece(PieceRepository $pieceRepository): Response
     {
         $currentUser = $this->getUser();
-        $pieces = [];
-        foreach ($pieceRepository->findAll() as $piece) {
-            if ($piece->getUser() === $currentUser) {
-                $pieces[] = $piece;
-            }
-        }
+        $pieces = $pieceRepository->findBy(['user' => $currentUser]);
 
         return $this->render('guest/show-user-piece.html.twig', ['pieces' => $pieces, 'user' => $currentUser]);
     }

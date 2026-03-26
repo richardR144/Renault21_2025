@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MessagesController extends AbstractController
 {
     #[Route('/guest/messages/list-messages', name: 'list-messages', methods: ['GET', 'POST'])]
-    public function listMessages(MessageRepository $messageRepository, UserRepository $userRepository): Response
+    public function listMessages(MessageRepository $messageRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
@@ -29,7 +29,7 @@ class MessagesController extends AbstractController
     }
 
     #[Route('/messages/read/{id}', name: 'read-message', methods: ['GET', 'POST'])]
-    public function readMessage(int $id, Request $request, MessageRepository $messageRepository, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    public function readMessage(int $id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $message = $messageRepository->find($id);
@@ -90,6 +90,11 @@ class MessagesController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $selectedReceiverId = $request->query->getInt('receiver', 0);
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('create_message', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('create-message');
+            }
+
             $content = $request->request->get('content');
             $sender = $this->getUser();
             $receiverId = $request->request->get('receiver_id');
@@ -134,6 +139,11 @@ class MessagesController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('update_message_' . $message->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('list-messages');
+            }
+
             $content = $request->request->get('content');
             if (empty(trim($content))) {
                 $this->addFlash('error', 'Le contenu du message ne peut pas être vide');

@@ -45,10 +45,12 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 $fbData = $fbUser->toArray();
                 $email = $fbData['email'] ?? null;
 
+                if (!$email) {
+                    throw new AuthenticationException('Votre compte Facebook n\'a pas d\'adresse email associée. Veuillez vous inscrire manuellement.');
+                }
+
                 // Chercher l'utilisateur existant
-                $existingUser = $email
-                    ? $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email])
-                    : null;
+                $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
                 if ($existingUser) {
                     return $existingUser;
@@ -56,9 +58,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
 
                 // Créer un nouvel utilisateur
                 $user = new User();
-                if ($email) {
-                    $user->setEmail($email);
-                }
+                $user->setEmail($email);
                 $user->setPseudo($fbData['name'] ?? $fbData['first_name'] ?? 'FacebookUser');
                 $user->setRoles(['ROLE_USER']);
                 $user->setFacebookId($fbData['id'] ?? null);

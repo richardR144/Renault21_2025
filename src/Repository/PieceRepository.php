@@ -25,6 +25,23 @@ class PieceRepository extends ServiceEntityRepository
         ->getResult();
     }*/
 
+    public function findPaginated(int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('p')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countTotal(): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findBySearchTerm(string $searchTerm): array
     {
         return $this->createQueryBuilder('p')
