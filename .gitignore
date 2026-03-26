@@ -23,3 +23,9 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Uploaded user files
+/public/uploads/**
+/public/Uploads/**
+!/public/uploads/.gitkeep
+!/public/Uploads/.gitkeep
