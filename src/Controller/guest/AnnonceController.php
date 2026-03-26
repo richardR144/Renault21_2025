@@ -7,6 +7,7 @@ use App\Form\AnnonceTypeForm;
 use App\Repository\AnnonceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,12 +42,20 @@ class AnnonceController extends AbstractController
             // Gestion de l'upload d'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('images_directory'),
-                    $newFilename
-                );
-                $annonce->setImage($newFilename);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $newFilename = uniqid() . '.' . $extension;
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                    $annonce->setImage($newFilename);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->render('guest/annonces/annonce-create.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                }
             }
 
             $entityManager->persist($annonce);
@@ -99,21 +108,30 @@ class AnnonceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $oldImage = $annonce->getImage();
-                if ($oldImage) {
-                    $oldImagePath = $this->getParameter('images_directory') . '/' . $oldImage;
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $oldImage = $annonce->getImage();
+                    if ($oldImage) {
+                        $oldImagePath = $this->getParameter('images_directory') . '/' . $oldImage;
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
                     }
+                    $newFilename = uniqid() . '.' . $extension;
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                    $annonce->setImage($newFilename);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->render('guest/annonces/annonce-update.html.twig', [
+                        'form' => $form->createView(),
+                        'annonce' => $annonce,
+                    ]);
                 }
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('images_directory'),
-                    $newFilename
-                );
-                $annonce->setImage($newFilename);
             }
-                $entityManager->flush();
+            $entityManager->flush();
 
             $this->addFlash('success', 'Annonce modifiée avec succès !');
             return $this->redirectToRoute('guest-annonces');
@@ -164,5 +182,25 @@ class AnnonceController extends AbstractController
         }
 
         return $this->redirectToRoute('guest-annonces');
+    }
+
+    private function validateImageUpload(UploadedFile $imageFile): string
+    {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimes, true)) {
+            throw new \InvalidArgumentException('Format d\'image non autorisé');
+        }
+
+        if ($imageFile->getSize() > 5 * 1024 * 1024) {
+            throw new \InvalidArgumentException('Image trop volumineuse (max 5MB)');
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = $imageFile->guessExtension();
+        if (!$extension || !in_array($extension, $allowedExtensions, true)) {
+            throw new \InvalidArgumentException('Extension non autorisée');
+        }
+
+        return $extension;
     }
 }

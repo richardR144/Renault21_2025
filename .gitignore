@@ -28,4 +28,7 @@
 /public/uploads/**
 /public/Uploads/**
 !/public/uploads/.gitkeep
+
+# Notes locales de session
+/notes/
 !/public/Uploads/.gitkeep
