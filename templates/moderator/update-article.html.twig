@@ -20,6 +20,7 @@
 {% endfor %}
 
 <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_token" value="{{ csrf_token('moderator_update_article_' ~ article.id) }}">
     <div class="row gap-4">
         <div class="col-md-8">
             <div class="mb-3">

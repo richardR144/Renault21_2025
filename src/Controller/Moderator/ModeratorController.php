@@ -34,15 +34,25 @@ class ModeratorController extends AbstractController
     public function updateArticle(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('moderator_update_article_' . $article->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide. Veuillez réessayer.');
+                return $this->redirectToRoute('moderator-update-article', ['id' => $article->getId()]);
+            }
+
             $article->setTitle($request->request->get('title'));
             $article->setContent($request->request->get('content'));
 
             $imageFile = $request->files->get('image');
             if ($imageFile) {
-                $extension = $this->validateImageUpload($imageFile);
-                $imageFileName = uniqid() . '.' . $extension;
-                $imageFile->move($this->getParameter('article_images_directory'), $imageFileName);
-                $article->setImage($imageFileName);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $imageFileName = uniqid() . '.' . $extension;
+                    $imageFile->move($this->getParameter('article_images_directory'), $imageFileName);
+                    $article->setImage($imageFileName);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->redirectToRoute('moderator-update-article', ['id' => $article->getId()]);
+                }
             }
 
             $entityManager->flush();
@@ -70,6 +80,11 @@ class ModeratorController extends AbstractController
     public function updatePiece(Request $request, Piece $piece, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response 
     {
     if ($request->isMethod('POST')) {
+        if (!$this->isCsrfTokenValid('moderator_update_piece_' . $piece->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide. Veuillez réessayer.');
+            return $this->redirectToRoute('moderator-update-piece', ['id' => $piece->getId()]);
+        }
+
         $name = $request->request->get('name');
         if ($name === null || $name === '') {
             $this->addFlash('error', 'Le nom de la pièce est obligatoire.');
@@ -81,10 +96,15 @@ class ModeratorController extends AbstractController
 
             $imageFile = $request->files->get('image');
             if ($imageFile) {
-                $extension = $this->validateImageUpload($imageFile);
-                $imageFileName = uniqid() . '.' . $extension;
-                $imageFile->move($this->getParameter('pieces_images_directory'), $imageFileName);
-                $piece->setImage($imageFileName);
+                try {
+                    $extension = $this->validateImageUpload($imageFile);
+                    $imageFileName = uniqid() . '.' . $extension;
+                    $imageFile->move($this->getParameter('pieces_images_directory'), $imageFileName);
+                    $piece->setImage($imageFileName);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->redirectToRoute('moderator-update-piece', ['id' => $piece->getId()]);
+                }
             }
 
             $categoryId = $request->request->get('category-id');
