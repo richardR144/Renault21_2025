@@ -12,6 +12,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -24,6 +25,11 @@ class AdminPieceController extends AbstractController
         $category = $categoryRepository->findAll();
 
 if ($request->isMethod('POST')) {
+    if (!$this->isCsrfTokenValid('create_piece', $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token de sécurité invalide');
+        return $this->redirectToRoute('admin-create-piece');
+    }
+
     try {
         $name= $request->request->get('name');
         $description = $request->request->get('description');
@@ -54,8 +60,9 @@ if ($request->isMethod('POST')) {
         $piece->setPrice($price);
         $piece->setCategory($category);
         
-        if ($image) {
-            $piece->setImage($image);
+        if ($image instanceof UploadedFile) {
+            $imageFileName = $this->uploadPieceImage($image);
+            $piece->setImage($imageFileName);
         }
 
         $entityManager->persist($piece);
@@ -117,6 +124,10 @@ public function listPieces(PieceRepository $pieceRepository): Response {
         $piece = $pieceRepository->find($id);
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('update_piece' . $piece->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
+            }
 
             $Name = $request->request->get('name');
             $description = $request->request->get('description');
@@ -141,7 +152,16 @@ public function listPieces(PieceRepository $pieceRepository): Response {
                 $piece->setExchange($exchange);
                 $piece->setPrice($price);
                 $piece->setCategory($category);
-                $piece->setImage($image);
+                if ($image instanceof UploadedFile) {
+                    if ($piece->getImage()) {
+                        $oldImagePath = $this->getParameter('pieces_images_directory') . '/' . $piece->getImage();
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    $imageFileName = $this->uploadPieceImage($image);
+                    $piece->setImage($imageFileName);
+                }
 
                 $entityManager->persist($piece);
                 $entityManager->flush();
@@ -158,5 +178,28 @@ public function listPieces(PieceRepository $pieceRepository): Response {
             'categories' => $categories,
             'piece' => $piece
         ]);
+    }
+
+    private function uploadPieceImage(UploadedFile $imageFile): string
+    {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimes, true)) {
+            throw new \InvalidArgumentException('Format d\'image non autorisé');
+        }
+
+        if ($imageFile->getSize() > 5 * 1024 * 1024) {
+            throw new \InvalidArgumentException('Image trop volumineuse (max 5MB)');
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = $imageFile->guessExtension();
+        if (!$extension || !in_array($extension, $allowedExtensions, true)) {
+            throw new \InvalidArgumentException('Extension non autorisée');
+        }
+
+        $newFileName = uniqid('piece_', true) . '.' . $extension;
+        $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
+
+        return $newFileName;
     }
 }

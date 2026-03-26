@@ -4,6 +4,7 @@
 	<h1>Créer un article</h1>
 
 	<form method="post" enctype="multipart/form-data">
+		<input type="hidden" name="_token" value="{{ csrf_token('create_article') }}">
 		<div class="form-group">
 			<label for="title">Titre :</label>
 			<input type="text" name="title" class="title" required>

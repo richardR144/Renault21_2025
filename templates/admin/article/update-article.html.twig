@@ -4,6 +4,7 @@
 	<h1 class="modif-article">Modifier un article</h1>
 	<div id="bg-modig-article">
 		<form method="post" enctype="multipart/form-data">
+			<input type="hidden" name="_token" value="{{ csrf_token('update_article_' ~ article.id) }}">
 			<div class="form-group">
 				<label for="title">Titre :</label>
 				<input type="text" name="title" class="title" value="{{ article.title }}" required>

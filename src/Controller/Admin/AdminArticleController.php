@@ -20,6 +20,11 @@ class AdminArticleController extends AbstractController
         $article = new Article();
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('create_article', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-create-article');
+            }
+
             try {
                 //VALIDATION DONNÉES
                 $validatedData = $this->validateArticleData($request);
@@ -67,6 +72,11 @@ class AdminArticleController extends AbstractController
     public function updateArticle(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('update_article_' . $article->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-update-article', ['id' => $article->getId()]);
+            }
+
             try {
                 //VALIDATION DONNÉES
                 $validatedData = $this->validateArticleData($request);

@@ -31,6 +31,11 @@ class AdminAnnonceController extends AbstractController
     public function createAnnonce(Request $request, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('create_annonce', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-create-annonce');
+            }
+
             try {
                 //Validation données
                 $validatedData = $this->validateAnnonceData($request);
@@ -139,6 +144,11 @@ class AdminAnnonceController extends AbstractController
     }
 
     if ($request->isMethod('POST')) {
+        if (!$this->isCsrfTokenValid('update_annonce_' . $annonce->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide');
+            return $this->redirectToRoute('admin-update-annonce', ['id' => $annonce->getId()]);
+        }
+
         try {
             // Validation et mise à jour des données
             $title = trim($request->request->get('title'));
@@ -184,8 +194,8 @@ class AdminAnnonceController extends AbstractController
             }
 
             // Gestion upload image
-            $imageFile = $request->files->get('image');
-            if ($imageFile) {
+            $imageFileName = $this->handleImageUpload($request);
+            if ($imageFileName) {
                 // Supprimer ancienne image
                 if ($annonce->getImage()) {
                     $oldImagePath = $this->getParameter('annonces_images_directory') . '/' . $annonce->getImage();
@@ -194,10 +204,7 @@ class AdminAnnonceController extends AbstractController
                     }
                 }
 
-                // Upload nouvelle image
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move($this->getParameter('annonces_images_directory'), $newFilename);
-                $annonce->setImage($newFilename);
+                $annonce->setImage($imageFileName);
             }
 
             $entityManager->flush();

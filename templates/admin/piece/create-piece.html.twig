@@ -7,7 +7,8 @@
     <section id="admin-user-menu" width="80%" border="1">
         <main id="create-piece">
             <h1>Créer une nouvelle pièce</h1>
-                <form method="post" action="{{ path('admin-create-piece') }}">
+                <form method="post" enctype="multipart/form-data" action="{{ path('admin-create-piece') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('create_piece') }}">
                     <div class="form-group">
                         <label for="name">Nom de la pièce :</label>
                         <input type="text" id="name" name="name" required>
@@ -15,6 +16,30 @@
                     <div class="form-group">
                         <label for="description">Description :</label>
                         <textarea id="description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryId">Catégorie :</label>
+                        <select id="categoryId" name="categoryId" required>
+                            <option value="">Sélectionner une catégorie</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exchange">Type :</label>
+                        <select id="exchange" name="exchange" required>
+                            <option value="1">Vente</option>
+                            <option value="0">Échange</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Prix :</label>
+                        <input type="number" id="price" name="price" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Image :</label>
+                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
                     </div>
                         <button type="submit" class="btn btn-primary">Créer la pièce</button>
                         <button type="button" onclick="window.location.href='{{ path('admin-list-pieces') }}'" class="btn btn-danger">Annuler</a></button>

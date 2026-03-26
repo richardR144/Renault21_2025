@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\Annonce;
 use App\Entity\Message;
 use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -60,5 +61,49 @@ class AdminSecurityTest extends WebTestCase
         ]);
 
         self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testAdminCannotCreateAnnonceWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+
+        $client->loginUser($admin, 'main');
+        $client->request('POST', '/admin/annonces/create', [
+            '_token' => 'invalid-csrf',
+            'title' => 'Annonce admin test csrf',
+            'description' => 'Description annonce admin test csrf',
+            'email' => 'admin@example.com',
+            'piece_id' => '1',
+        ]);
+
+        self::assertResponseRedirects('/admin/annonces/create');
+    }
+
+    public function testAdminCannotUpdateAnnonceWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $annonce = $this->createTestAnnonce($admin);
+        $originalTitle = $annonce->getTitle();
+
+        $client->loginUser($admin, 'main');
+        $client->request('POST', '/admin/annonces/' . $annonce->getId() . '/update', [
+            '_token' => 'invalid-csrf',
+            'title' => 'Titre pirate csrf',
+            'description' => 'Description modifiee depuis un token invalide.',
+            'email' => 'admin@example.com',
+            'piece_id' => (string) $annonce->getPiece()->getId(),
+            'type' => 'sale',
+            'price' => '200',
+            'exchange_description' => '',
+        ]);
+
+        self::assertResponseRedirects('/admin/annonces/' . $annonce->getId() . '/update');
+
+        $this->em()->clear();
+        $annonceInDb = $this->em()->getRepository(Annonce::class)->find($annonce->getId());
+        self::assertSame($originalTitle, $annonceInDb?->getTitle());
     }
 }

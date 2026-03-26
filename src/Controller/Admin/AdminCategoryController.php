@@ -98,6 +98,11 @@ class AdminCategoryController extends AbstractController
     public function createCategory(Request $request, EntityManagerInterface $entityManager, CategoryRepository $repository): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('create_category', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-create-category');
+            }
+
             try {
                 //VALIDATION DONNÉES
                 $validatedData = $this->validateCategoryData($request, $repository);
@@ -147,6 +152,11 @@ class AdminCategoryController extends AbstractController
 }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('update_category_' . $category->getId(), $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('admin-update-category', ['id' => $category->getId()]);
+            }
+
             try {
                 //VALIDATION DONNÉES
                 $validatedData = $this->validateCategoryData($request, $categoryRepository, $category);
