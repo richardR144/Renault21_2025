@@ -335,6 +335,38 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Décision: ne pas refactorer immédiatement pour éviter un changement ORM inutilement risqué dans Doctrine tant qu’aucun besoin fonctionnel ne l’impose.
 - Recommandation future: effectuer ce renommage dans un refactor isolé, avec validation du mapping Doctrine, vérification du schéma et exécution complète des tests après modification.
 
+### 11) Finalisation sécurité guest et tests de non-régression (juin 2026)
+- Objectif: clôturer le périmètre guest avec une couverture de tests renforcée sur `pièces`, `messages` et `annonces`.
+
+#### Pièces (guest)
+- Extension de [tests/GuestSecurityTest.php](tests/GuestSecurityTest.php):
+	- accès modification refusé pour un non-propriétaire
+	- création `Échange` sans prix autorisée
+	- création `Vente` sans prix refusée
+	- création avec image MIME invalide refusée
+- Exécution validée:
+	- `php bin/phpunit --filter GuestSecurityTest`
+	- résultat: `OK (18 tests, 49 assertions)`
+
+#### Messages (guest)
+- Extension de [tests/MessageSecurityTest.php](tests/MessageSecurityTest.php):
+	- création refusée avec CSRF invalide
+	- création autorisée avec CSRF valide
+	- modification refusée avec CSRF invalide
+	- modification refusée si contenu vide
+	- modification autorisée avec payload valide (`updatedAt` vérifié)
+- Exécution validée:
+	- `php bin/phpunit --filter MessageSecurityTest`
+	- résultat: `OK (11 tests, 28 assertions)`
+
+#### Annonces (guest)
+- Extension de [tests/AnnonceSecurityTest.php](tests/AnnonceSecurityTest.php):
+	- modification propriétaire refusée avec CSRF invalide
+	- suppression propriétaire autorisée avec CSRF valide
+- Exécution validée:
+	- `php bin/phpunit --filter AnnonceSecurityTest`
+	- résultat: `OK (11 tests, 34 assertions)`
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
