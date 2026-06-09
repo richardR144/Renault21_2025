@@ -297,6 +297,38 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Les erreurs de saisie prix sont remontées proprement à l’utilisateur.
 - Le flux admin pièces est désormais cohérent entre formulaire, validation et persistance.
 
+### 8) Renforcement des tests de régression admin (juin 2026)
+- Objectif: verrouiller les correctifs récents sur les flux admin critiques et éviter les régressions silencieuses.
+
+#### Validation annonces
+- Harmonisation de la règle de longueur de description dans [src/Controller/Admin/AdminAnnonceController.php](src/Controller/Admin/AdminAnnonceController.php) avec le formulaire [src/Form/AnnonceTypeForm.php](src/Form/AnnonceTypeForm.php).
+- Règle désormais cohérente côté admin: description entre `10` et `10000` caractères.
+
+#### Tests ajoutés
+- Mise à jour de [tests/AdminSecurityTest.php](tests/AdminSecurityTest.php) avec de nouveaux scénarios ciblés:
+	- création d’une pièce admin en mode `Échange` sans prix autorisée
+	- création d’une pièce admin en mode `Vente` sans prix refusée
+	- création d’une annonce admin avec description > `1000` caractères autorisée
+
+#### Validation exécutée
+- Exécution confirmée en local:
+	- `php bin/phpunit --filter AdminSecurityTest`
+	- résultat: `OK (15 tests, 42 assertions)`
+
+### 9) Deuxième lot de tests admin sur les pièces (juin 2026)
+- Objectif: couvrir les cas métier et uploads restés sensibles après stabilisation du CRUD admin des pièces.
+
+#### Tests ajoutés
+- Extension de [tests/AdminSecurityTest.php](tests/AdminSecurityTest.php) avec les scénarios suivants:
+	- création d’une pièce admin avec image au mauvais MIME refusée
+	- modification d’une pièce admin avec image au mauvais MIME refusée
+	- bascule d’une pièce admin de `Vente` vers `Échange` sans prix autorisée
+
+#### Résultat validé
+- Exécution confirmée en local:
+	- `php bin/phpunit --filter AdminSecurityTest`
+	- résultat: `OK (18 tests, 50 assertions)`
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)

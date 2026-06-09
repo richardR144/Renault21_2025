@@ -9,6 +9,7 @@ use App\Entity\Message;
 use App\Entity\Piece;
 use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AdminSecurityTest extends WebTestCase
 {
@@ -323,5 +324,123 @@ class AdminSecurityTest extends WebTestCase
         $annonceInDb = $this->em()->getRepository(Annonce::class)->findOneBy(['title' => $title]);
         self::assertNotNull($annonceInDb);
         self::assertSame($description, $annonceInDb?->getDescription());
+    }
+
+    public function testAdminCannotCreatePieceWithInvalidImageMime(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece image mime invalide ' . uniqid();
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $tmpFilePath = $this->createTempFileWithSize(1024);
+        file_put_contents($tmpFilePath, 'not-an-image-file');
+        $file = new UploadedFile($tmpFilePath, 'payload.txt', 'text/plain', null, true);
+
+        $client->request('POST', '/admin/create-piece', [
+            '_token' => $csrfToken,
+            'name' => $pieceName,
+            'description' => 'Description piece image mime invalide',
+            'exchange' => '1',
+            'price' => '120',
+            'categoryId' => (string) $category->getId(),
+        ], [
+            'image' => $file,
+        ]);
+
+        self::assertResponseIsSuccessful();
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNull($pieceInDb);
+    }
+
+    public function testAdminCannotUpdatePieceWithInvalidImageMime(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $piece = $this->createTestPiece($admin);
+        $originalName = $piece->getName();
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/update-piece/' . $piece->getId());
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $tmpFilePath = $this->createTempFileWithSize(1024);
+        file_put_contents($tmpFilePath, 'not-an-image-file');
+        $file = new UploadedFile($tmpFilePath, 'payload.txt', 'text/plain', null, true);
+
+        $client->request('POST', '/admin/update-piece/' . $piece->getId(), [
+            '_token' => $csrfToken,
+            'name' => 'Nom piece non mis a jour',
+            'description' => 'Description piece non mise a jour a cause du mime invalide',
+            'exchange' => '1',
+            'price' => '130',
+            'categoryId' => (string) $piece->getCategory()?->getId(),
+        ], [
+            'image' => $file,
+        ]);
+
+        self::assertResponseIsSuccessful();
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
+        self::assertSame($originalName, $pieceInDb?->getName());
+    }
+
+    public function testAdminCanUpdatePieceFromSaleToExchangeWithoutPrice(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $piece = $this->createTestPiece($admin);
+        $piece->setExchange(true);
+        $piece->setPrice(150.0);
+        $this->em()->flush();
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/update-piece/' . $piece->getId());
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/admin/update-piece/' . $piece->getId(), [
+            '_token' => $csrfToken,
+            'name' => 'Piece basculee en echange',
+            'description' => 'Description mise a jour pour une piece basculee en echange',
+            'exchange' => '0',
+            'price' => '',
+            'categoryId' => (string) $piece->getCategory()?->getId(),
+        ]);
+
+        self::assertResponseIsSuccessful();
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
+        self::assertSame('Piece basculee en echange', $pieceInDb?->getName());
+        self::assertFalse($pieceInDb->isExchange());
+        self::assertNull($pieceInDb->getPrice());
+    }
+
+    private function createTempFileWithSize(int $bytes): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'admin_piece_test_');
+        if ($path === false) {
+            self::fail('Impossible de creer un fichier temporaire pour le test.');
+        }
+
+        $handle = fopen($path, 'wb');
+        if ($handle === false) {
+            self::fail('Impossible d ouvrir le fichier temporaire pour ecriture.');
+        }
+
+        if ($bytes > 0) {
+            fwrite($handle, str_repeat('A', $bytes));
+        }
+
+        fclose($handle);
+
+        return $path;
     }
 }
