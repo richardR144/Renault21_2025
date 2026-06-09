@@ -220,6 +220,28 @@ class ModeratorSecurityTest extends WebTestCase
         self::assertSame($newTitle, $articleInDb?->getTitle());
     }
 
+    public function testValidArticleUpdateDisplaysSuccessFlash(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $article = $this->createTestArticle();
+
+        $client->loginUser($moderator, 'main');
+        $crawler = $client->request('GET', '/moderator/article/' . $article->getId() . '/update');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/moderator/article/' . $article->getId() . '/update', [
+            '_token' => $csrfToken,
+            'title' => 'Titre avec flash succes ' . uniqid(),
+            'content' => 'Contenu avec flash succes',
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-success', 'Article modéré avec succès !');
+    }
+
     public function testModeratorCanUpdatePieceWithValidCsrfToken(): void
     {
         $client = static::createClient();
@@ -246,6 +268,31 @@ class ModeratorSecurityTest extends WebTestCase
         $this->em()->clear();
         $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
         self::assertSame($newName, $pieceInDb?->getName());
+    }
+
+    public function testValidPieceUpdateDisplaysSuccessFlash(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $owner = $this->createTestUser();
+        $piece = $this->createTestPiece($owner);
+
+        $client->loginUser($moderator, 'main');
+        $crawler = $client->request('GET', '/moderator/piece/' . $piece->getId() . '/update');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/moderator/piece/' . $piece->getId() . '/update', [
+            '_token' => $csrfToken,
+            'name' => 'Piece avec flash succes ' . uniqid(),
+            'description' => 'Description piece avec flash succes',
+            'price' => '220',
+            'category-id' => (string) $piece->getCategory()?->getId(),
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-success', 'Pièce modérée avec succès !');
     }
 
     public function testModeratorCannotUpdatePieceWithEmptyName(): void

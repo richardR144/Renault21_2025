@@ -381,6 +381,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 	- accès refusé (403) pour un utilisateur connecté sans `ROLE_MODERATOR`
 	- accès autorisé (200) aux routes dashboard/listes/update pour un modérateur
 	- affichage des flashs d'erreur après CSRF invalide
+	- affichage des flashs de succès après mise à jour valide (article/pièce)
 	- modification d’article autorisée avec CSRF valide
 	- modification de pièce autorisée avec CSRF valide
 	- modification de pièce refusée si nom vide
@@ -390,12 +391,12 @@ php bin/console doctrine:migrations:migrate --no-interaction
 #### Résultat validé
 - Exécution confirmée en local:
 	- `php bin/phpunit tests/ModeratorSecurityTest.php`
-	- résultat: `OK (15 tests, 37 assertions)`
+	- résultat: `OK (17 tests, 43 assertions)`
 
 #### Validation globale
 - Exécution complète confirmée en local:
 	- `php bin/phpunit`
-	- résultat: `OK (73 tests, 198 assertions)`
+	- résultat: `OK (75 tests, 204 assertions)`
 
 ## Contribuer
 - Branches par fonctionnalité
