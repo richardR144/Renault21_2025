@@ -367,6 +367,28 @@ php bin/console doctrine:migrations:migrate --no-interaction
 	- `php bin/phpunit --filter AnnonceSecurityTest`
 	- résultat: `OK (11 tests, 34 assertions)`
 
+### 12) Durcissement sécurité modérateur (juin 2026)
+- Objectif: fiabiliser les routes et renforcer la non-régression sur les opérations de modération des articles/pièces.
+
+#### Contrôleurs modérateur
+- Nettoyage de [src/Controller/Moderator/ModeratorDashboardController.php](src/Controller/Moderator/ModeratorDashboardController.php):
+	- suppression des routes dupliquées `moderator-list-articles` et `moderator-list-pieces`
+	- conservation de la route dashboard uniquement
+- Impact: évite les collisions de définitions de routes et clarifie la responsabilité entre dashboard et CRUD de modération.
+
+#### Tests ajoutés
+- Extension de [tests/ModeratorSecurityTest.php](tests/ModeratorSecurityTest.php) avec les scénarios suivants:
+	- modification d’article autorisée avec CSRF valide
+	- modification de pièce autorisée avec CSRF valide
+	- modification de pièce refusée si nom vide
+	- modification d’article avec image MIME invalide refusée
+	- modification de pièce avec image MIME invalide refusée
+
+#### Résultat validé
+- Exécution confirmée en local:
+	- `php bin/phpunit tests/ModeratorSecurityTest.php`
+	- résultat: `OK (8 tests, 23 assertions)`
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
