@@ -20,6 +20,45 @@ class ModeratorSecurityTest extends WebTestCase
         self::assertResponseRedirects('/connexion');
     }
 
+    public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorDashboard(): void
+    {
+        $client = static::createClient();
+
+        $user = $this->createTestUser(['ROLE_USER']);
+
+        $client->loginUser($user, 'main');
+        $client->request('GET', '/moderator');
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorArticleUpdatePage(): void
+    {
+        $client = static::createClient();
+
+        $user = $this->createTestUser(['ROLE_USER']);
+        $article = $this->createTestArticle();
+
+        $client->loginUser($user, 'main');
+        $client->request('GET', '/moderator/article/' . $article->getId() . '/update');
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorPieceUpdatePage(): void
+    {
+        $client = static::createClient();
+
+        $user = $this->createTestUser(['ROLE_USER']);
+        $owner = $this->createTestUser();
+        $piece = $this->createTestPiece($owner);
+
+        $client->loginUser($user, 'main');
+        $client->request('GET', '/moderator/piece/' . $piece->getId() . '/update');
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
     public function testModeratorCannotUpdateArticleWithInvalidCsrfToken(): void
     {
         $client = static::createClient();
