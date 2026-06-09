@@ -398,6 +398,23 @@ php bin/console doctrine:migrations:migrate --no-interaction
 	- `php bin/phpunit`
 	- résultat: `OK (75 tests, 204 assertions)`
 
+### 13) Alignement périmètre et restauration ciblée (juin 2026)
+- Contexte: retour explicite au périmètre "avant point 4" demandé sur les éléments de dette technique non prioritaires.
+
+#### Fichiers restaurés
+- [src/Form/AnnonceTypeForm.php](src/Form/AnnonceTypeForm.php): conservation du style historique des contraintes (`new NotBlank([...])`, `new Length([...])`, `new File([...])`).
+- [src/Form/ForgotPasswordRequestForm.php](src/Form/ForgotPasswordRequestForm.php): conservation du style historique des contraintes.
+- [src/Entity/Category.php](src/Entity/Category.php): maintien de l'implémentation historique (imports Doctrine Collections et propriété `$Name`).
+
+#### Validation
+- Vérification de syntaxe PHP validée sur l'entité Category.
+- Exécutions PHPUnit vertes conservées.
+
+### 14) Note IDE (VS Code / Intelephense)
+- Certains diagnostics "Undefined type/method" peuvent rester affichés malgré un runtime valide.
+- Résolution constatée: `Intelephense: Clear Cache` puis `Developer: Reload Window`.
+- Interprétation: faux positifs d'indexation IDE, non bloquants si `php bin/phpunit` reste vert.
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
