@@ -4,24 +4,24 @@ namespace App\Controller\Admin;
 
 
 
+use App\Entity\Category;
 use App\Entity\Piece;
-use App\Repository\CategoryRepository;
-use App\Repository\PieceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
 class AdminPieceController extends AbstractController
 {
     #[Route('/admin/create-piece', name: 'admin-create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function createPiece(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $categoryRepository = $entityManager->getRepository(Category::class);
         $categories = $categoryRepository->findAll();
 
 if ($request->isMethod('POST')) {
@@ -91,7 +91,8 @@ if ($request->isMethod('POST')) {
 
 
 #[Route('/admin/list-pieces', name: 'admin-list-pieces', methods: ['GET'])]
-public function listPieces(PieceRepository $pieceRepository): Response {
+public function listPieces(EntityManagerInterface $entityManager): Response {
+    $pieceRepository = $entityManager->getRepository(Piece::class);
     $pieces = $pieceRepository->findAll();
 
     return $this->render('admin/piece/list-pieces.html.twig', [
@@ -100,8 +101,9 @@ public function listPieces(PieceRepository $pieceRepository): Response {
 }
 
     #[Route('/admin/delete-piece/{id}', name:'admin-delete-piece', methods: ['POST'])] 
-    public function deletePiece(int $id, PieceRepository $pieceRepository, EntityManagerInterface $entityManager, Request $request): Response
+    public function deletePiece(int $id, EntityManagerInterface $entityManager, Request $request): Response
 {
+    $pieceRepository = $entityManager->getRepository(Piece::class);
     //CSRF Protection
     if (!$this->isCsrfTokenValid('delete_piece_' . $id, $request->request->get('_token'))) {
         $this->addFlash('error', 'Token de sécurité invalide');
@@ -128,7 +130,10 @@ public function listPieces(PieceRepository $pieceRepository): Response {
     
 
     #[Route('/admin/update-piece/{id}', name: 'admin-update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
+    public function updatePiece(int $id, Request $request, EntityManagerInterface $entityManager): Response {
+
+        $pieceRepository = $entityManager->getRepository(Piece::class);
+        $categoryRepository = $entityManager->getRepository(Category::class);
 
         $piece = $pieceRepository->find($id);
         if (!$piece) {

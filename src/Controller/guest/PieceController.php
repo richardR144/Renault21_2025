@@ -5,15 +5,13 @@ namespace App\Controller\Guest;
 
 
 use App\Repository\PieceRepository;
-use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Piece;
 use App\Form\InsertPieceForm;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\FormInterface;
 
@@ -22,7 +20,7 @@ class PieceController extends AbstractController
 {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
 
     #[Route('/Guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function createPiece(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -69,7 +67,7 @@ class PieceController extends AbstractController
                 try {
                     $extension = $this->validateImageUpload($imageFile);
                     $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFileName = $slugger->slug($originalFileName);
+                    $safeFileName = $this->slugifyFilename($originalFileName);
                     $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
                     $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
                     $piece->setImage($newFileName);
@@ -124,12 +122,13 @@ class PieceController extends AbstractController
 
 
     #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function updatePiece(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
+        $pieceRepository = $entityManager->getRepository(Piece::class);
         $piece = $pieceRepository->find($id);
         if (!$piece) {
             throw $this->createNotFoundException('Pièce non trouvée');
@@ -179,7 +178,7 @@ class PieceController extends AbstractController
                 try {
                     $extension = $this->validateImageUpload($imageFile);
                     $originalFileName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFileName = $slugger->slug($originalFileName);
+                    $safeFileName = $this->slugifyFilename($originalFileName);
                     $newFileName = $safeFileName . '-' . uniqid() . '.' . $extension;
                     $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
                     $piece->setImage($newFileName);
@@ -214,6 +213,7 @@ class PieceController extends AbstractController
     {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $pieceRepository = $entityManager->getRepository(Piece::class);
         $piece = $pieceRepository->find($id);
         // Si le produit n'existe pas, redirige vers la page 404 ou affiche un message d'erreur de Symfony
         if (!$piece) {
@@ -252,8 +252,9 @@ class PieceController extends AbstractController
     }
 
     #[Route('/Guest/pieces/details-piece/{id}', name: 'details-piece', methods: ['GET'])]
-    public function detailsPiece(PieceRepository $pieceRepository, int $id): Response
+    public function detailsPiece(EntityManagerInterface $entityManager, int $id): Response
     {
+        $pieceRepository = $entityManager->getRepository(Piece::class);
 
         $piece = $pieceRepository->find($id);
 
@@ -267,13 +268,14 @@ class PieceController extends AbstractController
     }
 
     #[Route('/Guest/pieces/show-user-piece', name: 'show-user-piece', methods: ['GET'])]
-    public function showUserPieces(PieceRepository $pieceRepository): Response
+    public function showUserPieces(EntityManagerInterface $entityManager): Response
     {
         // Sécurisation obligatoire
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
+        $pieceRepository = $entityManager->getRepository(Piece::class);
 
         // Récupérer SEULEMENT les pièces de cet utilisateur
         $pieces = $pieceRepository->findBy(['user' => $user]);
@@ -334,6 +336,15 @@ class PieceController extends AbstractController
         }
 
         return (float) $normalized;
+    }
+
+    private function slugifyFilename(string $name): string
+    {
+        $slug = strtolower(trim($name));
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
+        $slug = trim($slug, '-');
+
+        return $slug !== '' ? $slug : 'image';
     }
 
     private function flashFormErrors(FormInterface $form): void

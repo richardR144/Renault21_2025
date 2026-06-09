@@ -6,13 +6,20 @@ use App\Entity\Message;
 use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/** @method static \Symfony\Bundle\FrameworkBundle\KernelBrowser createClient(array $options = [], array $server = []) */
 class MessageSecurityTest extends WebTestCase
 {
     use SecurityTestFactoryTrait;
 
+    /** @return mixed */
+    private function createTypedClient()
+    {
+        return static::createClient();
+    }
+
     public function testAnonymousUserCannotPostMessage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('POST', '/messages/create', [
             'content' => 'message test',
             'receiver_id' => 1,
@@ -23,7 +30,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testAnonymousUserCannotUpdateMessage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/messages/update/1');
 
         self::assertResponseRedirects('/connexion');
@@ -31,7 +38,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testNonSenderCannotUpdateMessage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -46,7 +53,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testAnonymousUserCannotDeleteMessage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('POST', '/messages/delete/1', [
             '_token' => 'invalid',
         ]);
@@ -56,7 +63,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testUserCannotDeleteMessageIfNotParticipant(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -73,7 +80,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testSenderCannotDeleteMessageWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -93,7 +100,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testUserCannotCreateMessageWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -118,7 +125,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testUserCanCreateMessageWithValidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -147,7 +154,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testSenderCannotUpdateMessageWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -169,7 +176,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testSenderCannotUpdateMessageWithEmptyContent(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();
@@ -195,7 +202,7 @@ class MessageSecurityTest extends WebTestCase
 
     public function testSenderCanUpdateMessageWithValidPayload(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $sender = $this->createTestUser();
         $receiver = $this->createTestUser();

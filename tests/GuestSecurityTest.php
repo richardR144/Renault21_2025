@@ -11,9 +11,15 @@ class GuestSecurityTest extends WebTestCase
 {
     use SecurityTestFactoryTrait;
 
+    /** @return mixed */
+    private function createTypedClient()
+    {
+        return static::createClient();
+    }
+
     public function testLoginPageIsReachable(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/connexion');
 
         self::assertResponseIsSuccessful();
@@ -21,7 +27,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testAnonymousUserIsRedirectedFromGuestCreatePiece(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/Guest/pieces/create-piece');
 
         self::assertResponseRedirects('/connexion');
@@ -29,7 +35,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testAnonymousUserCannotPostGuestCreatePiece(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('POST', '/Guest/pieces/create-piece', [
             '_token' => 'token-invalide',
             'insert_piece_form' => [
@@ -45,7 +51,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testLoggedUserCannotSubmitCreatePieceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->loginUser($this->createTestUser(), 'main');
 
         $client->request('POST', '/Guest/pieces/create-piece', [
@@ -64,7 +70,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testAnonymousUserCannotPostDeletePiece(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('POST', '/Guest/pieces/delete-piece/1', [
             '_token' => 'invalid',
         ]);
@@ -74,7 +80,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testOwnerCannotDeletePieceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $category = $this->createTestCategory();
@@ -102,7 +108,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testNonOwnerCannotDeletePiece(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $intruder = $this->createTestUser();
@@ -132,7 +138,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testNonOwnerCannotAccessUpdatePieceForm(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $intruder = $this->createTestUser();
@@ -146,7 +152,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testLoggedUserCanCreateExchangePieceWithoutPrice(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $category = $this->createTestCategory();
@@ -178,7 +184,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testLoggedUserCannotCreateSalePieceWithoutPrice(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $category = $this->createTestCategory();
@@ -209,7 +215,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testLoggedUserCannotCreatePieceWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $category = $this->createTestCategory();
@@ -248,7 +254,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testUserCanChangePasswordWithValidCurrentPassword(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $user = $this->createTestUserWithPassword('OldPass123!');
 
         $client->loginUser($user, 'main');
@@ -276,7 +282,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testUserCannotChangePasswordWithInvalidCurrentPassword(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $user = $this->createTestUserWithPassword('OldPass123!');
 
         $client->loginUser($user, 'main');
@@ -305,7 +311,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testForgotPasswordPageIsReachable(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/mot-de-passe-oublie');
 
         self::assertResponseIsSuccessful();
@@ -313,7 +319,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testInvalidResetTokenRedirectsToForgotPassword(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/reinitialiser-mot-de-passe/token-invalide');
 
         self::assertResponseRedirects('/mot-de-passe-oublie');
@@ -321,7 +327,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testUserCanResetPasswordWithValidToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $user = $this->createTestUserWithPassword('OldPass123!');
 
         $token = 'token-reset-valide';
@@ -354,7 +360,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testSearchPageIsReachableWithoutQuery(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/search');
 
         self::assertResponseIsSuccessful();
@@ -362,7 +368,7 @@ class GuestSecurityTest extends WebTestCase
 
     public function testSearchByQueryReturnsExpectedPieceName(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $category = $this->createTestCategory();

@@ -15,9 +15,15 @@ class AdminSecurityTest extends WebTestCase
 {
     use SecurityTestFactoryTrait;
 
+    /** @return mixed */
+    private function createTypedClient()
+    {
+        return static::createClient();
+    }
+
     public function testAnonymousUserIsRedirectedFromAdminDashboard(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/admin');
 
         self::assertResponseRedirects('/connexion');
@@ -25,7 +31,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testNonAdminUserCannotAccessAdminDashboard(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->loginUser($this->createTestUser(['ROLE_USER']), 'main');
 
         $client->request('GET', '/admin');
@@ -35,7 +41,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotDeleteMessageWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $sender = $this->createTestUser();
@@ -56,7 +62,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testNonAdminUserCannotDeleteAdminMessage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $user = $this->createTestUser(['ROLE_USER']);
 
         $client->loginUser($user, 'main');
@@ -69,7 +75,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreateAnnonceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
 
         $client->loginUser($admin, 'main');
@@ -86,7 +92,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotUpdateAnnonceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $annonce = $this->createTestAnnonce($admin);
@@ -113,7 +119,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreateArticleWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $title = 'Article csrf invalide ' . uniqid();
 
@@ -133,7 +139,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotUpdateArticleWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $article = $this->createTestArticle();
         $originalTitle = $article->getTitle();
@@ -154,7 +160,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreateCategoryWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $name = 'Category csrf invalide ' . uniqid();
         $initialCount = count($this->em()->getRepository(Category::class)->findAll());
@@ -175,7 +181,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotUpdateCategoryWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $category = $this->createTestCategory();
         $originalName = $category->getName();
@@ -196,7 +202,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreatePieceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $category = $this->createTestCategory();
         $pieceName = 'Piece csrf invalide ' . uniqid();
@@ -220,7 +226,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotUpdatePieceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $piece = $this->createTestPiece($admin);
         $originalName = $piece->getName();
@@ -244,7 +250,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCanCreateExchangePieceWithoutPrice(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $category = $this->createTestCategory();
         $pieceName = 'Piece echange sans prix ' . uniqid();
@@ -273,7 +279,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreateSalePieceWithoutPrice(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $category = $this->createTestCategory();
         $pieceName = 'Piece vente sans prix ' . uniqid();
@@ -300,7 +306,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCanCreateAnnonceWithDescriptionLongerThanOneThousandCharacters(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $piece = $this->createTestPiece($admin);
         $title = 'Annonce admin longue ' . uniqid();
@@ -328,7 +334,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotCreatePieceWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $category = $this->createTestCategory();
         $pieceName = 'Piece image mime invalide ' . uniqid();
@@ -361,7 +367,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCannotUpdatePieceWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $piece = $this->createTestPiece($admin);
         $originalName = $piece->getName();
@@ -394,7 +400,7 @@ class AdminSecurityTest extends WebTestCase
 
     public function testAdminCanUpdatePieceFromSaleToExchangeWithoutPrice(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $admin = $this->createTestUser(['ROLE_ADMIN']);
         $piece = $this->createTestPiece($admin);
         $piece->setExchange(true);

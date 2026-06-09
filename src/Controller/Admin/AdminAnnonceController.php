@@ -3,14 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Annonce;
-use App\Repository\AnnonceRepository;
-use App\Repository\PieceRepository;
+use App\Entity\Piece;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -18,8 +17,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AdminAnnonceController extends AbstractController
 {
     #[Route('/admin/annonces', name: 'admin-list-annonces', methods: ['GET'])]  
-    public function listAnnonce(AnnonceRepository $annonceRepository): Response
+    public function listAnnonce(EntityManagerInterface $entityManager): Response
 {
+    $annonceRepository = $entityManager->getRepository(Annonce::class);
     $annonces = $annonceRepository->findBy([], ['createdAt' => 'DESC']);   
 
     return $this->render('admin/annonces/list-annonces.html.twig', [
@@ -28,8 +28,9 @@ class AdminAnnonceController extends AbstractController
 }
 
     #[Route('/admin/annonces/create', name: 'admin-create-annonce', methods: ['GET', 'POST'])]  // ✅ Cohérent
-    public function createAnnonce(Request $request, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
+    public function createAnnonce(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $pieceRepository = $entityManager->getRepository(Piece::class);
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('create_annonce', $request->request->get('_token'))) {
                 $this->addFlash('error', 'Token de sécurité invalide');
@@ -83,8 +84,9 @@ class AdminAnnonceController extends AbstractController
     }
 
     #[Route('/admin/annonces/delete/{id}', name: 'admin-delete-annonce', methods: ['POST'])]  
-    public function deleteAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager): Response
+    public function deleteAnnonce(int $id, Request $request, EntityManagerInterface $entityManager): Response
 {
+    $annonceRepository = $entityManager->getRepository(Annonce::class);
     // CSRF Protection
     if (!$this->isCsrfTokenValid('delete_annonce_' . $id, $request->request->get('_token'))) {
         $this->addFlash('error', 'Token de sécurité invalide');
@@ -119,8 +121,9 @@ class AdminAnnonceController extends AbstractController
 }
 
     #[Route('/admin/annonces/{id}', name: 'admin-show-annonce', methods: ['GET'])]  // ✅ Cohérent
-    public function showAnnonce(int $id, AnnonceRepository $annonceRepository): Response
+    public function showAnnonce(int $id, EntityManagerInterface $entityManager): Response
     {
+        $annonceRepository = $entityManager->getRepository(Annonce::class);
         $annonce = $annonceRepository->find($id);
 
         if (!$annonce) {
@@ -134,8 +137,10 @@ class AdminAnnonceController extends AbstractController
     }
 
     #[Route('/admin/annonces/{id}/update', name: 'admin-update-annonce', methods: ['GET', 'POST'])]
-    public function updateAnnonce(int $id, Request $request, AnnonceRepository $annonceRepository, EntityManagerInterface $entityManager, PieceRepository $pieceRepository): Response
+    public function updateAnnonce(int $id, Request $request, EntityManagerInterface $entityManager): Response
 {
+    $annonceRepository = $entityManager->getRepository(Annonce::class);
+    $pieceRepository = $entityManager->getRepository(Piece::class);
     $annonce = $annonceRepository->find($id);
     
     if (!$annonce) {

@@ -7,13 +7,20 @@ use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/** @method static \Symfony\Bundle\FrameworkBundle\KernelBrowser createClient(array $options = [], array $server = []) */
 class AnnonceSecurityTest extends WebTestCase
 {
     use SecurityTestFactoryTrait;
 
+    /** @return mixed */
+    private function createTypedClient()
+    {
+        return static::createClient();
+    }
+
     public function testAnonymousUserIsRedirectedFromGuestCreateAnnonce(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/Guest/annonces/create');
 
         self::assertResponseRedirects('/connexion');
@@ -21,7 +28,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testAnonymousUserCannotPostDeleteAnnonce(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('POST', '/Guest/annonces/1/delete', [
             '_token' => 'invalid-token',
         ]);
@@ -31,7 +38,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCannotDeleteAnnonceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $annonce = $this->createTestAnnonce($owner);
@@ -50,7 +57,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testNonOwnerCannotDeleteAnnonce(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $intruder = $this->createTestUser();
@@ -70,7 +77,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testNonOwnerCannotAccessUpdateAnnonceForm(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $intruder = $this->createTestUser();
@@ -84,7 +91,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCanUpdateAnnonceWithValidPayload(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $annonce = $this->createTestAnnonce($owner);
@@ -114,7 +121,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCannotUpdateAnnonceWithInvalidPayload(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $annonce = $this->createTestAnnonce($owner);
@@ -146,7 +153,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCannotCreateAnnonceWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $piece = $this->createTestPiece($owner);
@@ -186,7 +193,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCannotCreateAnnonceWithOversizedImage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $piece = $this->createTestPiece($owner);
@@ -225,7 +232,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCannotUpdateAnnonceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $annonce = $this->createTestAnnonce($owner);
@@ -254,7 +261,7 @@ class AnnonceSecurityTest extends WebTestCase
 
     public function testOwnerCanDeleteAnnonceWithValidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $owner = $this->createTestUser();
         $annonce = $this->createTestAnnonce($owner);

@@ -8,13 +8,20 @@ use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/** @method static \Symfony\Bundle\FrameworkBundle\KernelBrowser createClient(array $options = [], array $server = []) */
 class ModeratorSecurityTest extends WebTestCase
 {
     use SecurityTestFactoryTrait;
 
+    /** @return mixed */
+    private function createTypedClient()
+    {
+        return static::createClient();
+    }
+
     public function testAnonymousUserIsRedirectedFromModeratorDashboard(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->request('GET', '/moderator');
 
         self::assertResponseRedirects('/connexion');
@@ -22,7 +29,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorDashboard(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $user = $this->createTestUser(['ROLE_USER']);
 
@@ -34,7 +41,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorArticleUpdatePage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $user = $this->createTestUser(['ROLE_USER']);
         $article = $this->createTestArticle();
@@ -47,7 +54,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testLoggedUserWithoutModeratorRoleCannotAccessModeratorPieceUpdatePage(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $user = $this->createTestUser(['ROLE_USER']);
         $owner = $this->createTestUser();
@@ -61,7 +68,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCanAccessDashboardAndLists(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
 
@@ -79,7 +86,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCanAccessUpdatePages(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $owner = $this->createTestUser();
@@ -97,7 +104,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCannotUpdateArticleWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $article = $this->createTestArticle();
@@ -119,7 +126,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testInvalidArticleCsrfDisplaysErrorFlash(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->followRedirects(true);
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
@@ -138,7 +145,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCannotUpdatePieceWithInvalidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $owner = $this->createTestUser();
@@ -172,7 +179,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testEmptyPieceNameDisplaysErrorFlash(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->followRedirects(true);
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
@@ -197,7 +204,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCanUpdateArticleWithValidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $article = $this->createTestArticle();
@@ -222,7 +229,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testValidArticleUpdateDisplaysSuccessFlash(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->followRedirects(true);
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
@@ -244,7 +251,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCanUpdatePieceWithValidCsrfToken(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $owner = $this->createTestUser();
@@ -272,7 +279,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testValidPieceUpdateDisplaysSuccessFlash(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
         $client->followRedirects(true);
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
@@ -297,7 +304,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCannotUpdatePieceWithEmptyName(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $owner = $this->createTestUser();
@@ -325,7 +332,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCannotUpdateArticleWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $article = $this->createTestArticle();
@@ -356,7 +363,7 @@ class ModeratorSecurityTest extends WebTestCase
 
     public function testModeratorCannotUpdatePieceWithInvalidImageMime(): void
     {
-        $client = static::createClient();
+        $client = $this->createTypedClient();
 
         $moderator = $this->createTestUser(['ROLE_MODERATOR']);
         $owner = $this->createTestUser();
