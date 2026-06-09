@@ -20,9 +20,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AdminPieceController extends AbstractController
 {
     #[Route('/admin/create-piece', name: 'admin-create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager, \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag): Response
+    public function createPiece(CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $category = $categoryRepository->findAll();
+        $categories = $categoryRepository->findAll();
 
 if ($request->isMethod('POST')) {
     if (!$this->isCsrfTokenValid('create_piece', $request->request->get('_token'))) {
@@ -31,14 +31,23 @@ if ($request->isMethod('POST')) {
     }
 
     try {
-        $name= $request->request->get('name');
-        $description = $request->request->get('description');
+        $name = trim((string) $request->request->get('name'));
+        $description = trim((string) $request->request->get('description'));
         $exchange = $request->request->get('exchange');
-        $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
-        $price = $request->request->get('price');
-        $userId = $request->request->get(key: 'userId');
+        $exchange = $exchange === '1' || $exchange === 1 || $exchange === true; // Vérification de l'échange
+        $price = $this->normalizePrice($request->request->get('price'));
         $categoryId = $request->request->get('categoryId');
         $image = $request->files->get('image'); 
+
+        if ($name === '' || $description === '') {
+            $this->addFlash('error', 'Le nom et la description sont obligatoires.');
+            return $this->redirectToRoute('admin-create-piece');
+        }
+
+        if ($exchange && $price === null) {
+            $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+            return $this->redirectToRoute('admin-create-piece');
+        }
 
         if (!$categoryId) {
             $this->addFlash('error', 'Veuillez sélectionner une catégorie.');
@@ -76,7 +85,7 @@ if ($request->isMethod('POST')) {
     }
 }
         return $this->render('admin/piece/create-piece.html.twig', [
-            'categories' => $category
+            'categories' => $categories
         ]);
     }
 
@@ -122,6 +131,10 @@ public function listPieces(PieceRepository $pieceRepository): Response {
     public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response {
 
         $piece = $pieceRepository->find($id);
+        if (!$piece) {
+            $this->addFlash('error', 'Pièce introuvable');
+            return $this->redirectToRoute('admin-list-pieces');
+        }
 
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('update_piece' . $piece->getId(), $request->request->get('_token'))) {
@@ -129,13 +142,24 @@ public function listPieces(PieceRepository $pieceRepository): Response {
                 return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
             }
 
-            $Name = $request->request->get('name');
-            $description = $request->request->get('description');
+            $name = trim((string) $request->request->get('name'));
+            $description = trim((string) $request->request->get('description'));
             $exchange = $request->request->get('exchange');
-            $exchange = $exchange === '1' || $exchange === 1 || $exchange === true ? true : false; // Vérification de l'échange
-            $price = $request->request->get('price');
+            $exchange = $exchange === '1' || $exchange === 1 || $exchange === true; // Vérification de l'échange
+            $price = $this->normalizePrice($request->request->get('price'));
             $categoryId = $request->request->get('categoryId');
             $image = $request->files->get('image'); // Récupération de l'image
+
+            if ($name === '' || $description === '') {
+                $this->addFlash('error', 'Le nom et la description sont obligatoires.');
+                return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
+            }
+
+            if ($exchange && $price === null) {
+                $this->addFlash('error', 'Le prix est obligatoire pour une vente.');
+                return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
+            }
+
             if (!$categoryId) {
                 $this->addFlash('error', 'Veuillez sélectionner une catégorie.');
                 return $this->redirectToRoute('admin-update-piece', ['id' => $piece->getId()]);
@@ -147,7 +171,7 @@ public function listPieces(PieceRepository $pieceRepository): Response {
 }
             
             try {
-                $piece->setName($Name);
+                $piece->setName($name);
                 $piece->setDescription($description);
                 $piece->setExchange($exchange);
                 $piece->setPrice($price);
@@ -201,5 +225,24 @@ public function listPieces(PieceRepository $pieceRepository): Response {
         $imageFile->move($this->getParameter('pieces_images_directory'), $newFileName);
 
         return $newFileName;
+    }
+
+    private function normalizePrice(mixed $priceInput): ?float
+    {
+        if ($priceInput === null) {
+            return null;
+        }
+
+        $priceString = trim((string) $priceInput);
+        if ($priceString === '') {
+            return null;
+        }
+
+        $normalized = str_replace([',', ' '], ['.', ''], $priceString);
+        if (!is_numeric($normalized)) {
+            throw new \InvalidArgumentException('Le prix doit être un nombre valide (ex: 1500 ou 1500,50).');
+        }
+
+        return (float) $normalized;
     }
 }
