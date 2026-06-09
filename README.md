@@ -277,6 +277,26 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Validation CSRF côté backend dans [src/Controller/Guest/MessagesController.php](src/Controller/Guest/MessagesController.php).
 - Durcissement supplémentaire: route `delete-message` en `POST` uniquement (plus de suppression via `GET`).
 
+### 7) Stabilisation du flux admin des pièces (juin 2026)
+- Objectif: fiabiliser la création/modification des pièces côté admin et supprimer les incohérences fonctionnelles.
+
+#### Backend admin
+- Correctifs appliqués dans [src/Controller/Admin/AdminPieceController.php](src/Controller/Admin/AdminPieceController.php):
+	- Vérification explicite de l’existence de la pièce en modification (`admin-update-piece/{id}`) avec redirection propre si introuvable.
+	- Normalisation du prix (`1500`, `1500,50`, `1500.50`) via une méthode dédiée pour éviter les valeurs invalides.
+	- Règle métier alignée: si type `Vente`, le prix est obligatoire; si type `Échange`, le prix peut être vide.
+	- Validation de base sur `name` et `description` non vides avec message flash clair.
+
+#### Template admin de modification
+- Mise à jour de [templates/admin/piece/update-piece.html.twig](templates/admin/piece/update-piece.html.twig):
+	- Champ `Type` (`Vente` / `Échange`) réintroduit dans le formulaire d’édition.
+	- Champ `Prix` rendu optionnel côté HTML pour rester cohérent avec la logique métier backend.
+
+#### Résultat
+- Le type `Vente/Échange` n’est plus perdu lors d’une modification admin.
+- Les erreurs de saisie prix sont remontées proprement à l’utilisateur.
+- Le flux admin pièces est désormais cohérent entre formulaire, validation et persistance.
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)
