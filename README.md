@@ -378,6 +378,9 @@ php bin/console doctrine:migrations:migrate --no-interaction
 
 #### Tests ajoutés
 - Extension de [tests/ModeratorSecurityTest.php](tests/ModeratorSecurityTest.php) avec les scénarios suivants:
+	- accès refusé (403) pour un utilisateur connecté sans `ROLE_MODERATOR`
+	- accès autorisé (200) aux routes dashboard/listes/update pour un modérateur
+	- affichage des flashs d'erreur après CSRF invalide
 	- modification d’article autorisée avec CSRF valide
 	- modification de pièce autorisée avec CSRF valide
 	- modification de pièce refusée si nom vide
@@ -387,7 +390,12 @@ php bin/console doctrine:migrations:migrate --no-interaction
 #### Résultat validé
 - Exécution confirmée en local:
 	- `php bin/phpunit tests/ModeratorSecurityTest.php`
-	- résultat: `OK (8 tests, 23 assertions)`
+	- résultat: `OK (15 tests, 37 assertions)`
+
+#### Validation globale
+- Exécution complète confirmée en local:
+	- `php bin/phpunit`
+	- résultat: `OK (73 tests, 198 assertions)`
 
 ## Contribuer
 - Branches par fonctionnalité

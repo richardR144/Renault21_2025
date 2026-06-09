@@ -59,6 +59,42 @@ class ModeratorSecurityTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testModeratorCanAccessDashboardAndLists(): void
+    {
+        $client = static::createClient();
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+
+        $client->loginUser($moderator, 'main');
+
+        $client->request('GET', '/moderator');
+        self::assertResponseIsSuccessful();
+
+        $client->request('GET', '/moderator/articles');
+        self::assertResponseIsSuccessful();
+
+        $client->request('GET', '/moderator/pieces');
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testModeratorCanAccessUpdatePages(): void
+    {
+        $client = static::createClient();
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $owner = $this->createTestUser();
+        $article = $this->createTestArticle();
+        $piece = $this->createTestPiece($owner);
+
+        $client->loginUser($moderator, 'main');
+
+        $client->request('GET', '/moderator/article/' . $article->getId() . '/update');
+        self::assertResponseIsSuccessful();
+
+        $client->request('GET', '/moderator/piece/' . $piece->getId() . '/update');
+        self::assertResponseIsSuccessful();
+    }
+
     public function testModeratorCannotUpdateArticleWithInvalidCsrfToken(): void
     {
         $client = static::createClient();
@@ -79,6 +115,25 @@ class ModeratorSecurityTest extends WebTestCase
         $this->em()->clear();
         $articleInDb = $this->em()->getRepository(Article::class)->find($article->getId());
         self::assertSame($initialTitle, $articleInDb?->getTitle());
+    }
+
+    public function testInvalidArticleCsrfDisplaysErrorFlash(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $article = $this->createTestArticle();
+
+        $client->loginUser($moderator, 'main');
+        $client->request('POST', '/moderator/article/' . $article->getId() . '/update', [
+            '_token' => 'invalid-csrf',
+            'title' => 'Titre non pris en compte',
+            'content' => 'Contenu non pris en compte',
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Token de sécurité invalide. Veuillez réessayer.');
     }
 
     public function testModeratorCannotUpdatePieceWithInvalidCsrfToken(): void
@@ -113,6 +168,31 @@ class ModeratorSecurityTest extends WebTestCase
         $this->em()->clear();
         $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
         self::assertSame($initialName, $pieceInDb?->getName());
+    }
+
+    public function testEmptyPieceNameDisplaysErrorFlash(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        $moderator = $this->createTestUser(['ROLE_MODERATOR']);
+        $owner = $this->createTestUser();
+        $piece = $this->createTestPiece($owner);
+
+        $client->loginUser($moderator, 'main');
+        $crawler = $client->request('GET', '/moderator/piece/' . $piece->getId() . '/update');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/moderator/piece/' . $piece->getId() . '/update', [
+            '_token' => $csrfToken,
+            'name' => '',
+            'description' => 'Description test flash nom vide',
+            'price' => '140',
+            'category-id' => (string) $piece->getCategory()?->getId(),
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Le nom de la pièce est obligatoire.');
     }
 
     public function testModeratorCanUpdateArticleWithValidCsrfToken(): void
