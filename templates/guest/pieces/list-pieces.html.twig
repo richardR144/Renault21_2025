@@ -38,7 +38,11 @@
                     <div class="piece-meta">
                         <p>Categorie : {{ piece.name }}</p>
                         <p>Créé le : {{ piece.createdAt|date('Y-m-d') }}</p>
-                        <p>Par {{ piece.user.pseudo }} — {{ piece.user.email }}</p>
+                        {% if piece.user %}
+                            <p>Par {{ piece.user.pseudo }} — {{ piece.user.email }}</p>
+                        {% else %}
+                            <p>Par utilisateur inconnu</p>
+                        {% endif %}
                     </div>
                     <div class="piece-actions d-flex gap-2 mt-2">
                         <a href="{{ path('details-piece', {id: piece.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
