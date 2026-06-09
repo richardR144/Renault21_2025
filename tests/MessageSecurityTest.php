@@ -90,4 +90,132 @@ class MessageSecurityTest extends WebTestCase
         $messageInDb = $this->em()->getRepository(Message::class)->find($message->getId());
         self::assertNotNull($messageInDb);
     }
+
+    public function testUserCannotCreateMessageWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+
+        $client->loginUser($sender, 'main');
+        $client->request('POST', '/messages/create', [
+            '_token' => 'invalid-csrf',
+            'content' => 'Message avec token invalide',
+            'receiver_id' => (string) $receiver->getId(),
+        ]);
+
+        self::assertResponseRedirects('/messages/create');
+
+        $this->em()->clear();
+        $messageInDb = $this->em()->getRepository(Message::class)->findOneBy([
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'content' => 'Message avec token invalide',
+        ]);
+        self::assertNull($messageInDb);
+    }
+
+    public function testUserCanCreateMessageWithValidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+
+        $client->loginUser($sender, 'main');
+        $crawler = $client->request('GET', '/messages/create');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $content = 'Message valide ' . uniqid();
+        $client->request('POST', '/messages/create', [
+            '_token' => $csrfToken,
+            'content' => $content,
+            'receiver_id' => (string) $receiver->getId(),
+        ]);
+
+        self::assertResponseRedirects('/guest/messages/list-messages');
+
+        $this->em()->clear();
+        $messageInDb = $this->em()->getRepository(Message::class)->findOneBy([
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'content' => $content,
+        ]);
+        self::assertNotNull($messageInDb);
+    }
+
+    public function testSenderCannotUpdateMessageWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+        $originalContent = $message->getContent();
+
+        $client->loginUser($sender, 'main');
+        $client->request('POST', '/messages/update/' . $message->getId(), [
+            '_token' => 'invalid-csrf',
+            'content' => 'Nouveau contenu refusé',
+        ]);
+
+        self::assertResponseRedirects('/guest/messages/list-messages');
+
+        $this->em()->clear();
+        $messageInDb = $this->em()->getRepository(Message::class)->find($message->getId());
+        self::assertSame($originalContent, $messageInDb?->getContent());
+    }
+
+    public function testSenderCannotUpdateMessageWithEmptyContent(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+        $originalContent = $message->getContent();
+
+        $client->loginUser($sender, 'main');
+        $crawler = $client->request('GET', '/messages/update/' . $message->getId());
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/messages/update/' . $message->getId(), [
+            '_token' => $csrfToken,
+            'content' => '   ',
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Le contenu du message ne peut pas être vide');
+
+        $this->em()->clear();
+        $messageInDb = $this->em()->getRepository(Message::class)->find($message->getId());
+        self::assertSame($originalContent, $messageInDb?->getContent());
+    }
+
+    public function testSenderCanUpdateMessageWithValidPayload(): void
+    {
+        $client = static::createClient();
+
+        $sender = $this->createTestUser();
+        $receiver = $this->createTestUser();
+        $message = $this->createTestMessage($sender, $receiver);
+
+        $client->loginUser($sender, 'main');
+        $crawler = $client->request('GET', '/messages/update/' . $message->getId());
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $newContent = 'Contenu modifié ' . uniqid();
+        $client->request('POST', '/messages/update/' . $message->getId(), [
+            '_token' => $csrfToken,
+            'content' => $newContent,
+        ]);
+
+        self::assertResponseRedirects('/guest/messages/list-messages');
+
+        $this->em()->clear();
+        $messageInDb = $this->em()->getRepository(Message::class)->find($message->getId());
+        self::assertSame($newContent, $messageInDb?->getContent());
+        self::assertNotNull($messageInDb?->getUpdatedAt());
+    }
 }

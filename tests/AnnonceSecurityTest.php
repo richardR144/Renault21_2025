@@ -223,6 +223,60 @@ class AnnonceSecurityTest extends WebTestCase
         self::assertNull($annonceInDb);
     }
 
+    public function testOwnerCannotUpdateAnnonceWithInvalidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $annonce = $this->createTestAnnonce($owner);
+        $originalTitle = $annonce->getTitle();
+
+        $client->loginUser($owner, 'main');
+        $client->request('POST', '/Guest/annonces/' . $annonce->getId() . '/update', [
+            'annonce_type_form' => [
+                'title' => 'Titre modifie csrf invalide',
+                'description' => 'Description valide pour un test de csrf invalide.',
+                'email' => 'owner-update@example.com',
+                'type' => 'sale',
+                'price' => '210',
+                'piece' => (string) $annonce->getPiece()->getId(),
+                '_token' => 'invalid-csrf-token',
+            ],
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Le formulaire contient des erreurs');
+
+        $this->em()->clear();
+        $annonceInDb = $this->em()->getRepository(Annonce::class)->find($annonce->getId());
+        self::assertSame($originalTitle, $annonceInDb?->getTitle());
+    }
+
+    public function testOwnerCanDeleteAnnonceWithValidCsrfToken(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $annonce = $this->createTestAnnonce($owner);
+
+        $client->loginUser($owner, 'main');
+
+        $crawler = $client->request('GET', '/Guest/annonces');
+        $csrfToken = $crawler
+            ->filter('form[action="/Guest/annonces/' . $annonce->getId() . '/delete"] input[name="_token"]')
+            ->attr('value');
+
+        $client->request('POST', '/Guest/annonces/' . $annonce->getId() . '/delete', [
+            '_token' => $csrfToken,
+        ]);
+
+        self::assertResponseRedirects('/Guest/annonces');
+
+        $this->em()->clear();
+        $annonceInDb = $this->em()->getRepository(Annonce::class)->find($annonce->getId());
+        self::assertNull($annonceInDb);
+    }
+
     private function createTempFileWithSize(int $bytes): string
     {
         $path = tempnam(sys_get_temp_dir(), 'annonce_test_');

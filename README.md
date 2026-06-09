@@ -329,6 +329,12 @@ php bin/console doctrine:migrations:migrate --no-interaction
 	- `php bin/phpunit --filter AdminSecurityTest`
 	- résultat: `OK (18 tests, 50 assertions)`
 
+### 10) Dette technique identifiée: propriétés de Category non camelCase
+- Contexte: dans [src/Entity/Category.php](src/Entity/Category.php), les propriétés privées historiques `$Name`, `$Description` et `$Image` ne respectent pas la convention camelCase attendue.
+- État actuel: le projet fonctionne correctement car les méthodes publiques (`getName()`, `setName()`, `getDescription()`, `setDescription()`, `getImage()`, `setImage()`) sont cohérentes et utilisées dans le reste du code.
+- Décision: ne pas refactorer immédiatement pour éviter un changement ORM inutilement risqué dans Doctrine tant qu’aucun besoin fonctionnel ne l’impose.
+- Recommandation future: effectuer ce renommage dans un refactor isolé, avec validation du mapping Doctrine, vérification du schéma et exécution complète des tests après modification.
+
 ## Contribuer
 - Branches par fonctionnalité
 - Messages de commit clairs (scope: backend/frontend, feat/fix/chore)

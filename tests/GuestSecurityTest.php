@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\Entity\Piece;
 use App\Tests\Support\SecurityTestFactoryTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class GuestSecurityTest extends WebTestCase
 {
@@ -127,6 +128,122 @@ class GuestSecurityTest extends WebTestCase
         $this->em()->clear();
         $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
         self::assertNotNull($pieceInDb);
+    }
+
+    public function testNonOwnerCannotAccessUpdatePieceForm(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $intruder = $this->createTestUser();
+        $piece = $this->createTestPiece($owner);
+
+        $client->loginUser($intruder, 'main');
+        $client->request('GET', '/Guest/pieces/update-piece/' . $piece->getId());
+
+        self::assertResponseRedirects('/Guest/pieces/show-user-piece');
+    }
+
+    public function testLoggedUserCanCreateExchangePieceWithoutPrice(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece guest echange sans prix ' . uniqid();
+
+        $client->loginUser($owner, 'main');
+        $crawler = $client->request('GET', '/Guest/pieces/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/Guest/pieces/create-piece', [
+            '_token' => $csrfToken,
+            'insert_piece_form' => [
+                'category' => (string) $category->getId(),
+                'name' => $pieceName,
+                'description' => 'Description test piece guest echange sans prix',
+                'exchange' => 'echange',
+                'price' => '',
+            ],
+        ]);
+
+        self::assertResponseRedirects('/Guest/pieces/list-pieces');
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNotNull($pieceInDb);
+        self::assertFalse($pieceInDb->isExchange());
+        self::assertNull($pieceInDb->getPrice());
+    }
+
+    public function testLoggedUserCannotCreateSalePieceWithoutPrice(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece guest vente sans prix ' . uniqid();
+
+        $client->loginUser($owner, 'main');
+        $crawler = $client->request('GET', '/Guest/pieces/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/Guest/pieces/create-piece', [
+            '_token' => $csrfToken,
+            'insert_piece_form' => [
+                'category' => (string) $category->getId(),
+                'name' => $pieceName,
+                'description' => 'Description test piece guest vente sans prix',
+                'exchange' => 'vente',
+                'price' => '',
+            ],
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Le prix est obligatoire pour une vente');
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNull($pieceInDb);
+    }
+
+    public function testLoggedUserCannotCreatePieceWithInvalidImageMime(): void
+    {
+        $client = static::createClient();
+
+        $owner = $this->createTestUser();
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece guest image mime invalide ' . uniqid();
+
+        $client->loginUser($owner, 'main');
+        $crawler = $client->request('GET', '/Guest/pieces/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $tmpFilePath = $this->createTempFileWithSize(1024);
+        file_put_contents($tmpFilePath, 'not-an-image-file');
+        $file = new UploadedFile($tmpFilePath, 'payload.txt', 'text/plain', null, true);
+
+        $client->request('POST', '/Guest/pieces/create-piece', [
+            '_token' => $csrfToken,
+            'insert_piece_form' => [
+                'category' => (string) $category->getId(),
+                'name' => $pieceName,
+                'description' => 'Description test piece guest image invalide',
+                'exchange' => 'vente',
+                'price' => '120',
+            ],
+        ], [
+            'insert_piece_form' => [
+                'image' => $file,
+            ],
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert-danger', 'Format d\'image non autorisé');
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNull($pieceInDb);
     }
 
     public function testUserCanChangePasswordWithValidCurrentPassword(): void
@@ -264,5 +381,26 @@ class GuestSecurityTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Radiateur Test Recherche', (string) $client->getResponse()->getContent());
+    }
+
+    private function createTempFileWithSize(int $bytes): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'guest_piece_test_');
+        if ($path === false) {
+            self::fail('Impossible de creer un fichier temporaire pour le test.');
+        }
+
+        $handle = fopen($path, 'wb');
+        if ($handle === false) {
+            self::fail('Impossible d ouvrir le fichier temporaire pour ecriture.');
+        }
+
+        if ($bytes > 0) {
+            fwrite($handle, str_repeat('A', $bytes));
+        }
+
+        fclose($handle);
+
+        return $path;
     }
 }
