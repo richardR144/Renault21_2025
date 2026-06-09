@@ -165,7 +165,7 @@ class AdminAnnonceController extends AbstractController
             }
 
             if (empty($description) || strlen($description) < 10 || strlen($description) > 10000) {
-                throw new \Exception('La description doit contenir entre 10 et 1000 caractères');
+                throw new \Exception('La description doit contenir entre 10 et 10000 caractères');
             }
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -236,8 +236,8 @@ class AdminAnnonceController extends AbstractController
             throw new \InvalidArgumentException('Le titre doit contenir entre 5 et 255 caractères');
         }
 
-        if (strlen($description) < 10 || strlen($description) > 1000) {
-            throw new \InvalidArgumentException('La description doit contenir entre 10 et 1000 caractères');
+        if (strlen($description) < 10 || strlen($description) > 10000) {
+            throw new \InvalidArgumentException('La description doit contenir entre 10 et 10000 caractères');
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

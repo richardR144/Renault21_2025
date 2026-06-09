@@ -240,4 +240,88 @@ class AdminSecurityTest extends WebTestCase
         $pieceInDb = $this->em()->getRepository(Piece::class)->find($piece->getId());
         self::assertSame($originalName, $pieceInDb?->getName());
     }
+
+    public function testAdminCanCreateExchangePieceWithoutPrice(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece echange sans prix ' . uniqid();
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/admin/create-piece', [
+            '_token' => $csrfToken,
+            'name' => $pieceName,
+            'description' => 'Description test piece echange sans prix',
+            'exchange' => '0',
+            'price' => '',
+            'categoryId' => (string) $category->getId(),
+        ]);
+
+        self::assertResponseRedirects('/admin/list-pieces');
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNotNull($pieceInDb);
+        self::assertFalse($pieceInDb->isExchange());
+        self::assertNull($pieceInDb->getPrice());
+    }
+
+    public function testAdminCannotCreateSalePieceWithoutPrice(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $category = $this->createTestCategory();
+        $pieceName = 'Piece vente sans prix ' . uniqid();
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/create-piece');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/admin/create-piece', [
+            '_token' => $csrfToken,
+            'name' => $pieceName,
+            'description' => 'Description test piece vente sans prix',
+            'exchange' => '1',
+            'price' => '',
+            'categoryId' => (string) $category->getId(),
+        ]);
+
+        self::assertResponseRedirects('/admin/create-piece');
+
+        $this->em()->clear();
+        $pieceInDb = $this->em()->getRepository(Piece::class)->findOneBy(['name' => $pieceName]);
+        self::assertNull($pieceInDb);
+    }
+
+    public function testAdminCanCreateAnnonceWithDescriptionLongerThanOneThousandCharacters(): void
+    {
+        $client = static::createClient();
+        $admin = $this->createTestUser(['ROLE_ADMIN']);
+        $piece = $this->createTestPiece($admin);
+        $title = 'Annonce admin longue ' . uniqid();
+        $description = str_repeat('A', 1500);
+
+        $client->loginUser($admin, 'main');
+        $crawler = $client->request('GET', '/admin/annonces/create');
+        $csrfToken = $crawler->filter('input[name="_token"]')->attr('value');
+
+        $client->request('POST', '/admin/annonces/create', [
+            '_token' => $csrfToken,
+            'title' => $title,
+            'description' => $description,
+            'email' => 'admin-long-description@example.com',
+            'piece_id' => (string) $piece->getId(),
+        ]);
+
+        self::assertResponseRedirects('/admin/annonces');
+
+        $this->em()->clear();
+        $annonceInDb = $this->em()->getRepository(Annonce::class)->findOneBy(['title' => $title]);
+        self::assertNotNull($annonceInDb);
+        self::assertSame($description, $annonceInDb?->getDescription());
+    }
 }

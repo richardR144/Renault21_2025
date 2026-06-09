@@ -13,12 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Piece;
 use App\Form\InsertPieceForm;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use App\Repository\UserRepository;
-use App\Form\InsertPieceType;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Form\FormInterface;
 
 
@@ -26,15 +22,13 @@ class PieceController extends AbstractController
 {  //AbstractController permet d'utiliser les méthodes  Symfony comme render, redirectToRoute, etc.
 
     #[Route('/Guest/pieces/create-piece', name: 'create-piece', methods: ['GET', 'POST'])]
-    public function createPiece(CategoryRepository $categoryRepository, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, ParameterBagInterface $params, SluggerInterface $slugger): Response
+    public function createPiece(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         // Vérifie si l'utilisateur est connecté
         $user = $this->getUser();
 
-        $categories = $categoryRepository->findAll();
-        $params = $this->container->get('parameter_bag');
         $piece = new Piece();
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
@@ -130,7 +124,7 @@ class PieceController extends AbstractController
 
 
     #[Route('/Guest/pieces/update-piece/{id}', name: 'update-piece', methods: ['GET', 'POST'])]
-    public function updatePiece(int $id, PieceRepository $pieceRepository, UserRepository $userRepository, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function updatePiece(int $id, PieceRepository $pieceRepository, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -145,8 +139,6 @@ class PieceController extends AbstractController
             $this->addFlash('error', 'Vous ne pouvez modifier que vos propres pièces.');
             return $this->redirectToRoute('show-user-piece');
         }
-
-        $categories = $categoryRepository->findAll();
 
         $form = $this->createForm(InsertPieceForm::class, $piece);
         $form->handleRequest($request);
